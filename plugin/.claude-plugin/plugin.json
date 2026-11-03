@@ -1,0 +1,24 @@
+{
+  "name": "twosci",
+  "version": "0.1.0",
+  "description": "Seed-paper-driven literature discovery, abstract screening, citation expansion, and evidence export across Web of Science, Scopus, OpenAlex, and Crossref.",
+  "author": {
+    "name": "zzhzkx"
+  },
+  "license": "MIT",
+  "keywords": [
+    "literature search",
+    "web of science",
+    "scopus",
+    "openalex",
+    "citation graph",
+    "systematic review",
+    "MCP"
+  ],
+  "homepage": "https://github.com/zzhzkx/TwoSCI",
+  "repository": "https://github.com/zzhzkx/TwoSCI",
+  "skills": [
+    "./skills/literature-search"
+  ],
+  "mcpServers": "./mcp.json"
+}

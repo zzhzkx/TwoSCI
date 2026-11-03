@@ -1,0 +1,15 @@
+{
+  "name": "twosci-marketplace",
+  "owner": {
+    "name": "zzhzkx"
+  },
+  "description": "Marketplace for the TwoSCI literature research plugin.",
+  "plugins": [
+    {
+      "name": "twosci",
+      "source": "./plugin",
+      "description": "Seed-paper-driven literature discovery and evidence export across WoS, Scopus, OpenAlex, and Crossref.",
+      "version": "0.1.0"
+    }
+  ]
+}

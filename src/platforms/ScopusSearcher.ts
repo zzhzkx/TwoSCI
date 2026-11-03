@@ -1,0 +1,689 @@
+/**
+ * Scopus (Elsevier) Searcher
+ * 
+ * Documentation: https://dev.elsevier.com/documentation/SCOPUSSearchAPI.wadl
+ * API Endpoints:
+ * - Search API: https://api.elsevier.com/content/search/scopus
+ * - Abstract API: https://api.elsevier.com/content/abstract/scopus_id/
+ * 
+ * Required API Key: Yes (X-ELS-APIKey header or apikey parameter)
+ * Get API key from: https://dev.elsevier.com/apikey/manage
+ * 
+ * Scopus is the largest abstract and citation database of peer-reviewed literature
+ */
+
+import axios, { AxiosInstance } from 'axios';
+import { PaperSource, SearchOptions, DownloadOptions, PlatformCapabilities } from './PaperSource.js';
+import { Paper, PaperFactory } from '../models/Paper.js';
+import { RateLimiter } from '../utils/RateLimiter.js';
+import { ErrorHandler } from '../utils/ErrorHandler.js';
+import { QuotaExhaustedError, QuotaManager } from '../utils/QuotaManager.js';
+import { TIMEOUTS, USER_AGENT } from '../config/constants.js';
+import { logDebug } from '../utils/Logger.js';
+
+interface ScopusSearchResponse {
+  'search-results': {
+    'opensearch:totalResults': string;
+    'opensearch:startIndex': string;
+    'opensearch:itemsPerPage': string;
+    'opensearch:Query': {
+      '@role': string;
+      '@searchTerms': string;
+      '@startPage': string;
+    };
+    entry?: ScopusEntry[];
+    link?: Array<{
+      '@ref': string;
+      '@href': string;
+      '@type': string;
+    }>;
+  };
+}
+
+interface ScopusEntry {
+  '@_fa': string;
+  'link': Array<{
+    '@ref': string;
+    '@href': string;
+    '@type'?: string;
+  }>;
+  'prism:url': string;
+  'dc:identifier': string;
+  'eid': string;
+  'dc:title': string;
+  'dc:creator'?: string;
+  'prism:publicationName'?: string;
+  'prism:issn'?: string;
+  'prism:eIssn'?: string;
+  'prism:volume'?: string;
+  'prism:issueIdentifier'?: string;
+  'prism:pageRange'?: string;
+  'prism:coverDate'?: string;
+  'prism:coverDisplayDate'?: string;
+  'prism:doi'?: string;
+  'dc:description'?: string;
+  'citedby-count'?: string;
+  'affiliation'?: Array<{
+    '@_fa': string;
+    'affilname': string;
+    'affiliation-city': string;
+    'affiliation-country': string;
+  }>;
+  'prism:aggregationType': string;
+  'subtype': string;
+  'subtypeDescription': string;
+  'author'?: Array<{
+    '@_fa': string;
+    'authid': string;
+    'authname': string;
+    'surname': string;
+    'given-name': string;
+    'initials': string;
+    'afid': Array<{ '$': string }>;
+  }>;
+  'authkeywords'?: string;
+  'article-number'?: string;
+  'fund-acr'?: string;
+  'fund-no'?: string;
+  'fund-sponsor'?: string;
+  'openaccess'?: string;
+  'openaccessFlag'?: boolean;
+}
+
+interface ScopusAbstractResponse {
+  'abstracts-retrieval-response': {
+    coredata: {
+      'dc:identifier': string;
+      'eid': string;
+      'dc:title': string;
+      'dc:creator'?: Array<{ '$': string }>;
+      'prism:publicationName'?: string;
+      'prism:issn'?: string;
+      'prism:volume'?: string;
+      'prism:issueIdentifier'?: string;
+      'prism:pageRange'?: string;
+      'prism:coverDate'?: string;
+      'prism:doi'?: string;
+      'dc:description'?: string;
+      'citedby-count'?: string;
+      'pubmed-id'?: string;
+    };
+    authors?: {
+      author: Array<{
+        '@auid': string;
+        'preferred-name': {
+          'ce:given-name': string;
+          'ce:surname': string;
+          'ce:indexed-name': string;
+        };
+      }>;
+    };
+    subject?: {
+      '@scheme': string;
+      subject: Array<{
+        '@code': string;
+        '$': string;
+      }>;
+    };
+  };
+}
+
+export class ScopusSearcher extends PaperSource {
+  private client: AxiosInstance;
+  private rateLimiter: RateLimiter;
+  private quotaManager: QuotaManager;
+  private searchApiKey?: string;
+  private elsevierApiKey?: string;
+
+  constructor(apiKey?: string, searchApiKey?: string) {
+    const configuredElsevierApiKey = firstConfiguredKey(apiKey, process.env.ELSEVIER_API_KEY);
+    const configuredSearchApiKey = firstConfiguredKey(
+      searchApiKey,
+      process.env.SCOPUS_SEARCH_API_KEY,
+      configuredElsevierApiKey
+    );
+    // The PaperSource key represents the search capability. This allows a
+    // dedicated SCOPUS_SEARCH_API_KEY to work even when the general Elsevier
+    // key is intentionally not configured.
+    super('scopus', 'https://api.elsevier.com', configuredSearchApiKey);
+
+    // Keep the general Elsevier key separate: abstract/reference endpoints
+    // must not silently inherit a key intended only for Scopus Search.
+    this.elsevierApiKey = configuredElsevierApiKey;
+    this.searchApiKey = configuredSearchApiKey;
+
+    this.client = axios.create({
+      baseURL: 'https://api.elsevier.com',
+      timeout: TIMEOUTS.DEFAULT,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': USER_AGENT,
+        ...(this.searchApiKey ? { 'X-ELS-APIKey': this.searchApiKey } : {})
+      }
+    });
+
+    // Scopus rate limits (same as Elsevier):
+    // - Without key: 20 requests per minute
+    // - With key: 10 requests per second (600 per minute)
+    const requestsPerSecond = this.searchApiKey ? 10 : 0.33;
+
+    this.rateLimiter = new RateLimiter({
+      requestsPerSecond,
+      burstCapacity: this.searchApiKey ? 20 : 5
+    });
+
+    this.quotaManager = QuotaManager.getInstance();
+    this.quotaManager.registerPlatform('scopus', {
+      dailyLimit: 5000,
+      envPrefix: 'SCOPUS'
+    });
+  }
+
+  async search(query: string, options: SearchOptions = {}): Promise<Paper[]> {
+    const customOptions = options as any;
+    if (!this.apiKey) {
+      throw new Error('Scopus API key is required');
+    }
+
+    const maxResults = Math.min(options.maxResults || 10, 200);
+    const papers: Paper[] = [];
+
+    try {
+      // Build Scopus search query
+      let searchQuery = `TITLE-ABS-KEY(${query})`;
+      
+      if (options.author) {
+        searchQuery += ` AND AUTHOR(${options.author})`;
+      }
+      
+      if (options.journal) {
+        searchQuery += ` AND SRCTITLE(${options.journal})`;
+      }
+      
+      if (customOptions.affiliation) {
+        searchQuery += ` AND AFFIL(${customOptions.affiliation})`;
+      }
+      
+      if (customOptions.subject) {
+        searchQuery += ` AND SUBJAREA(${customOptions.subject})`;
+      }
+      
+      if (options.year) {
+        if (options.year.includes('-')) {
+          const [startYear, endYear] = options.year.split('-');
+          searchQuery += ` AND PUBYEAR > ${parseInt(startYear) - 1}`;
+          if (endYear) {
+            searchQuery += ` AND PUBYEAR < ${parseInt(endYear) + 1}`;
+          }
+        } else {
+          searchQuery += ` AND PUBYEAR = ${options.year}`;
+        }
+      }
+
+      if (customOptions.openAccess) {
+        searchQuery += ' AND OPENACCESS(1)';
+      }
+      
+      if (customOptions.documentType) {
+        const docTypeMap: Record<string, string> = {
+          'ar': 'Article',
+          'cp': 'Conference Paper',
+          're': 'Review',
+          'bk': 'Book',
+          'ch': 'Book Chapter'
+        };
+        searchQuery += ` AND DOCTYPE(${docTypeMap[customOptions.documentType]})`;
+      }
+
+      let view: ScopusSearchView = 'COMPLETE';
+      let start = 0;
+      let totalResults: number | undefined;
+      let completeFallbackUsed = false;
+
+      while (papers.length < maxResults) {
+        // COMPLETE is capped at 25 records per page; STANDARD can return up to
+        // 200. Paginate instead of silently truncating the caller's request.
+        const pageSize = Math.min(
+          view === 'COMPLETE' ? 25 : 200,
+          maxResults - papers.length
+        );
+
+        let response: Awaited<ReturnType<typeof this.searchWithView>>;
+        try {
+          response = await this.searchWithView(searchQuery, start, pageSize, view);
+        } catch (error) {
+          if (view !== 'COMPLETE' || completeFallbackUsed || !isCompleteViewEntitlementError(error)) {
+            throw error;
+          }
+          logDebug('Scopus COMPLETE view is unavailable; retrying once with STANDARD view');
+          completeFallbackUsed = true;
+          view = 'STANDARD';
+          start = 0;
+          papers.length = 0;
+          totalResults = undefined;
+          continue;
+        }
+
+        const searchResults = response.data['search-results'];
+        const entries = searchResults?.entry || [];
+        totalResults = numberOrUndefined(searchResults?.['opensearch:totalResults']);
+
+        for (const entry of entries) {
+          const paper = await this.parseEntry(entry);
+          if (paper) {
+            papers.push(paper);
+          }
+          if (papers.length >= maxResults) break;
+        }
+
+        start += entries.length;
+        if (
+          entries.length === 0 ||
+          papers.length >= maxResults ||
+          entries.length < pageSize ||
+          (totalResults !== undefined && start >= totalResults)
+        ) {
+          break;
+        }
+      }
+
+      return papers.slice(0, maxResults);
+    } catch (error: any) {
+      this.handleHttpError(error, 'search');
+    }
+  }
+
+  private async searchWithView(
+    searchQuery: string,
+    start: number,
+    count: number,
+    view: ScopusSearchView
+  ) {
+    return ErrorHandler.retryWithBackoff(
+      async () => {
+        await this.rateLimiter.waitForPermission();
+        const quotaReservation = this.quotaManager.reserve('scopus', 1);
+        try {
+          return await this.client.get<ScopusSearchResponse>('/content/search/scopus', {
+            params: {
+              query: searchQuery,
+              count,
+              start,
+              // The field parameter overrides view in the Scopus API. Leave it
+              // unset so STANDARD can return only fields allowed by entitlement.
+              view
+            }
+          });
+        } finally {
+          // Scopus quota is request-based: commit even when the provider
+          // rejects the dispatch, including a failed COMPLETE attempt.
+          this.quotaManager.commit(quotaReservation);
+        }
+      },
+      {
+        context: `Scopus search (${view})`,
+        shouldRetry: error => !(error instanceof QuotaExhaustedError) && ErrorHandler.isRetryable(error)
+      }
+    );
+  }
+
+  private async parseEntry(entry: ScopusEntry): Promise<Paper | null> {
+    try {
+      // Extract authors
+      let authors = '';
+      if (entry.author && entry.author.length > 0) {
+        authors = entry.author.map(a => a.authname).join(', ');
+      } else if (entry['dc:creator']) {
+        authors = Array.isArray(entry['dc:creator'])
+          ? entry['dc:creator'].join(', ')
+          : entry['dc:creator'];
+      }
+
+      // Extract affiliations
+      let affiliations: string[] = [];
+      if (entry.affiliation) {
+        affiliations = entry.affiliation.map(a => a.affilname);
+      }
+
+      // Build paper URL
+      const paperUrl = entry['prism:url'] || 
+                      (entry['prism:doi'] ? `https://doi.org/${entry['prism:doi']}` : undefined);
+
+      // Extract keywords
+      const keywords = entry.authkeywords?.split(' | ') || [];
+
+      return PaperFactory.create({
+        paperId: entry.eid || entry['dc:identifier'] || '',
+        title: entry['dc:title'] || '',
+        authors: authors ? authors.split(', ') : [],
+        abstract: cleanScopusText(entry['dc:description']),
+        doi: entry['prism:doi'],
+        publishedDate: entry['prism:coverDate'] ? new Date(entry['prism:coverDate']) : null,
+        url: paperUrl,
+        source: 'scopus',
+        journal: entry['prism:publicationName'],
+        volume: entry['prism:volume'],
+        issue: entry['prism:issueIdentifier'],
+        pages: entry['prism:pageRange'],
+        citationCount: entry['citedby-count'] ? parseInt(entry['citedby-count']) : undefined,
+        keywords: keywords,
+        extra: {
+          scopusId: entry['dc:identifier'],
+          eid: entry.eid,
+          affiliations: affiliations,
+          documentType: entry.subtypeDescription,
+          issn: entry['prism:issn'],
+          eIssn: entry['prism:eIssn'],
+          openAccess: entry.openaccess === '1' || entry.openaccessFlag === true
+        }
+      });
+    } catch (error) {
+      logDebug('Error parsing Scopus entry:', error);
+      return null;
+    }
+  }
+
+  async getAbstract(scopusId: string): Promise<Paper | null> {
+    if (!this.elsevierApiKey) {
+      throw new Error('General Elsevier API key is required for Scopus abstract retrieval');
+    }
+
+    try {
+      await this.rateLimiter.waitForPermission();
+
+      const response = await ErrorHandler.retryWithBackoff(
+        () => this.client.get<ScopusAbstractResponse>(`/content/abstract/scopus_id/${scopusId}`, {
+          params: { view: 'FULL' },
+          headers: {
+            'X-ELS-APIKey': this.elsevierApiKey
+          }
+        }),
+        { context: 'Scopus abstract' }
+      );
+
+      const coredata = response.data['abstracts-retrieval-response']?.coredata;
+      if (!coredata) return null;
+
+      // Extract authors from detailed response
+      let authors = '';
+      const authorsData = response.data['abstracts-retrieval-response']?.authors;
+      if (authorsData && authorsData.author) {
+        authors = authorsData.author
+          .map(a => `${a['preferred-name']['ce:given-name']} ${a['preferred-name']['ce:surname']}`)
+          .join(', ');
+      } else if (coredata['dc:creator']) {
+        authors = coredata['dc:creator'].map((c: any) => c.$).join(', ');
+      }
+
+      // Extract subjects/keywords
+      let keywords: string[] = [];
+      const subjectData = response.data['abstracts-retrieval-response']?.subject;
+      if (subjectData && subjectData.subject) {
+        keywords = subjectData.subject.map(s => s.$);
+      }
+
+      return PaperFactory.create({
+        paperId: scopusId,
+        title: coredata['dc:title'] || '',
+        authors: authors ? authors.split(', ') : [],
+        abstract: coredata['dc:description'] || '',
+        doi: coredata['prism:doi'],
+        publishedDate: coredata['prism:coverDate'] ? new Date(coredata['prism:coverDate']) : null,
+        url: coredata['prism:doi'] ? `https://doi.org/${coredata['prism:doi']}` : undefined,
+        source: 'scopus',
+        journal: coredata['prism:publicationName'],
+        volume: coredata['prism:volume'],
+        issue: coredata['prism:issueIdentifier'],
+        pages: coredata['prism:pageRange'],
+        citationCount: coredata['citedby-count'] ? parseInt(coredata['citedby-count']) : undefined,
+        keywords: keywords,
+        extra: {
+          scopusId: coredata['dc:identifier'],
+          eid: coredata.eid,
+          pubmedId: coredata['pubmed-id'],
+          issn: coredata['prism:issn']
+        }
+      });
+    } catch (error: any) {
+      logDebug('Scopus abstract retrieval error:', error.message);
+      return null;
+    }
+  }
+
+  getCapabilities(): PlatformCapabilities {
+    return {
+      search: true,
+      download: false,
+      fullText: false,
+      citations: true,
+      requiresApiKey: true,
+      supportedOptions: ['maxResults', 'year', 'author', 'journal', 'affiliation', 'subject', 'openAccess', 'documentType']
+    };
+  }
+
+  getStatus() {
+    return {
+      configured: Boolean(this.searchApiKey),
+      searchKeyConfigured: Boolean(this.searchApiKey),
+      detailKeyConfigured: Boolean(this.elsevierApiKey),
+      baseUrl: this.getBaseUrl(),
+      rateLimiter: this.rateLimiter.getStatus(),
+      quota: this.quotaManager.getStatus('scopus')
+    };
+  }
+
+  async getPaperByDoi(doi: string, options: SearchOptions = {}): Promise<Paper | null> {
+    const normalized = doi
+      .trim()
+      .replace(/^doi:\s*/i, '')
+      .replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '');
+    if (!/^10\.\d{4,}\/\S+$/i.test(normalized)) return null;
+    const query = `DOI("${normalized.replace(/"/g, '')}")`;
+    let view: ScopusSearchView = 'COMPLETE';
+    let response: Awaited<ReturnType<typeof this.searchWithView>>;
+    try {
+      response = await this.searchWithView(query, 0, 1, view);
+    } catch (error) {
+      if (!isCompleteViewEntitlementError(error)) throw error;
+      view = 'STANDARD';
+      response = await this.searchWithView(query, 0, 1, view);
+    }
+    const entry = response.data['search-results']?.entry?.[0];
+    return entry ? this.parseEntry(entry) : null;
+  }
+
+  async downloadPdf(paperId: string, options: DownloadOptions = {}): Promise<string> {
+    throw new Error('PDF download requires institutional access for Scopus');
+  }
+
+  async readPaper(paperId: string, options: DownloadOptions = {}): Promise<string> {
+    const paper = await this.getAbstract(paperId);
+    if (!paper) {
+      throw new Error('Paper not found');
+    }
+    return paper.abstract || 'Abstract not available';
+  }
+
+  /**
+   * 获取参考文献的Scopus ID列表
+   */
+  async getReferenceIds(scopusId: string): Promise<string[]> {
+    if (!this.elsevierApiKey) return [];
+
+    try {
+      await this.rateLimiter.waitForPermission();
+
+      const response = await ErrorHandler.retryWithBackoff(
+        () => axios.get(
+          `https://api.elsevier.com/content/abstract/scopus_id/${scopusId}`,
+          {
+            params: { view: 'REF' },
+            headers: {
+              'Accept': 'application/json',
+              'X-ELS-APIKey': this.elsevierApiKey
+            }
+          }
+        ),
+        { context: 'Scopus references' }
+      );
+
+      const refIds: string[] = [];
+      const coreData = response.data?.['abstracts-retrieval-response']?.item?.bibrecord;
+      const tail = coreData?.tail;
+      const bibliography = tail?.bibliography;
+      const references = bibliography?.reference || [];
+
+      for (const ref of references) {
+        const refInfo = ref?.['ref-info'];
+        const refScopusId = refInfo?.['refd-itemidlist']?.itemid?.['#text'];
+        if (refScopusId) {
+          refIds.push(refScopusId);
+        }
+      }
+
+      return refIds;
+    } catch (error) {
+      logDebug(`Error getting reference IDs for Scopus ID ${scopusId}:`, error);
+      return [];
+    }
+  }
+
+  /**
+   * 获取引用文献的Scopus ID列表
+   */
+  async getCitationIds(scopusId: string): Promise<string[]> {
+    if (!this.elsevierApiKey) return [];
+
+    try {
+      await this.rateLimiter.waitForPermission();
+
+      const response = await ErrorHandler.retryWithBackoff(
+        () => axios.get(
+          'https://api.elsevier.com/content/abstract/citations',
+          {
+            params: { scopus_id: scopusId },
+            headers: {
+              'Accept': 'application/json',
+              'X-ELS-APIKey': this.elsevierApiKey
+            }
+          }
+        ),
+        { context: 'Scopus citations' }
+      );
+
+      const citIds: string[] = [];
+      const citationData = response.data?.['abstract-citations-response'];
+      const citeInfoMatrix = citationData?.citeInfoMatrix;
+      const citeInfo = citeInfoMatrix?.citeInfo || [];
+
+      for (const cite of citeInfo) {
+        const citeScopusId = cite?.['scopus-id'];
+        if (citeScopusId) {
+          citIds.push(citeScopusId);
+        }
+      }
+
+      return citIds;
+    } catch (error) {
+      logDebug(`Error getting citation IDs for Scopus ID ${scopusId}:`, error);
+      return [];
+    }
+  }
+
+  /**
+   * 获取论文详情（包含references和citations ID列表）
+   */
+  async getPaperWithCitations(paperId: string): Promise<Paper | null> {
+    try {
+      const paper = await this.getAbstract(paperId);
+      if (!paper) return null;
+
+      const scopusId = paper.extra?.scopusId?.replace('SCOPUS_ID:', '') || paperId;
+      
+      const [refIds, citIds] = await Promise.all([
+        this.getReferenceIds(scopusId),
+        this.getCitationIds(scopusId)
+      ]);
+
+      paper.references = refIds;
+      paper.extra = {
+        ...paper.extra,
+        citationIds: citIds
+      };
+
+      return paper;
+    } catch (error) {
+      logDebug('Error getting paper with citations:', error);
+      return null;
+    }
+  }
+}
+
+type ScopusSearchView = 'COMPLETE' | 'STANDARD';
+
+function isCompleteViewEntitlementError(error: unknown): boolean {
+  const errorRecord = asRecord(error);
+  const response = asRecord(errorRecord?.response);
+  const status = Number(response?.status);
+  if (status !== 401 && status !== 403) return false;
+
+  const data = response?.data;
+  const dataRecord = asRecord(data);
+  const serviceError = asRecord(dataRecord?.['service-error']);
+  const serviceStatus = asRecord(serviceError?.status);
+  const errorResponse = asRecord(dataRecord?.['error-response']);
+  const code = [
+    serviceStatus?.statusCode,
+    serviceStatus?.code,
+    errorResponse?.statusCode,
+    errorResponse?.code
+  ].filter(isString).join(' ');
+  const message = [
+    serviceStatus?.statusText,
+    serviceStatus?.message,
+    errorResponse?.statusText,
+    errorResponse?.message,
+    dataRecord?.message,
+    asRecord(dataRecord?.error)?.message,
+    dataRecord?.error,
+    errorRecord?.message
+  ].filter(isString).join(' ');
+  const text = `${code} ${message}`.trim();
+  if (!text) return false;
+
+  if (/(?:invalid|missing|expired)\s+(?:api[\s-]?key|credentials?|authentication|token)|authentication\s+failed/i.test(text)
+    || /(?:authentication_error|authentication_failed|invalid[_ -]?credentials?|invalid[_ -]?api[_ -]?key|missing[_ -]?api[_ -]?key)/i.test(code)) {
+    return false;
+  }
+
+  const denial = /(?:unauthori[sz]ed|authorization_error|forbidden|denied|insufficient|privileg|permission|entitl|not[_\s-]+(?:available|authori[sz]ed|entitled))/i.test(text);
+  const structuredEntitlementSignal = /(?:entitlement|subscription|service[_ -]?level)/i.test(code);
+  const explicitViewSignal = /(?:^|[^a-z])(?:complete|view)(?:$|[^a-z])/i.test(text);
+  return denial && (structuredEntitlementSignal || explicitViewSignal);
+}
+
+function asRecord(value: unknown): Record<string, unknown> | undefined {
+  return value && typeof value === 'object' ? value as Record<string, unknown> : undefined;
+}
+
+function isString(value: unknown): value is string {
+  return typeof value === 'string' && value.trim() !== '';
+}
+
+function firstConfiguredKey(...values: Array<string | undefined>): string | undefined {
+  return values.find(value => typeof value === 'string' && value.trim() !== '')?.trim();
+}
+
+function numberOrUndefined(value: unknown): number | undefined {
+  if (value === undefined || value === null || value === '') return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function cleanScopusText(value: unknown): string {
+  if (typeof value !== 'string') return '';
+  return value
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}

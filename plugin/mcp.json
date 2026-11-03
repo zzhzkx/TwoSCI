@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "twosci": {
+      "command": "node",
+      "args": [
+        "./dist/server.cjs"
+      ],
+      "cwd": "."
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "twosci",
+  "version": "0.1.0",
+  "description": "Seed-paper-driven literature discovery, abstract screening, citation expansion, and evidence export across Web of Science, Scopus, OpenAlex, and Crossref.",
+  "author": {
+    "name": "zzhzkx"
+  },
+  "license": "MIT",
+  "keywords": [
+    "literature search",
+    "web of science",
+    "scopus",
+    "openalex",
+    "citation graph",
+    "systematic review",
+    "MCP"
+  ],
+  "homepage": "https://github.com/zzhzkx/TwoSCI",
+  "repository": "https://github.com/zzhzkx/TwoSCI",
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json",
+  "interface": {
+    "displayName": "TwoSCI",
+    "shortDescription": "Run a human-like literature research workflow with WoS and Scopus.",
+    "longDescription": "TwoSCI starts from a seed paper and the user research intent, discovers deduplicated literature across Web of Science, Scopus, OpenAlex, and Crossref, delegates abstract screening to subagents, expands one-hop citation networks, keeps screening decisions, and exports evidence-ready records.",
+    "developerName": "zzhzkx",
+    "category": "Science",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use my seed paper to map the field, indicators, and follow-up studies.",
+      "Search WoS and Scopus, then screen the abstracts with subagents.",
+      "Expand the references and citing papers of these key papers."
+    ],
+    "brandColor": "#0F766E"
+  }
+}
