@@ -361881,8 +361881,10 @@ var LiteratureService = class {
     try {
       if (source === "webofscience") {
         const product = searchers2.webofscience.getDefaultProduct();
+        const trimmed = input2.query.trim();
+        const wosQuery = /^[A-Z]{2,4}=/i.test(trimmed) ? trimmed : `TS=(${trimmed})`;
         const papers2 = await withTimeout(
-          searchers2.webofscience.search(input2.query, {
+          searchers2.webofscience.search(wosQuery, {
             maxResults: perSource,
             apiProduct: "auto",
             ...product === "expanded" ? { recordView: "full" } : {},
