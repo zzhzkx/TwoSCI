@@ -60,6 +60,24 @@ describe('literature normalization', () => {
     expect(dedupeRecords([left, right])).toHaveLength(2);
   });
 
+  it('treats DOI case variants as the same work', () => {
+    const upper = recordFromPaper(paper({
+      doi: '10.1109/JLT.2025.3581583',
+      title: 'Upper DOI record'
+    }), 'webofscience', 1);
+    const lower = recordFromPaper(paper({
+      paperId: 'W4386122897',
+      source: 'openalex',
+      doi: '10.1109/jlt.2025.3581583',
+      title: 'Lower DOI record',
+      extra: { openalexId: 'W4386122897' }
+    }), 'openalex', 1);
+
+    const merged = dedupeRecords([upper, lower]);
+    expect(merged).toHaveLength(1);
+    expect(merged[0].doi).toBe('10.1109/jlt.2025.3581583');
+  });
+
   it('merges DOI-less records by a conservative title and year match', () => {
     const left = recordFromPaper(paper({
       paperId: 'WOS:0001',

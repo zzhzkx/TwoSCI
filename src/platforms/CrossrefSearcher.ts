@@ -305,7 +305,8 @@ export class CrossrefSearcher extends PaperSource {
       
       // Extract title
       const titleList = data.title || [];
-      const title = titleList[0] || 'No title';
+      const title = titleList[0];
+      if (!title) return null;
 
       // Extract authors
       const authors: string[] = [];

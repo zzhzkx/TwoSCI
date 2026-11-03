@@ -311054,7 +311054,8 @@ var init_CrossrefSearcher = __esm({
         try {
           const doi = data2.DOI || "";
           const titleList = data2.title || [];
-          const title = titleList[0] || "No title";
+          const title = titleList[0];
+          if (!title) return null;
           const authors = [];
           for (const author of data2.author || []) {
             const given = author.given || "";
@@ -359710,7 +359711,7 @@ function parseDate2(value) {
   return Number.isNaN(date5.getTime()) ? null : date5;
 }
 function normalizeDoi(value) {
-  return String(value || "").trim().replace(/^doi:\s*/i, "").replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "").replace(/[.,;)\s]+$/, "");
+  return String(value || "").trim().replace(/^doi:\s*/i, "").replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "").replace(/[.,;)\s]+$/, "").toLowerCase();
 }
 function normalizeWorkId(value) {
   if (typeof value !== "string") return "";
@@ -360644,7 +360645,7 @@ var SOURCE_PRIORITY = {
 };
 function normalizeDoi2(value) {
   if (typeof value !== "string") return "";
-  return value.trim().replace(/^doi:\s*/i, "").replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "").replace(/[.,;)\s]+$/, "");
+  return value.trim().replace(/^doi:\s*/i, "").replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "").replace(/[.,;)\s]+$/, "").toLowerCase();
 }
 function recordFromPaper(paper, source, rank) {
   const doi = normalizeDoi2(paper.doi);

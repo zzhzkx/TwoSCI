@@ -339,7 +339,8 @@ function normalizeDoi(value: string): string {
     .trim()
     .replace(/^doi:\s*/i, '')
     .replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '')
-    .replace(/[.,;)\s]+$/, '');
+    .replace(/[.,;)\s]+$/, '')
+    .toLowerCase();
 }
 
 function normalizeWorkId(value: unknown): string {

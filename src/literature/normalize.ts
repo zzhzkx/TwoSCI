@@ -27,7 +27,8 @@ export function normalizeDoi(value: unknown): string {
     .trim()
     .replace(/^doi:\s*/i, '')
     .replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '')
-    .replace(/[.,;)\s]+$/, '');
+    .replace(/[.,;)\s]+$/, '')
+    .toLowerCase();
 }
 
 export function recordFromPaper(
