@@ -161,7 +161,8 @@ export interface ExportInput {
   searchId?: string;
   briefId?: string;
   recordIds?: string[];
-  format: 'bibtex' | 'ris' | 'json';
+  format: 'bibtex' | 'ris' | 'json' | 'markdown';
+  verdict?: 'include' | 'exclude' | 'maybe' | 'all';
   includeAbstract?: boolean;
 }
 

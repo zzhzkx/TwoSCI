@@ -806,7 +806,7 @@ export const TOOLS: Tool[] = [
   {
     name: 'export_literature',
     description:
-      'Export a search result set to BibTeX, RIS, or JSON. Export is user-initiated and is the intended way to retain WoS/Scopus records outside the process.',
+      'Export literature records to Markdown, JSON, BibTeX, or RIS. Supports filtering by screening verdict (include, maybe, exclude). Markdown produces a structured evidence synthesis report with summary table and cards; JSON includes complete screening ledgers and multi-source provenance.',
     inputSchema: {
       type: 'object',
       additionalProperties: false,
@@ -814,7 +814,16 @@ export const TOOLS: Tool[] = [
         searchId: { type: 'string' },
         briefId: { type: 'string' },
         recordIds: { type: 'array', items: { type: 'string' }, maxItems: 200 },
-        format: { type: 'string', enum: ['bibtex', 'ris', 'json'] },
+        format: {
+          type: 'string',
+          enum: ['markdown', 'json', 'bibtex', 'ris'],
+          description: 'Export format: markdown (formatted report & review cards), json (full data + screening), bibtex, or ris'
+        },
+        verdict: {
+          type: 'string',
+          enum: ['include', 'exclude', 'maybe', 'all'],
+          description: 'Optional filter to export only records with a specific screening verdict'
+        },
         includeAbstract: { type: 'boolean', default: true }
       },
       required: ['format']

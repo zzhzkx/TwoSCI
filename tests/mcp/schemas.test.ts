@@ -235,6 +235,18 @@ describe('parseToolArgs', () => {
       expect(search.abstractChars).toBe(3000);
     });
 
+    it('parses export_literature with markdown and verdict filtering', () => {
+      const args = parseToolArgs('export_literature', {
+        searchId: 'search_123',
+        format: 'markdown',
+        verdict: 'include',
+        includeAbstract: false
+      });
+      expect(args.format).toBe('markdown');
+      expect(args.verdict).toBe('include');
+      expect(args.includeAbstract).toBe(false);
+    });
+
     it('requires a seed identifier and a valid screening decision', () => {
       expect(() => parseToolArgs('create_research_brief', {
         seed: {},

@@ -179,6 +179,59 @@ describe('LiteratureService', () => {
     expect(exported.content).toContain('10.1000/green.1');
   });
 
+  it('supports exporting filtered screening results to markdown and json with verdicts', async () => {
+    const searchers = makeSearchers();
+    const service = new LiteratureService(() => searchers as any, new ResearchStore());
+    const result = await service.search({
+      query: 'embodied carbon',
+      mode: 'quick',
+      layer: 'abstract'
+    });
+    const recordId = result.search.records[0].recordId;
+
+    service.saveScreening({
+      searchId: result.search.searchId,
+      decisions: [{
+        recordId,
+        verdict: 'include',
+        reason: 'Directly reports the target indicators',
+        tags: ['indicators'],
+        confidence: 0.95
+      }]
+    });
+
+    // Export include only to Markdown
+    const mdExport = service.export({
+      searchId: result.search.searchId,
+      format: 'markdown',
+      verdict: 'include'
+    });
+    expect(mdExport.format).toBe('markdown');
+    expect(mdExport.count).toBe(1);
+    expect(mdExport.content).toContain('# TwoSCI 文献研究与筛选报告');
+    expect(mdExport.content).toContain('✅ 纳入 (Include)');
+    expect(mdExport.content).toContain('Directly reports the target indicators');
+
+    // Export include only to JSON
+    const jsonExport = service.export({
+      searchId: result.search.searchId,
+      format: 'json',
+      verdict: 'include'
+    });
+    expect(jsonExport.format).toBe('json');
+    const parsed = JSON.parse(jsonExport.content);
+    expect(parsed).toHaveLength(1);
+    expect(parsed[0].screening.verdict).toBe('include');
+    expect(parsed[0].screening.tags).toEqual(['indicators']);
+
+    // If filtering by exclude when no records match, expect error
+    expect(() => service.export({
+      searchId: result.search.searchId,
+      format: 'markdown',
+      verdict: 'exclude'
+    })).toThrow(/No records matched/i);
+  });
+
   it('expands a stored seed through WoS and returns graph edges', async () => {
     const searchers = makeSearchers();
     const service = new LiteratureService(() => searchers as any, new ResearchStore());

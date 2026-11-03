@@ -22,7 +22,7 @@ opt-in source for IEEE journals, conferences, standards, and books.
    to subagents. Record include/exclude/maybe decisions with reasons.
 4. **Evidence**: hydrate selected records, follow references and citing papers,
    and keep per-source provenance.
-5. **Export**: write BibTeX, RIS, or JSON. Full-text acquisition and parsing
+5. **Export**: write Markdown (synthesis report & evidence cards), JSON (with screening ledger), BibTeX, or RIS. Supports filtering by screening verdict (e.g., `verdict="include"`). Full-text acquisition and parsing
    remain a separate companion workflow.
 
 ## MCP Tools
@@ -35,7 +35,7 @@ opt-in source for IEEE journals, conferences, standards, and books.
 | `get_literature_records` | Hydrate stored records without repeating discovery; `fetchReferences=true` optionally fills references |
 | `expand_citation_graph` | One-hop references, citing papers, or related works |
 | `save_screening` | Persist subagent screening decisions and reasons |
-| `export_literature` | Export BibTeX, RIS, or JSON |
+| `export_literature` | Export Markdown, JSON, BibTeX, or RIS; supports `verdict` filtering |
 | `get_source_status` | Inspect source configuration, product tier, quotas, and sessions |
 
 The original per-platform tools remain available for targeted lookups, PDF
@@ -177,7 +177,7 @@ Agent flow:
 5. Screen abstracts in subagent batches and call `save_screening`.
 6. Call `get_literature_records` for selected `record_id`s.
 7. Call `expand_citation_graph` for the seed and key included papers.
-8. Export the final set with `export_literature`.
+8. Export the final set with `export_literature` (`format="markdown"` or `format="json"`, optionally `verdict="include"`).
 
 The bundled `skills/literature-search` skill defines the subagent batching
 protocol and the full evidence workflow.

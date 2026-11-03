@@ -335035,7 +335035,7 @@ var TOOLS = [
   },
   {
     name: "export_literature",
-    description: "Export a search result set to BibTeX, RIS, or JSON. Export is user-initiated and is the intended way to retain WoS/Scopus records outside the process.",
+    description: "Export literature records to Markdown, JSON, BibTeX, or RIS. Supports filtering by screening verdict (include, maybe, exclude). Markdown produces a structured evidence synthesis report with summary table and cards; JSON includes complete screening ledgers and multi-source provenance.",
     inputSchema: {
       type: "object",
       additionalProperties: false,
@@ -335043,7 +335043,16 @@ var TOOLS = [
         searchId: { type: "string" },
         briefId: { type: "string" },
         recordIds: { type: "array", items: { type: "string" }, maxItems: 200 },
-        format: { type: "string", enum: ["bibtex", "ris", "json"] },
+        format: {
+          type: "string",
+          enum: ["markdown", "json", "bibtex", "ris"],
+          description: "Export format: markdown (formatted report & review cards), json (full data + screening), bibtex, or ris"
+        },
+        verdict: {
+          type: "string",
+          enum: ["include", "exclude", "maybe", "all"],
+          description: "Optional filter to export only records with a specific screening verdict"
+        },
         includeAbstract: { type: "boolean", default: true }
       },
       required: ["format"]
@@ -360807,10 +360816,13 @@ function sanitizeMarkdown(value) {
 init_SecurityUtils();
 
 // src/literature/export.ts
-function exportRecords(records, format, includeAbstract) {
+function exportRecords(records, format, optionsOrIncludeAbstract = true) {
+  const options = typeof optionsOrIncludeAbstract === "boolean" ? { includeAbstract: optionsOrIncludeAbstract } : optionsOrIncludeAbstract;
+  const includeAbstract = options.includeAbstract !== false;
   if (format === "bibtex") return toBibtex(records, includeAbstract);
   if (format === "ris") return toRis(records, includeAbstract);
-  return JSON.stringify(records.map((record2) => toExportJson(record2, includeAbstract)), null, 2);
+  if (format === "markdown") return toMarkdown(records, includeAbstract, options.context);
+  return toExportJsonString(records, includeAbstract, options.context?.screening);
 }
 function toBibtex(records, includeAbstract) {
   const keys = /* @__PURE__ */ new Set();
@@ -360856,7 +360868,11 @@ function toRis(records, includeAbstract) {
     return lines.join("\n");
   }).join("\n\n");
 }
-function toExportJson(record2, includeAbstract) {
+function toExportJsonString(records, includeAbstract, screeningMap) {
+  const items = records.map((record2) => toExportJson(record2, includeAbstract, screeningMap?.[record2.recordId]));
+  return JSON.stringify(items, null, 2);
+}
+function toExportJson(record2, includeAbstract, decision) {
   return {
     record_id: record2.recordId,
     title: record2.title,
@@ -360874,8 +360890,184 @@ function toExportJson(record2, includeAbstract) {
     cited_by: record2.citedBy,
     identifiers: record2.identifiers,
     sources: record2.sources,
+    ...decision ? {
+      screening: {
+        verdict: decision.verdict,
+        reason: decision.reason,
+        tags: decision.tags || [],
+        confidence: decision.confidence,
+        decided_at: decision.decidedAt
+      }
+    } : {},
     ...includeAbstract ? { abstract: record2.abstract } : {}
   };
+}
+function toMarkdown(records, includeAbstract, context) {
+  const lines = [];
+  lines.push("# TwoSCI \u6587\u732E\u7814\u7A76\u4E0E\u7B5B\u9009\u62A5\u544A (Literature Review & Screening Report)\n");
+  const metaLines = [];
+  metaLines.push(`- **\u5BFC\u51FA\u65F6\u95F4 (Exported At)**: ${(/* @__PURE__ */ new Date()).toISOString().replace("T", " ").slice(0, 19)} UTC`);
+  metaLines.push(`- **\u6587\u732E\u6761\u76EE\u6570 (Total Records)**: ${records.length}`);
+  if (context?.brief) {
+    if (context.brief.intent) {
+      metaLines.push(`- **\u7814\u7A76\u610F\u56FE (Research Intent)**: ${cleanInline(context.brief.intent)}`);
+    }
+    if (context.brief.seed) {
+      const seedTitle = cleanInline(context.brief.seed.title);
+      const seedDoi = context.brief.seed.doi;
+      const seedUrl = context.brief.seed.url || (seedDoi ? `https://doi.org/${seedDoi}` : "");
+      const seedLink = seedUrl ? `[${seedTitle}](${seedUrl})` : seedTitle;
+      metaLines.push(`- **\u57FA\u51C6\u79CD\u5B50\u6587\u732E (Seed Paper)**: ${seedLink}${seedDoi ? ` (DOI: ${seedDoi})` : ""}`);
+    }
+    if (context.brief.focus && context.brief.focus.length > 0) {
+      metaLines.push(`- **\u5173\u6CE8\u91CD\u70B9 (Focus Areas)**: ${context.brief.focus.join(", ")}`);
+    }
+  }
+  if (context?.query) {
+    metaLines.push(`- **\u68C0\u7D22\u5F0F (Search Query)**: \`${cleanInline(context.query)}\``);
+  }
+  const screeningMap = context?.screening;
+  if (screeningMap && Object.keys(screeningMap).length > 0) {
+    let inc = 0;
+    let maybe = 0;
+    let exc = 0;
+    let unscreened = 0;
+    for (const r of records) {
+      const v = screeningMap[r.recordId]?.verdict;
+      if (v === "include") inc++;
+      else if (v === "maybe") maybe++;
+      else if (v === "exclude") exc++;
+      else unscreened++;
+    }
+    metaLines.push(
+      `- **\u7B5B\u9009\u7EDF\u8BA1 (Screening Stats)**: \u2705 \u7EB3\u5165 (Include): ${inc} | \u2753 \u5F85\u5B9A (Maybe): ${maybe} | \u274C \u6392\u9664 (Exclude): ${exc}${unscreened > 0 ? ` | \u23F3 \u672A\u8BC4\u4F30 (Unscreened): ${unscreened}` : ""}`
+    );
+  }
+  lines.push(metaLines.join("\n"));
+  lines.push("\n---\n");
+  lines.push("## \u4E00\u3001\u6587\u732E\u4E00\u89C8\u8868 (Overview Table)\n");
+  lines.push("| # | \u6807\u9898 (Title) | \u5E74\u4EFD | \u51FA\u7248\u7269 (Venue) | \u5F15\u7528 (Citations) | \u7B5B\u9009\u7ED3\u8BBA (Verdict) | DOI / \u94FE\u63A5 |");
+  lines.push("|---|-------------|------|----------------|------------------|-------------------|------------|");
+  for (let i = 0; i < records.length; i++) {
+    const r = records[i];
+    const idx = i + 1;
+    const title = escapeTable(r.title);
+    const year = r.year ? String(r.year) : "-";
+    const venue = escapeTable(r.venue || formatSourcesShort(r));
+    const citations = formatCitations(r.citedBy);
+    const decision = screeningMap?.[r.recordId];
+    const verdict = decision ? formatVerdictBadge(decision.verdict) : "-";
+    const link = r.doi ? `[${escapeTable(r.doi)}](https://doi.org/${r.doi})` : r.url ? `[\u94FE\u63A5](${r.url})` : "-";
+    lines.push(`| ${idx} | ${title} | ${year} | ${venue} | ${citations} | ${verdict} | ${link} |`);
+  }
+  lines.push("\n---\n");
+  lines.push("## \u4E8C\u3001\u6587\u732E\u8BE6\u7EC6\u8BC1\u636E\u5361\u7247 (Detailed Records)\n");
+  for (let i = 0; i < records.length; i++) {
+    const r = records[i];
+    const idx = i + 1;
+    const decision = screeningMap?.[r.recordId];
+    lines.push(`### [${idx}] ${r.title}
+`);
+    const details = [];
+    if (r.authors && r.authors.length > 0) {
+      details.push(`- **\u4F5C\u8005 (Authors)**: ${r.authors.join(", ")}`);
+    } else {
+      details.push("- **\u4F5C\u8005 (Authors)**: \u672A\u77E5");
+    }
+    const venueParts = [];
+    if (r.venue) venueParts.push(r.venue);
+    if (r.year) venueParts.push(String(r.year));
+    if (r.volume) venueParts.push(`Vol. ${r.volume}`);
+    if (r.issue) venueParts.push(`No. ${r.issue}`);
+    if (r.pages) venueParts.push(`pp. ${r.pages}`);
+    if (venueParts.length > 0) {
+      details.push(`- **\u51FA\u7248\u7269 (Publication)**: ${venueParts.join(" \xB7 ")}`);
+    }
+    if (r.doi) {
+      details.push(`- **DOI**: [${r.doi}](https://doi.org/${r.doi})`);
+    } else if (r.url) {
+      details.push(`- **URL**: [${r.url}](${r.url})`);
+    }
+    const sourcesDesc = formatSourcesDetail(r);
+    if (sourcesDesc) {
+      details.push(`- **\u6570\u636E\u5E93\u6765\u6E90 (Sources)**: ${sourcesDesc}`);
+    }
+    const oaDesc = r.openAccess ? "\u662F (Open Access)" : "\u5426";
+    const pdfDesc = r.pdfUrl ? ` \xB7 [PDF \u76F4\u8FBE\u94FE\u63A5](${r.pdfUrl})` : "";
+    details.push(`- **\u5F00\u653E\u83B7\u53D6 (OA)**: ${oaDesc}${pdfDesc}`);
+    if (decision) {
+      details.push("- **\u7B5B\u9009\u8BC4\u4F30 (Screening Decision)**:");
+      details.push(`  - **\u7ED3\u8BBA (Verdict)**: ${formatVerdictBadge(decision.verdict)}`);
+      details.push(`  - **\u7406\u7531 (Reason)**: ${decision.reason}`);
+      if (decision.tags && decision.tags.length > 0) {
+        details.push(`  - **\u6807\u7B7E (Tags)**: ${decision.tags.join(", ")}`);
+      }
+      if (decision.confidence !== void 0) {
+        details.push(`  - **\u7F6E\u4FE1\u5EA6 (Confidence)**: ${(decision.confidence * 100).toFixed(0)}%`);
+      }
+      if (decision.decidedAt) {
+        details.push(`  - **\u8BC4\u4F30\u65F6\u95F4**: ${decision.decidedAt.replace("T", " ").slice(0, 19)} UTC`);
+      }
+    }
+    if (r.keywords && r.keywords.length > 0) {
+      details.push(`- **\u5173\u952E\u8BCD (Keywords)**: ${r.keywords.join("; ")}`);
+    }
+    if (r.references && r.references.length > 0) {
+      details.push(`- **\u5F15\u6587\u7F51\u7EDC (References Count)**: \u5305\u542B ${r.references.length} \u6761\u53C2\u8003\u6587\u732E\u8BB0\u5F55`);
+    }
+    if (includeAbstract) {
+      if (r.abstract && r.abstract.trim()) {
+        const cleanAbs = r.abstract.replace(/\s+/g, " ").trim();
+        details.push(`- **\u6458\u8981 (Abstract)**:
+  > ${cleanAbs}`);
+      } else {
+        details.push("- **\u6458\u8981 (Abstract)**: *(\u8BE5\u6761\u76EE\u6682\u65E0\u6458\u8981\u5185\u5BB9)*");
+      }
+    }
+    lines.push(details.join("\n"));
+    lines.push("");
+  }
+  return lines.join("\n");
+}
+function cleanInline(text3) {
+  return text3.replace(/[\r\n]+/g, " ").trim();
+}
+function escapeTable(text3) {
+  return cleanInline(text3).replace(/\|/g, "\\|");
+}
+function formatVerdictBadge(verdict) {
+  if (verdict === "include") return "\u2705 \u7EB3\u5165 (Include)";
+  if (verdict === "maybe") return "\u2753 \u5F85\u5B9A (Maybe)";
+  if (verdict === "exclude") return "\u274C \u6392\u9664 (Exclude)";
+  return verdict;
+}
+function formatCitations(citedBy) {
+  const entries = Object.entries(citedBy);
+  if (entries.length === 0) return "-";
+  return entries.map(([src, count]) => `${formatSourceName(src)}: ${count}`).join(", ");
+}
+function formatSourceName(source) {
+  const names = {
+    webofscience: "WoS",
+    scopus: "Scopus",
+    openalex: "OpenAlex",
+    crossref: "Crossref",
+    ieee: "IEEE Xplore"
+  };
+  return names[source.toLowerCase()] || source;
+}
+function formatSourcesShort(r) {
+  if (!r.sources || r.sources.length === 0) return "\u672A\u77E5";
+  return r.sources.map((s) => formatSourceName(s.source)).join("/");
+}
+function formatSourcesDetail(r) {
+  if (!r.sources || r.sources.length === 0) return "";
+  return r.sources.map((s) => {
+    const name = formatSourceName(s.source);
+    const cite = s.citedBy !== void 0 ? ` (\u88AB\u5F15: ${s.citedBy})` : r.citedBy?.[s.source] !== void 0 ? ` (\u88AB\u5F15: ${r.citedBy[s.source]})` : "";
+    const view = s.recordView ? ` [${s.recordView}]` : "";
+    return `${name}${cite}${view}`;
+  }).join(", ");
 }
 function bibtexKey(record2) {
   const surname = (record2.authors[0] || "anon").trim().split(/\s+/).pop() || "anon";
@@ -361610,19 +361802,35 @@ var LiteratureService = class {
   }
   export(input2) {
     let records = [];
+    let search;
+    let brief;
     if (input2.searchId) {
-      const search = this.store.getSearch(input2.searchId);
+      search = this.store.getSearch(input2.searchId);
       if (!search) throw new Error(`Unknown or expired search_id: ${input2.searchId}`);
+      if (search.briefId) {
+        brief = this.store.getBrief(search.briefId);
+      }
       records = input2.recordIds?.length ? search.records.filter((record2) => input2.recordIds.includes(record2.recordId)) : search.records;
+      if (input2.verdict && input2.verdict !== "all") {
+        records = records.filter((record2) => search.screening[record2.recordId]?.verdict === input2.verdict);
+      }
     } else if (input2.briefId) {
-      const brief = this.store.getBrief(input2.briefId);
+      brief = this.store.getBrief(input2.briefId);
       if (!brief) throw new Error(`Unknown or expired brief_id: ${input2.briefId}`);
       records = [brief.seed];
     } else {
       throw new Error("Provide search_id, brief_id, or a search-scoped record_ids list.");
     }
     if (records.length === 0) throw new Error("No records matched the export selection.");
-    const content = exportRecords(records, input2.format, input2.includeAbstract !== false);
+    const content = exportRecords(records, input2.format, {
+      includeAbstract: input2.includeAbstract !== false,
+      context: {
+        query: search?.query,
+        search,
+        brief,
+        screening: search?.screening
+      }
+    });
     return { format: input2.format, count: records.length, content };
   }
   async status(validate2 = false) {
@@ -362542,7 +362750,8 @@ var ExportLiteratureSchema = external_exports.object({
   searchId: external_exports.string().optional(),
   briefId: external_exports.string().optional(),
   recordIds: external_exports.array(external_exports.string()).max(200).optional(),
-  format: external_exports.enum(["bibtex", "ris", "json"]),
+  format: external_exports.enum(["bibtex", "ris", "json", "markdown"]),
+  verdict: external_exports.enum(["include", "exclude", "maybe", "all"]).optional(),
   includeAbstract: external_exports.boolean().optional().default(true)
 }).strict().refine((value) => Boolean(value.searchId || value.briefId), "Provide searchId or briefId");
 var GetSourceStatusSchema = external_exports.object({

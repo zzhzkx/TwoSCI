@@ -42,7 +42,7 @@ description: >
 - `get_literature_records`：按 `record_id` 或 DOI 批量取完整记录；默认不重新请求 WoS/Scopus。
 - `expand_citation_graph`：从一个或多个种子扩展 `references`、`citing`、`related`。
 - `save_screening`：保存子 agent 的 include/exclude/maybe 决定和理由。
-- `export_literature`：导出 BibTeX、RIS、JSON。
+- `export_literature`：导出 Markdown（综述报告与证据卡片）、JSON（含筛选决策与元数据）、BibTeX 或 RIS。支持 `verdict="include"` 快速过滤。
 - `get_source_status`：查看 WoS 产品、Scopus、OpenAlex/Crossref、IEEE 状态、配额和会话数。
 
 ## 流程 A：用户给了一篇种子文献
@@ -186,10 +186,11 @@ AND (indicator OR metric OR assessment OR benchmarking)
 
 ## 导出与留痕
 
-- 需要给用户 BibTeX/RIS 时调用 `export_literature`。
-- 导出前先确认 `search_id` 和 `record_ids`，不要把整个宽搜集合直接导出。
+- 推荐首选导出格式为 `markdown`（生成标准文献综述报告与证据卡片）或 `json`（保留筛选证据链与多源元数据）。也支持传统 `bibtex` 与 `ris`。
+- 筛选完成后，使用 `verdict="include"` 可一键导出所有通过筛选的文献；使用 `verdict="maybe"` 可导出待讨论文献。
 - 筛选理由保存在 `search_id` 的 screening ledger 中；后续写综述时应沿用这些理由，不要重新编造。
-- 如果用户要系统综述，导出 JSON 作为可审计的筛选底稿，再在外部工具中生成 PRISMA 计数。
+- 导出的 Markdown 包含研究背景意图、检索式、种子文献信息、筛选统计表、一览总表和逐篇文献证据卡片，极其适合学术汇报和笔记整理。
+- 导出的 JSON 内嵌完整 screening 记录（verdict, reason, tags, confidence, decidedAt），可作为 PRISMA 审计与下游分析底稿。
 
 ## 失败与边界
 

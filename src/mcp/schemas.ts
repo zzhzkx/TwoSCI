@@ -395,7 +395,8 @@ export const ExportLiteratureSchema = z
     searchId: z.string().optional(),
     briefId: z.string().optional(),
     recordIds: z.array(z.string()).max(200).optional(),
-    format: z.enum(['bibtex', 'ris', 'json']),
+    format: z.enum(['bibtex', 'ris', 'json', 'markdown']),
+    verdict: z.enum(['include', 'exclude', 'maybe', 'all']).optional(),
     includeAbstract: z.boolean().optional().default(true)
   })
   .strict()

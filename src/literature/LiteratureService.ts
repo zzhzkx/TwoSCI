@@ -300,14 +300,24 @@ export class LiteratureService {
 
   export(input: ExportInput): { format: string; count: number; content: string } {
     let records: LiteratureRecord[] = [];
+    let search: SearchSession | undefined;
+    let brief: ResearchBrief | undefined;
+
     if (input.searchId) {
-      const search = this.store.getSearch(input.searchId);
+      search = this.store.getSearch(input.searchId);
       if (!search) throw new Error(`Unknown or expired search_id: ${input.searchId}`);
+      if (search.briefId) {
+        brief = this.store.getBrief(search.briefId);
+      }
       records = input.recordIds?.length
         ? search.records.filter(record => input.recordIds!.includes(record.recordId))
         : search.records;
+
+      if (input.verdict && input.verdict !== 'all') {
+        records = records.filter(record => search!.screening[record.recordId]?.verdict === input.verdict);
+      }
     } else if (input.briefId) {
-      const brief = this.store.getBrief(input.briefId);
+      brief = this.store.getBrief(input.briefId);
       if (!brief) throw new Error(`Unknown or expired brief_id: ${input.briefId}`);
       records = [brief.seed];
     } else {
@@ -315,7 +325,15 @@ export class LiteratureService {
     }
 
     if (records.length === 0) throw new Error('No records matched the export selection.');
-    const content = exportRecords(records, input.format, input.includeAbstract !== false);
+    const content = exportRecords(records, input.format, {
+      includeAbstract: input.includeAbstract !== false,
+      context: {
+        query: search?.query,
+        search,
+        brief,
+        screening: search?.screening
+      }
+    });
     return { format: input.format, count: records.length, content };
   }
 
