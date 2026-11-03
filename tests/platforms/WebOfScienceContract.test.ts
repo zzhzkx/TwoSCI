@@ -408,6 +408,33 @@ describe('WebOfScienceSearcher HTTP contracts', () => {
     expect(parseReferences({ Data: [{ citedTitle: 'Reference without UID' }] })).toEqual([
       expect.objectContaining({ citedTitle: 'Reference without UID', uid: undefined })
     ]);
+    expect(parseReferences({
+      Data: {
+        '0': {
+          UID: 'RC:156112021_S24',
+          CitedAuthor: 'Yakhlef, Majida',
+          TimesCited: '2',
+          Year: '2020',
+          Page: '471',
+          Volume: '10',
+          CitedWork: 'International Journal of Energy Economics and Policy',
+          CitedTitle: 'TOWARD DEVELOPING ENERGY STAR RATING DEVELOPMENT IN JORDAN',
+          DOI: '10.32479/ijeep.7982'
+        }
+      }
+    })).toEqual([
+      expect.objectContaining({
+        uid: 'RC:156112021_S24',
+        citedAuthor: 'Yakhlef, Majida',
+        citedTitle: 'TOWARD DEVELOPING ENERGY STAR RATING DEVELOPMENT IN JORDAN',
+        citedWork: 'International Journal of Energy Economics and Policy',
+        year: 2020,
+        volume: '10',
+        page: 471,
+        timesCited: 2,
+        doi: '10.32479/ijeep.7982'
+      })
+    ]);
   });
 
   it('serializes an absent citation count as null instead of zero', () => {

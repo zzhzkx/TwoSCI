@@ -18,7 +18,7 @@ TwoSCI 是一个面向 Codex 和 Claude Code 的文献研究 MCP 服务与插件
 | --- | --- |
 | `create_research_brief` | 解析种子文献，建立可复用的研究上下文 |
 | `search_literature` | WoS/Scopus/OpenAlex/Crossref 统一检索与去重 |
-| `get_literature_records` | 从会话中补全记录，不重复请求发现接口 |
+| `get_literature_records` | 从会话中补全记录，不重复请求发现接口；`fetchReferences=true` 可补参考文献 |
 | `expand_citation_graph` | 一跳 references、citing、related 扩展 |
 | `save_screening` | 保存子 agent 的筛选决定与理由 |
 | `export_literature` | 导出 BibTeX、RIS、JSON |

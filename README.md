@@ -30,7 +30,7 @@ open-access links, and fallback coverage.
 | --- | --- |
 | `create_research_brief` | Resolve a seed paper and build a reusable research context |
 | `search_literature` | Unified WoS/Scopus/OpenAlex/Crossref search with deduplication |
-| `get_literature_records` | Hydrate stored records without repeating discovery |
+| `get_literature_records` | Hydrate stored records without repeating discovery; `fetchReferences=true` optionally fills references |
 | `expand_citation_graph` | One-hop references, citing papers, or related works |
 | `save_screening` | Persist subagent screening decisions and reasons |
 | `export_literature` | Export BibTeX, RIS, or JSON |

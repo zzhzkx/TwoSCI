@@ -104,7 +104,7 @@ export function recordFromWosReference(reference: WosReference): LiteratureRecor
     authors: splitAuthors(reference.citedAuthor),
     year,
     venue: cleanText(reference.citedWork || '') || undefined,
-    volume: undefined,
+    volume: cleanText(reference.volume || '') || undefined,
     issue: undefined,
     pages: reference.page !== undefined ? String(reference.page) : undefined,
     abstract: '',

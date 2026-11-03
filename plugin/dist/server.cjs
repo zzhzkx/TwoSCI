@@ -334939,7 +334939,12 @@ var TOOLS = [
         dois: { type: "array", items: { type: "string" }, maxItems: 20 },
         refresh: { type: "boolean", default: false },
         includeAbstract: { type: "boolean", default: true },
-        includeReferences: { type: "boolean", default: true }
+        includeReferences: { type: "boolean", default: true },
+        fetchReferences: {
+          type: "boolean",
+          default: false,
+          description: "Fetch references for selected records when they are not already in the session; this may make one provider request per record"
+        }
       }
     }
   },
@@ -354110,7 +354115,13 @@ function parseQueryResult(data2) {
   };
 }
 function parseReferences(data2) {
-  const records = data2?.Data?.Records?.records?.REC ?? data2?.Data?.Records?.records?.rec ?? data2?.Data?.records?.REC ?? data2?.Data?.records?.rec ?? data2?.data?.Records?.records?.REC ?? data2?.data?.Records?.records?.rec ?? data2?.Records?.records?.REC ?? data2?.Records?.records?.rec ?? data2?.Data ?? data2?.data ?? data2?.records;
+  const nested = data2?.Data?.Records?.records?.REC ?? data2?.Data?.Records?.records?.rec ?? data2?.Data?.records?.REC ?? data2?.Data?.records?.rec ?? data2?.data?.Records?.records?.REC ?? data2?.data?.Records?.records?.rec ?? data2?.Records?.records?.REC ?? data2?.Records?.records?.rec;
+  const direct = data2?.Data ?? data2?.data ?? data2?.records;
+  let records = nested ?? direct;
+  if (!nested && direct && typeof direct === "object" && !Array.isArray(direct)) {
+    const numbered = Object.entries(direct).filter(([key, value]) => /^\d+$/.test(key) && value && typeof value === "object").map(([, value]) => value);
+    if (numbered.length > 0) records = numbered;
+  }
   return asArray(records).map(parseReferenceRecord).filter((reference) => Boolean(reference.uid || reference.doi || reference.citedTitle || reference.citedWork));
 }
 function parseReferenceRecord(record2) {
@@ -354121,16 +354132,17 @@ function parseReferenceRecord(record2) {
   const titles = asArray(summary.titles?.title ?? record2?.titles?.title);
   const names = asArray(summary.names?.name ?? record2?.names?.name);
   const citationCounts = parseCitationCounts(record2, staticData);
-  const pageValue = record2?.page ?? pubInfo.page;
+  const pageValue = record2?.page ?? record2?.Page ?? pubInfo.page;
   return {
     uid: textValue(record2?.UID ?? record2?.uid) || void 0,
     doi: findDoi(record2, staticData, fullMetadata) || void 0,
-    citedAuthor: textValue(record2?.citedAuthor) || names.filter((name) => !name.role || String(name.role).toLowerCase() === "author").map((name) => textValue(name.display_name ?? name.displayName ?? name.full_name)).filter(Boolean).join("; ") || void 0,
-    citedTitle: textValue(record2?.citedTitle) || firstTitle(titles, ["item", "title"]) || void 0,
-    citedWork: textValue(record2?.citedWork) || firstTitle(titles, ["source", "publication", "so"]) || textValue(pubInfo.sourceTitle ?? pubInfo.source_title) || void 0,
-    year: numberValue(record2?.year ?? pubInfo.pubyear ?? pubInfo.pubYear),
+    citedAuthor: textValue(record2?.citedAuthor ?? record2?.CitedAuthor) || names.filter((name) => !name.role || String(name.role).toLowerCase() === "author").map((name) => textValue(name.display_name ?? name.displayName ?? name.full_name)).filter(Boolean).join("; ") || void 0,
+    citedTitle: textValue(record2?.citedTitle ?? record2?.CitedTitle) || firstTitle(titles, ["item", "title"]) || void 0,
+    citedWork: textValue(record2?.citedWork ?? record2?.CitedWork) || firstTitle(titles, ["source", "publication", "so"]) || textValue(pubInfo.sourceTitle ?? pubInfo.source_title) || void 0,
+    year: numberValue(record2?.year ?? record2?.Year ?? pubInfo.pubyear ?? pubInfo.pubYear),
+    volume: textValue(record2?.Volume ?? record2?.volume) || void 0,
     page: referencePage(pageValue),
-    timesCited: numberValue(record2?.timesCited ?? record2?.times_cited) ?? citationCounts.WOS
+    timesCited: numberValue(record2?.timesCited ?? record2?.TimesCited ?? record2?.times_cited) ?? citationCounts.WOS
   };
 }
 function parseExpandedRecord(record2, recordView = "short", databaseId = "WOS", queryResult) {
@@ -360700,7 +360712,7 @@ function recordFromWosReference(reference) {
     authors: splitAuthors(reference.citedAuthor),
     year,
     venue: cleanText3(reference.citedWork || "") || void 0,
-    volume: void 0,
+    volume: cleanText3(reference.volume || "") || void 0,
     issue: void 0,
     pages: reference.page !== void 0 ? String(reference.page) : void 0,
     abstract: "",
@@ -361207,17 +361219,20 @@ var LiteratureService = class {
   }
   async hydrate(input2) {
     const records = await this.resolveStoredRecords(input2);
-    const selected = records.slice(0, 50);
+    let selected = records.slice(0, 50);
     if (input2.refresh) {
       const refreshed = [];
       for (const record2 of selected) {
         refreshed.push(await this.refreshRecord(record2));
       }
-      return dedupeRecords(refreshed).map((record2) => ({
-        ...record2,
-        abstract: input2.includeAbstract === false ? "" : record2.abstract,
-        references: input2.includeReferences === false ? [] : record2.references
-      }));
+      selected = dedupeRecords(refreshed);
+    }
+    if (input2.fetchReferences && input2.includeReferences !== false) {
+      const withReferences = [];
+      for (const record2 of selected) {
+        withReferences.push(await this.refreshReferences(record2));
+      }
+      selected = withReferences;
     }
     return selected.map((record2) => ({
       ...record2,
@@ -361663,12 +361678,22 @@ var LiteratureService = class {
     }
     return dedupeRecords(refreshed)[0];
   }
+  async refreshReferences(record2) {
+    if (record2.references.length > 0) return record2;
+    try {
+      const related = await this.getRelatedRecords(record2, "references", 50, "short");
+      const references = related.records.map((reference) => reference.doi || reference.identifiers.wosUid || reference.identifiers.openalexId || reference.recordId).filter((reference) => Boolean(reference));
+      return { ...record2, references: uniqueStrings2(references) };
+    } catch {
+      return record2;
+    }
+  }
   async resolveSeeds(seeds, searchId) {
     const search = searchId ? this.store.getSearch(searchId) : void 0;
     const fromSearch = new Map(search?.records.map((record2) => [record2.recordId, record2]) || []);
     const resolved = [];
     for (const seed of seeds) {
-      const stored = fromSearch.get(seed);
+      const stored = fromSearch.get(seed) || this.store.findRecord(seed);
       if (stored) {
         resolved.push(stored);
         continue;
@@ -362147,7 +362172,8 @@ var GetLiteratureRecordsSchema = external_exports.object({
   dois: external_exports.array(external_exports.string()).max(20).optional(),
   refresh: external_exports.boolean().optional().default(false),
   includeAbstract: external_exports.boolean().optional().default(true),
-  includeReferences: external_exports.boolean().optional().default(true)
+  includeReferences: external_exports.boolean().optional().default(true),
+  fetchReferences: external_exports.boolean().optional().default(false)
 }).strict().refine(
   (value) => Boolean(value.searchId || value.recordIds?.length || value.dois?.length),
   "Provide searchId, recordIds, or dois"

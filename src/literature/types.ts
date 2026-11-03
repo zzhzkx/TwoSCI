@@ -146,6 +146,7 @@ export interface HydrateInput {
   refresh?: boolean;
   includeAbstract?: boolean;
   includeReferences?: boolean;
+  fetchReferences?: boolean;
 }
 
 export interface ExpandInput {

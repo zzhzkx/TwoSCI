@@ -17,6 +17,7 @@ export interface WosReference {
   citedTitle?: string;
   citedWork?: string;
   year?: number;
+  volume?: string;
   page?: number | string;
   timesCited?: number;
 }
@@ -136,15 +137,22 @@ export function parseQueryResult(data: any): WosQueryResult {
 }
 
 export function parseReferences(data: any): WosReference[] {
-  const records = data?.Data?.Records?.records?.REC ??
+  const nested = data?.Data?.Records?.records?.REC ??
     data?.Data?.Records?.records?.rec ??
     data?.Data?.records?.REC ??
     data?.Data?.records?.rec ??
     data?.data?.Records?.records?.REC ??
     data?.data?.Records?.records?.rec ??
     data?.Records?.records?.REC ??
-    data?.Records?.records?.rec ??
-    data?.Data ?? data?.data ?? data?.records;
+    data?.Records?.records?.rec;
+  const direct = data?.Data ?? data?.data ?? data?.records;
+  let records: any = nested ?? direct;
+  if (!nested && direct && typeof direct === 'object' && !Array.isArray(direct)) {
+    const numbered = Object.entries(direct)
+      .filter(([key, value]) => /^\d+$/.test(key) && value && typeof value === 'object')
+      .map(([, value]) => value);
+    if (numbered.length > 0) records = numbered;
+  }
   return asArray(records)
     .map(parseReferenceRecord)
     .filter(reference => Boolean(reference.uid || reference.doi || reference.citedTitle || reference.citedWork));
@@ -158,20 +166,21 @@ function parseReferenceRecord(record: any): WosReference {
   const titles = asArray(summary.titles?.title ?? record?.titles?.title);
   const names = asArray(summary.names?.name ?? record?.names?.name);
   const citationCounts = parseCitationCounts(record, staticData);
-  const pageValue = record?.page ?? pubInfo.page;
+  const pageValue = record?.page ?? record?.Page ?? pubInfo.page;
   return {
     uid: textValue(record?.UID ?? record?.uid) || undefined,
     doi: findDoi(record, staticData, fullMetadata) || undefined,
-    citedAuthor: textValue(record?.citedAuthor) || names
+    citedAuthor: textValue(record?.citedAuthor ?? record?.CitedAuthor) || names
       .filter(name => !name.role || String(name.role).toLowerCase() === 'author')
       .map(name => textValue(name.display_name ?? name.displayName ?? name.full_name))
       .filter(Boolean).join('; ') || undefined,
-    citedTitle: textValue(record?.citedTitle) || firstTitle(titles, ['item', 'title']) || undefined,
-    citedWork: textValue(record?.citedWork) || firstTitle(titles, ['source', 'publication', 'so']) ||
+    citedTitle: textValue(record?.citedTitle ?? record?.CitedTitle) || firstTitle(titles, ['item', 'title']) || undefined,
+    citedWork: textValue(record?.citedWork ?? record?.CitedWork) || firstTitle(titles, ['source', 'publication', 'so']) ||
       textValue(pubInfo.sourceTitle ?? pubInfo.source_title) || undefined,
-    year: numberValue(record?.year ?? pubInfo.pubyear ?? pubInfo.pubYear),
+    year: numberValue(record?.year ?? record?.Year ?? pubInfo.pubyear ?? pubInfo.pubYear),
+    volume: textValue(record?.Volume ?? record?.volume) || undefined,
     page: referencePage(pageValue),
-    timesCited: numberValue(record?.timesCited ?? record?.times_cited) ?? citationCounts.WOS
+    timesCited: numberValue(record?.timesCited ?? record?.TimesCited ?? record?.times_cited) ?? citationCounts.WOS
   };
 }
 

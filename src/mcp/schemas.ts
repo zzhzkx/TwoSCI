@@ -335,7 +335,8 @@ export const GetLiteratureRecordsSchema = z
     dois: z.array(z.string()).max(20).optional(),
     refresh: z.boolean().optional().default(false),
     includeAbstract: z.boolean().optional().default(true),
-    includeReferences: z.boolean().optional().default(true)
+    includeReferences: z.boolean().optional().default(true),
+    fetchReferences: z.boolean().optional().default(false)
   })
   .strict()
   .refine(

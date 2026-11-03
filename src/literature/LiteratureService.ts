@@ -181,18 +181,22 @@ export class LiteratureService {
 
   async hydrate(input: HydrateInput): Promise<LiteratureRecord[]> {
     const records = await this.resolveStoredRecords(input);
-    const selected = records.slice(0, 50);
+    let selected = records.slice(0, 50);
 
     if (input.refresh) {
       const refreshed: LiteratureRecord[] = [];
       for (const record of selected) {
         refreshed.push(await this.refreshRecord(record));
       }
-      return dedupeRecords(refreshed).map(record => ({
-        ...record,
-        abstract: input.includeAbstract === false ? '' : record.abstract,
-        references: input.includeReferences === false ? [] : record.references
-      }));
+      selected = dedupeRecords(refreshed);
+    }
+
+    if (input.fetchReferences && input.includeReferences !== false) {
+      const withReferences: LiteratureRecord[] = [];
+      for (const record of selected) {
+        withReferences.push(await this.refreshReferences(record));
+      }
+      selected = withReferences;
     }
 
     return selected.map(record => ({
@@ -698,12 +702,25 @@ export class LiteratureService {
     return dedupeRecords(refreshed)[0];
   }
 
+  private async refreshReferences(record: LiteratureRecord): Promise<LiteratureRecord> {
+    if (record.references.length > 0) return record;
+    try {
+      const related = await this.getRelatedRecords(record, 'references', 50, 'short');
+      const references = related.records
+        .map(reference => reference.doi || reference.identifiers.wosUid || reference.identifiers.openalexId || reference.recordId)
+        .filter((reference): reference is string => Boolean(reference));
+      return { ...record, references: uniqueStrings(references) };
+    } catch {
+      return record;
+    }
+  }
+
   private async resolveSeeds(seeds: string[], searchId?: string): Promise<LiteratureRecord[]> {
     const search = searchId ? this.store.getSearch(searchId) : undefined;
     const fromSearch = new Map(search?.records.map(record => [record.recordId, record]) || []);
     const resolved: LiteratureRecord[] = [];
     for (const seed of seeds) {
-      const stored = fromSearch.get(seed);
+      const stored = fromSearch.get(seed) || this.store.findRecord(seed);
       if (stored) {
         resolved.push(stored);
         continue;

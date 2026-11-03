@@ -158,7 +158,7 @@ AND (indicator OR metric OR assessment OR benchmarking)
 
 筛选后：
 
-1. 用 `get_literature_records` + `search_id` + `record_ids` 取入选记录的完整摘要和参考文献。
+1. 用 `get_literature_records` + `search_id` + `record_ids` 取入选记录的完整摘要和参考文献。若 `references_count=0` 且确实需要参考文献，再设置 `fetchReferences=true`；它会为每篇选中记录增加一次来源请求。
 2. 默认 `refresh=false`。会话里已有 WoS/Scopus 完整记录时，不要重复请求。
 3. `get_literature_records` 返回的是 evidence packet，不是 PDF 全文。
 4. 需要读全文时，使用 MinerU 或 scansci-pdf 作为 companion；不要把 PDF 下载和解析混进检索服务。

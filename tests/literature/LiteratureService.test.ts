@@ -203,4 +203,42 @@ describe('LiteratureService', () => {
     ]));
     expect(graph.search.searchId).toMatch(/^srch_/);
   });
+
+  it('expands a brief seed record_id without requiring a search session', async () => {
+    const searchers = makeSearchers();
+    const service = new LiteratureService(() => searchers as any, new ResearchStore());
+    const brief = await service.createBrief({
+      seed: { doi: '10.1000/green.1' },
+      intent: 'Map the field around this seed',
+      includeCitationContext: false
+    });
+
+    const graph = await service.expand({
+      seeds: [brief.seed.recordId],
+      directions: ['citing'],
+      limitPerSeed: 5
+    });
+
+    expect(graph.edges).toEqual(expect.arrayContaining([
+      expect.objectContaining({ relation: 'citing', source: 'webofscience' })
+    ]));
+  });
+
+  it('optionally hydrates references for selected records', async () => {
+    const searchers = makeSearchers();
+    const service = new LiteratureService(() => searchers as any, new ResearchStore());
+    const result = await service.search({
+      query: 'embodied carbon',
+      mode: 'quick',
+      layer: 'abstract'
+    });
+
+    const hydrated = await service.hydrate({
+      searchId: result.search.searchId,
+      recordIds: [result.search.records[0].recordId],
+      fetchReferences: true
+    });
+
+    expect(hydrated[0].references).toContain('10.1000/ref.1');
+  });
 });

@@ -708,7 +708,12 @@ export const TOOLS: Tool[] = [
         dois: { type: 'array', items: { type: 'string' }, maxItems: 20 },
         refresh: { type: 'boolean', default: false },
         includeAbstract: { type: 'boolean', default: true },
-        includeReferences: { type: 'boolean', default: true }
+        includeReferences: { type: 'boolean', default: true },
+        fetchReferences: {
+          type: 'boolean',
+          default: false,
+          description: 'Fetch references for selected records when they are not already in the session; this may make one provider request per record'
+        }
       }
     }
   },
