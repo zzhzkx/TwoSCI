@@ -27,6 +27,8 @@ variables in the host application:
 - `WOS_API_KEY`: Starter fallback.
 - `ELSEVIER_API_KEY`: Scopus details.
 - `SCOPUS_SEARCH_API_KEY`: optional dedicated Scopus Search key.
+- `IEEE_XPLORE_API_KEY`: IEEE Xplore Metadata API key.
+- `IEEE_XPLORE_RPS`: local IEEE request rate; default `1`.
 - `OPENALEX_EMAIL`: polite-pool contact email.
 
 If `WOS_EXPANDED_API_KEY` is present, all WoS calls use Expanded by default.

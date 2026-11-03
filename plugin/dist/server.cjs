@@ -33217,7 +33217,8 @@ var init_constants = __esm({
       BIORXIV: "https://api.biorxiv.org",
       MEDRXIV: "https://api.medrxiv.org",
       WILEY_TDM: "https://api.wiley.com/onlinelibrary/tdm/v1",
-      OPENALEX: "https://api.openalex.org"
+      OPENALEX: "https://api.openalex.org",
+      IEEE_XPLORE: "https://ieeexploreapi.ieee.org/api/v1"
     };
     USER_AGENT = "TwoSCI/0.1.0 (Academic Research Tool)";
     DEFAULT_MAILTO = process.env.CROSSREF_MAILTO || "twosci@example.com";
@@ -37797,10 +37798,10 @@ var require_pdf_worker = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(18);
+            var toInteger2 = __w_pdfjs_require__(18);
             var min = Math.min;
             module3.exports = function(it) {
-              return it > 0 ? min(toInteger(it), 9007199254740991) : 0;
+              return it > 0 ? min(toInteger2(it), 9007199254740991) : 0;
             };
           }),
           /* 15 */
@@ -38933,11 +38934,11 @@ var require_pdf_worker = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(18);
+            var toInteger2 = __w_pdfjs_require__(18);
             var max = Math.max;
             var min = Math.min;
             module3.exports = function(index2, length) {
-              index2 = toInteger(index2);
+              index2 = toInteger2(index2);
               return index2 < 0 ? max(index2 + length, 0) : min(index2, length);
             };
           }),
@@ -44746,11 +44747,11 @@ var require_pdf_worker = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(18);
+            var toInteger2 = __w_pdfjs_require__(18);
             var toLength = __w_pdfjs_require__(14);
             module3.exports = function(it) {
               if (it === void 0) return 0;
-              var number4 = toInteger(it);
+              var number4 = toInteger2(it);
               var length = toLength(number4);
               if (number4 !== length) throw RangeError("Wrong length!");
               return length;
@@ -60964,7 +60965,7 @@ var require_pdf_worker = __commonJS({
               var propertyDesc = __w_pdfjs_require__(29);
               var hide2 = __w_pdfjs_require__(8);
               var redefineAll = __w_pdfjs_require__(23);
-              var toInteger = __w_pdfjs_require__(18);
+              var toInteger2 = __w_pdfjs_require__(18);
               var toLength = __w_pdfjs_require__(14);
               var toIndex = __w_pdfjs_require__(50);
               var toAbsoluteIndex = __w_pdfjs_require__(31);
@@ -61040,7 +61041,7 @@ var require_pdf_worker = __commonJS({
                 new Uint8Array2(1).set({});
               });
               var toOffset = function toOffset2(it, BYTES) {
-                var offset = toInteger(it);
+                var offset = toInteger2(it);
                 if (offset < 0 || offset % BYTES) throw RangeError2("Wrong offset!");
                 return offset;
               };
@@ -61403,7 +61404,7 @@ var require_pdf_worker = __commonJS({
             var redefineAll = __w_pdfjs_require__(23);
             var fails = __w_pdfjs_require__(11);
             var anInstance = __w_pdfjs_require__(24);
-            var toInteger = __w_pdfjs_require__(18);
+            var toInteger2 = __w_pdfjs_require__(18);
             var toLength = __w_pdfjs_require__(14);
             var toIndex = __w_pdfjs_require__(50);
             var gOPN = __w_pdfjs_require__(51).f;
@@ -61563,7 +61564,7 @@ var require_pdf_worker = __commonJS({
                 anInstance(this, $DataView, DATA_VIEW);
                 anInstance(buffer, $ArrayBuffer, DATA_VIEW);
                 var bufferLength = buffer[$LENGTH];
-                var offset = toInteger(byteOffset);
+                var offset = toInteger2(byteOffset);
                 if (offset < 0 || offset > bufferLength) throw RangeError2("Wrong offset!");
                 byteLength = byteLength === void 0 ? bufferLength - offset : toLength(byteLength);
                 if (offset + byteLength > bufferLength) throw RangeError2(WRONG_LENGTH);
@@ -61875,12 +61876,12 @@ var require_pdf_worker = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(18);
+            var toInteger2 = __w_pdfjs_require__(18);
             var defined = __w_pdfjs_require__(38);
             module3.exports = function(TO_STRING) {
               return function(that, pos) {
                 var s = String(defined(that));
-                var i = toInteger(pos);
+                var i = toInteger2(pos);
                 var l = s.length;
                 var a, b;
                 if (i < 0 || i >= l) return TO_STRING ? "" : void 0;
@@ -80818,10 +80819,10 @@ var require_pdf = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(17);
+            var toInteger2 = __w_pdfjs_require__(17);
             var min = Math.min;
             module3.exports = function(it) {
-              return it > 0 ? min(toInteger(it), 9007199254740991) : 0;
+              return it > 0 ? min(toInteger2(it), 9007199254740991) : 0;
             };
           }),
           /* 13 */
@@ -81327,11 +81328,11 @@ var require_pdf = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(17);
+            var toInteger2 = __w_pdfjs_require__(17);
             var max = Math.max;
             var min = Math.min;
             module3.exports = function(index2, length) {
-              index2 = toInteger(index2);
+              index2 = toInteger2(index2);
               return index2 < 0 ? max(index2 + length, 0) : min(index2, length);
             };
           }),
@@ -81722,11 +81723,11 @@ var require_pdf = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(17);
+            var toInteger2 = __w_pdfjs_require__(17);
             var toLength = __w_pdfjs_require__(12);
             module3.exports = function(it) {
               if (it === void 0) return 0;
-              var number4 = toInteger(it);
+              var number4 = toInteger2(it);
               var length = toLength(number4);
               if (number4 !== length) throw RangeError("Wrong length!");
               return length;
@@ -88007,7 +88008,7 @@ var require_pdf = __commonJS({
               var propertyDesc = __w_pdfjs_require__(27);
               var hide2 = __w_pdfjs_require__(6);
               var redefineAll = __w_pdfjs_require__(23);
-              var toInteger = __w_pdfjs_require__(17);
+              var toInteger2 = __w_pdfjs_require__(17);
               var toLength = __w_pdfjs_require__(12);
               var toIndex = __w_pdfjs_require__(47);
               var toAbsoluteIndex = __w_pdfjs_require__(29);
@@ -88083,7 +88084,7 @@ var require_pdf = __commonJS({
                 new Uint8Array2(1).set({});
               });
               var toOffset = function toOffset2(it, BYTES) {
-                var offset = toInteger(it);
+                var offset = toInteger2(it);
                 if (offset < 0 || offset % BYTES) throw RangeError2("Wrong offset!");
                 return offset;
               };
@@ -88446,7 +88447,7 @@ var require_pdf = __commonJS({
             var redefineAll = __w_pdfjs_require__(23);
             var fails = __w_pdfjs_require__(9);
             var anInstance = __w_pdfjs_require__(24);
-            var toInteger = __w_pdfjs_require__(17);
+            var toInteger2 = __w_pdfjs_require__(17);
             var toLength = __w_pdfjs_require__(12);
             var toIndex = __w_pdfjs_require__(47);
             var gOPN = __w_pdfjs_require__(48).f;
@@ -88606,7 +88607,7 @@ var require_pdf = __commonJS({
                 anInstance(this, $DataView, DATA_VIEW);
                 anInstance(buffer, $ArrayBuffer, DATA_VIEW);
                 var bufferLength = buffer[$LENGTH];
-                var offset = toInteger(byteOffset);
+                var offset = toInteger2(byteOffset);
                 if (offset < 0 || offset > bufferLength) throw RangeError2("Wrong offset!");
                 byteLength = byteLength === void 0 ? bufferLength - offset : toLength(byteLength);
                 if (offset + byteLength > bufferLength) throw RangeError2(WRONG_LENGTH);
@@ -88918,12 +88919,12 @@ var require_pdf = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(17);
+            var toInteger2 = __w_pdfjs_require__(17);
             var defined = __w_pdfjs_require__(35);
             module3.exports = function(TO_STRING) {
               return function(that, pos) {
                 var s = String(defined(that));
-                var i = toInteger(pos);
+                var i = toInteger2(pos);
                 var l = s.length;
                 var a, b;
                 if (i < 0 || i >= l) return TO_STRING ? "" : void 0;
@@ -100005,10 +100006,10 @@ var require_pdf_worker2 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(18);
+            var toInteger2 = __w_pdfjs_require__(18);
             var min = Math.min;
             module3.exports = function(it) {
-              return it > 0 ? min(toInteger(it), 9007199254740991) : 0;
+              return it > 0 ? min(toInteger2(it), 9007199254740991) : 0;
             };
           }),
           /* 15 */
@@ -101141,11 +101142,11 @@ var require_pdf_worker2 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(18);
+            var toInteger2 = __w_pdfjs_require__(18);
             var max = Math.max;
             var min = Math.min;
             module3.exports = function(index2, length) {
-              index2 = toInteger(index2);
+              index2 = toInteger2(index2);
               return index2 < 0 ? max(index2 + length, 0) : min(index2, length);
             };
           }),
@@ -106954,11 +106955,11 @@ var require_pdf_worker2 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(18);
+            var toInteger2 = __w_pdfjs_require__(18);
             var toLength = __w_pdfjs_require__(14);
             module3.exports = function(it) {
               if (it === void 0) return 0;
-              var number4 = toInteger(it);
+              var number4 = toInteger2(it);
               var length = toLength(number4);
               if (number4 !== length) throw RangeError("Wrong length!");
               return length;
@@ -123179,7 +123180,7 @@ var require_pdf_worker2 = __commonJS({
               var propertyDesc = __w_pdfjs_require__(29);
               var hide2 = __w_pdfjs_require__(8);
               var redefineAll = __w_pdfjs_require__(22);
-              var toInteger = __w_pdfjs_require__(18);
+              var toInteger2 = __w_pdfjs_require__(18);
               var toLength = __w_pdfjs_require__(14);
               var toIndex = __w_pdfjs_require__(50);
               var toAbsoluteIndex = __w_pdfjs_require__(31);
@@ -123255,7 +123256,7 @@ var require_pdf_worker2 = __commonJS({
                 new Uint8Array2(1).set({});
               });
               var toOffset = function toOffset2(it, BYTES) {
-                var offset = toInteger(it);
+                var offset = toInteger2(it);
                 if (offset < 0 || offset % BYTES) throw RangeError2("Wrong offset!");
                 return offset;
               };
@@ -123618,7 +123619,7 @@ var require_pdf_worker2 = __commonJS({
             var redefineAll = __w_pdfjs_require__(22);
             var fails = __w_pdfjs_require__(12);
             var anInstance = __w_pdfjs_require__(23);
-            var toInteger = __w_pdfjs_require__(18);
+            var toInteger2 = __w_pdfjs_require__(18);
             var toLength = __w_pdfjs_require__(14);
             var toIndex = __w_pdfjs_require__(50);
             var gOPN = __w_pdfjs_require__(51).f;
@@ -123778,7 +123779,7 @@ var require_pdf_worker2 = __commonJS({
                 anInstance(this, $DataView, DATA_VIEW);
                 anInstance(buffer, $ArrayBuffer, DATA_VIEW);
                 var bufferLength = buffer[$LENGTH];
-                var offset = toInteger(byteOffset);
+                var offset = toInteger2(byteOffset);
                 if (offset < 0 || offset > bufferLength) throw RangeError2("Wrong offset!");
                 byteLength = byteLength === void 0 ? bufferLength - offset : toLength(byteLength);
                 if (offset + byteLength > bufferLength) throw RangeError2(WRONG_LENGTH);
@@ -124090,12 +124091,12 @@ var require_pdf_worker2 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(18);
+            var toInteger2 = __w_pdfjs_require__(18);
             var defined = __w_pdfjs_require__(38);
             module3.exports = function(TO_STRING) {
               return function(that, pos) {
                 var s = String(defined(that));
-                var i = toInteger(pos);
+                var i = toInteger2(pos);
                 var l = s.length;
                 var a, b;
                 if (i < 0 || i >= l) return TO_STRING ? "" : void 0;
@@ -143020,10 +143021,10 @@ var require_pdf2 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(17);
+            var toInteger2 = __w_pdfjs_require__(17);
             var min = Math.min;
             module3.exports = function(it) {
-              return it > 0 ? min(toInteger(it), 9007199254740991) : 0;
+              return it > 0 ? min(toInteger2(it), 9007199254740991) : 0;
             };
           }),
           /* 13 */
@@ -143652,11 +143653,11 @@ var require_pdf2 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(17);
+            var toInteger2 = __w_pdfjs_require__(17);
             var max = Math.max;
             var min = Math.min;
             module3.exports = function(index2, length) {
-              index2 = toInteger(index2);
+              index2 = toInteger2(index2);
               return index2 < 0 ? max(index2 + length, 0) : min(index2, length);
             };
           }),
@@ -144047,11 +144048,11 @@ var require_pdf2 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(17);
+            var toInteger2 = __w_pdfjs_require__(17);
             var toLength = __w_pdfjs_require__(12);
             module3.exports = function(it) {
               if (it === void 0) return 0;
-              var number4 = toInteger(it);
+              var number4 = toInteger2(it);
               var length = toLength(number4);
               if (number4 !== length) throw RangeError("Wrong length!");
               return length;
@@ -150326,7 +150327,7 @@ var require_pdf2 = __commonJS({
               var propertyDesc = __w_pdfjs_require__(27);
               var hide2 = __w_pdfjs_require__(6);
               var redefineAll = __w_pdfjs_require__(22);
-              var toInteger = __w_pdfjs_require__(17);
+              var toInteger2 = __w_pdfjs_require__(17);
               var toLength = __w_pdfjs_require__(12);
               var toIndex = __w_pdfjs_require__(47);
               var toAbsoluteIndex = __w_pdfjs_require__(29);
@@ -150402,7 +150403,7 @@ var require_pdf2 = __commonJS({
                 new Uint8Array2(1).set({});
               });
               var toOffset = function toOffset2(it, BYTES) {
-                var offset = toInteger(it);
+                var offset = toInteger2(it);
                 if (offset < 0 || offset % BYTES) throw RangeError2("Wrong offset!");
                 return offset;
               };
@@ -150765,7 +150766,7 @@ var require_pdf2 = __commonJS({
             var redefineAll = __w_pdfjs_require__(22);
             var fails = __w_pdfjs_require__(10);
             var anInstance = __w_pdfjs_require__(23);
-            var toInteger = __w_pdfjs_require__(17);
+            var toInteger2 = __w_pdfjs_require__(17);
             var toLength = __w_pdfjs_require__(12);
             var toIndex = __w_pdfjs_require__(47);
             var gOPN = __w_pdfjs_require__(48).f;
@@ -150925,7 +150926,7 @@ var require_pdf2 = __commonJS({
                 anInstance(this, $DataView, DATA_VIEW);
                 anInstance(buffer, $ArrayBuffer, DATA_VIEW);
                 var bufferLength = buffer[$LENGTH];
-                var offset = toInteger(byteOffset);
+                var offset = toInteger2(byteOffset);
                 if (offset < 0 || offset > bufferLength) throw RangeError2("Wrong offset!");
                 byteLength = byteLength === void 0 ? bufferLength - offset : toLength(byteLength);
                 if (offset + byteLength > bufferLength) throw RangeError2(WRONG_LENGTH);
@@ -151237,12 +151238,12 @@ var require_pdf2 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(17);
+            var toInteger2 = __w_pdfjs_require__(17);
             var defined = __w_pdfjs_require__(35);
             module3.exports = function(TO_STRING) {
               return function(that, pos) {
                 var s = String(defined(that));
-                var i = toInteger(pos);
+                var i = toInteger2(pos);
                 var l = s.length;
                 var a, b;
                 if (i < 0 || i >= l) return TO_STRING ? "" : void 0;
@@ -216047,10 +216048,10 @@ var require_pdf_worker4 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(40);
+            var toInteger2 = __w_pdfjs_require__(40);
             var min = Math.min;
             module3.exports = function(it) {
-              return it > 0 ? min(toInteger(it), 9007199254740991) : 0;
+              return it > 0 ? min(toInteger2(it), 9007199254740991) : 0;
             };
           }),
           /* 40 */
@@ -216067,11 +216068,11 @@ var require_pdf_worker4 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(40);
+            var toInteger2 = __w_pdfjs_require__(40);
             var max = Math.max;
             var min = Math.min;
             module3.exports = function(index2, length) {
-              index2 = toInteger(index2);
+              index2 = toInteger2(index2);
               return index2 < 0 ? max(index2 + length, 0) : min(index2, length);
             };
           }),
@@ -216219,12 +216220,12 @@ var require_pdf_worker4 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(40);
+            var toInteger2 = __w_pdfjs_require__(40);
             var defined = __w_pdfjs_require__(32);
             module3.exports = function(TO_STRING) {
               return function(that, pos) {
                 var s = String(defined(that));
-                var i = toInteger(pos);
+                var i = toInteger2(pos);
                 var l = s.length;
                 var a, b;
                 if (i < 0 || i >= l) return TO_STRING ? "" : void 0;
@@ -259429,10 +259430,10 @@ var require_pdf4 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(39);
+            var toInteger2 = __w_pdfjs_require__(39);
             var min = Math.min;
             module3.exports = function(it) {
-              return it > 0 ? min(toInteger(it), 9007199254740991) : 0;
+              return it > 0 ? min(toInteger2(it), 9007199254740991) : 0;
             };
           }),
           /* 39 */
@@ -259449,11 +259450,11 @@ var require_pdf4 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(39);
+            var toInteger2 = __w_pdfjs_require__(39);
             var max = Math.max;
             var min = Math.min;
             module3.exports = function(index2, length) {
-              index2 = toInteger(index2);
+              index2 = toInteger2(index2);
               return index2 < 0 ? max(index2 + length, 0) : min(index2, length);
             };
           }),
@@ -259601,12 +259602,12 @@ var require_pdf4 = __commonJS({
           /***/
           (function(module3, exports3, __w_pdfjs_require__) {
             "use strict";
-            var toInteger = __w_pdfjs_require__(39);
+            var toInteger2 = __w_pdfjs_require__(39);
             var defined = __w_pdfjs_require__(31);
             module3.exports = function(TO_STRING) {
               return function(that, pos) {
                 var s = String(defined(that));
-                var i = toInteger(pos);
+                var i = toInteger2(pos);
                 var l = s.length;
                 var a, b;
                 if (i < 0 || i >= l) return TO_STRING ? "" : void 0;
@@ -334267,9 +334268,10 @@ var TOOLS = [
             "scopus",
             "crossref",
             "openalex",
+            "ieee",
             "all"
           ],
-          description: 'Platform to search (default: crossref). Options: arxiv, webofscience/wos, pubmed, biorxiv, medrxiv, semantic, iacr, googlescholar/scholar, scihub, sciencedirect, springer, scopus, crossref, openalex, or all. "all" uses the unified multi-source path; prefer search_literature for seed-aware workflows. Note: Wiley only supports PDF download by DOI, use download_paper instead.'
+          description: 'Platform to search (default: crossref). Options: arxiv, webofscience/wos, pubmed, biorxiv, medrxiv, semantic, iacr, googlescholar/scholar, scihub, sciencedirect, springer, scopus, crossref, openalex, ieee, or all. "all" uses the unified multi-source path; prefer search_literature for seed-aware workflows. Note: Wiley only supports PDF download by DOI, use download_paper instead.'
         },
         maxResults: {
           type: "number",
@@ -334627,7 +334629,7 @@ var TOOLS = [
         doi: { type: "string", description: "DOI (Digital Object Identifier)" },
         platform: {
           type: "string",
-          enum: ["arxiv", "webofscience", "scihub", "all"],
+          enum: ["arxiv", "webofscience", "scihub", "ieee", "all"],
           description: "Platform to search"
         }
       },
@@ -334839,6 +334841,32 @@ var TOOLS = [
     }
   },
   {
+    name: "search_ieee",
+    description: "Search IEEE Xplore metadata and abstracts (requires IEEE_XPLORE_API_KEY). One request returns up to 200 records; results may include metadata outside the caller's institutional subscription.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Free-text IEEE Xplore query" },
+        maxResults: {
+          type: "number",
+          minimum: 1,
+          maximum: 200,
+          description: "Maximum number of records (IEEE API limit: 200 per request)"
+        },
+        year: { type: "string", description: 'Year filter (e.g., "2024" or "2020-2024")' },
+        author: { type: "string", description: "Author name filter" },
+        journal: { type: "string", description: "Publication title filter" },
+        openAccess: { type: "boolean", description: "Filter to IEEE open-access records" },
+        contentType: {
+          type: "string",
+          enum: ["Books", "Conferences", "Courses", "Early Access", "Journals", "Magazines", "Standards"],
+          description: "IEEE content type filter (case-sensitive)"
+        }
+      },
+      required: ["query"]
+    }
+  },
+  {
     name: "create_research_brief",
     description: "Create a research brief from a seed paper plus the user intent. Resolves the seed with WoS Expanded (when configured), Scopus, OpenAlex, and Crossref; returns its abstract, keywords, references, citing sample, and a brief_id for later searches.",
     inputSchema: {
@@ -334886,7 +334914,7 @@ var TOOLS = [
   },
   {
     name: "search_literature",
-    description: "Unified deduplicated literature search across WoS (Expanded by default when configured), Scopus, OpenAlex, and Crossref. Returns candidates with source provenance and a search_id. Use layer=metadata for cheap triage, abstract for screening, evidence for deeper evidence packets. Screening should be delegated to subagents in batches.",
+    description: "Unified deduplicated literature search across WoS (Expanded by default when configured), Scopus, OpenAlex, Crossref, and IEEE Xplore (opt-in source). Returns candidates with source provenance and a search_id. Use layer=metadata for cheap triage, abstract for screening, evidence for deeper evidence packets. Screening should be delegated to subagents in batches.",
     inputSchema: {
       type: "object",
       additionalProperties: false,
@@ -334907,7 +334935,7 @@ var TOOLS = [
         },
         sources: {
           type: "array",
-          items: { type: "string", enum: ["webofscience", "scopus", "openalex", "crossref"] }
+          items: { type: "string", enum: ["webofscience", "scopus", "openalex", "crossref", "ieee"] }
         },
         maxResults: { type: "number", minimum: 1, maximum: 300 },
         perSource: { type: "number", minimum: 1, maximum: 100 },
@@ -335023,7 +335051,7 @@ var TOOLS = [
   },
   {
     name: "get_source_status",
-    description: "Report configured sources, WoS default product, quota/rate status, OpenAlex/Crossref cache state, and in-memory brief/search session counts. Set validate=true only when an actual key validation request is acceptable.",
+    description: "Report configured sources, WoS default product, quota/rate status, OpenAlex/Crossref cache state, IEEE rate status, and in-memory brief/search session counts. Set validate=true only when an actual key validation request is acceptable.",
     inputSchema: {
       type: "object",
       additionalProperties: false,
@@ -359734,6 +359762,264 @@ function firstConfigured3(...values) {
   return values.find((value) => typeof value === "string" && value.trim() !== "")?.trim();
 }
 
+// src/platforms/IEEEXploreSearcher.ts
+init_axios2();
+init_Paper();
+init_PaperSource();
+init_constants();
+init_ErrorHandler();
+init_RateLimiter();
+init_Logger();
+var IEEE_MAX_RECORDS = 200;
+var IEEEXploreSearcher = class extends PaperSource {
+  client;
+  rateLimiter;
+  constructor(apiKey) {
+    const configuredKey = firstConfiguredKey2(
+      apiKey,
+      process.env.IEEE_XPLORE_API_KEY,
+      process.env.IEEE_API_KEY
+    );
+    super("ieee", API_ENDPOINTS.IEEE_XPLORE, configuredKey);
+    this.client = axios_default.create({
+      baseURL: API_ENDPOINTS.IEEE_XPLORE,
+      timeout: TIMEOUTS.DEFAULT,
+      headers: {
+        Accept: "application/json",
+        "User-Agent": USER_AGENT
+      }
+    });
+    const requestsPerSecond = positiveNumber(process.env.IEEE_XPLORE_RPS, 1);
+    this.rateLimiter = new RateLimiter({
+      requestsPerSecond,
+      burstCapacity: Math.max(1, Math.ceil(requestsPerSecond))
+    });
+  }
+  async search(query, options = {}) {
+    if (!this.apiKey) {
+      throw new Error("IEEE Xplore API key is required. Set IEEE_XPLORE_API_KEY.");
+    }
+    const maxResults = Math.max(1, Math.min(options.maxResults || 25, IEEE_MAX_RECORDS));
+    const params = {
+      querytext: query,
+      max_records: maxResults,
+      start_record: 1,
+      format: "json"
+    };
+    if (options.author) params.author = options.author;
+    if (options.journal) params.publication_title = options.journal;
+    if (options.openAccess !== void 0) params.open_access = options.openAccess;
+    if (options.contentType) params.content_type = options.contentType;
+    applyYearFilter(params, options.year);
+    try {
+      const response = await this.request(params);
+      return this.parseArticles(response.data).slice(0, maxResults);
+    } catch (error62) {
+      throwIeeeError(error62, "search");
+    }
+  }
+  async getPaperByDoi(doi) {
+    const normalized = normalizeDoi2(doi);
+    if (!normalized) return null;
+    if (!this.apiKey) {
+      throw new Error("IEEE Xplore API key is required. Set IEEE_XPLORE_API_KEY.");
+    }
+    try {
+      const response = await this.request({
+        doi: normalized,
+        max_records: 1,
+        start_record: 1,
+        format: "json"
+      });
+      return this.parseArticles(response.data)[0] || null;
+    } catch (error62) {
+      throwIeeeError(error62, "DOI lookup");
+    }
+  }
+  getCapabilities() {
+    return {
+      search: true,
+      download: false,
+      fullText: false,
+      citations: true,
+      requiresApiKey: true,
+      supportedOptions: ["maxResults", "year", "author", "journal", "openAccess", "contentType"]
+    };
+  }
+  getStatus() {
+    return {
+      configured: Boolean(this.apiKey),
+      baseUrl: this.getBaseUrl(),
+      rateLimiter: this.rateLimiter.getStatus()
+    };
+  }
+  async downloadPdf(_paperId, _options = {}) {
+    throw new Error("IEEE Xplore metadata access does not include PDF download.");
+  }
+  async readPaper(_paperId, _options = {}) {
+    throw new Error("IEEE Xplore metadata access does not include full text.");
+  }
+  async request(params) {
+    return ErrorHandler.retryWithBackoff(
+      async () => {
+        await this.rateLimiter.waitForPermission();
+        return this.client.get("/search/articles", {
+          params: {
+            ...params,
+            apikey: this.apiKey
+          }
+        });
+      },
+      { context: "IEEE Xplore request" }
+    );
+  }
+  parseArticles(data2) {
+    const articles = Array.isArray(data2?.articles) ? data2.articles : [];
+    const papers = [];
+    for (const article of articles) {
+      const paper = this.parseArticle(article);
+      if (paper) papers.push(paper);
+    }
+    return papers;
+  }
+  parseArticle(article) {
+    try {
+      const articleNumber = String(article.article_number || "").trim();
+      const title = this.cleanText(article.title || "");
+      if (!title) return null;
+      const authors = normalizeAuthors(article.authors);
+      const year = toInteger(article.publication_year);
+      const pages = buildPages(article.start_page, article.end_page);
+      const url3 = article.html_url || article.abstract_url || (articleNumber ? `https://ieeexplore.ieee.org/document/${articleNumber}` : "");
+      const accessType = article.access_type || article.accessType;
+      const isOpenAccess = article.is_open_access ?? article.isOpenAccess ?? false;
+      return PaperFactory.create({
+        paperId: articleNumber || normalizeDoi2(article.doi) || title,
+        title,
+        authors,
+        abstract: this.cleanText(article.abstract || ""),
+        doi: normalizeDoi2(article.doi),
+        publishedDate: parseIeeeDate(article.publication_date, year),
+        pdfUrl: article.pdf_url || "",
+        url: url3,
+        source: "ieee",
+        journal: this.cleanText(article.publication_title || ""),
+        volume: this.cleanText(article.volume || ""),
+        issue: this.cleanText(article.issue || ""),
+        pages,
+        year,
+        citationCount: toInteger(article.citing_paper_count),
+        keywords: uniqueStrings([
+          ...article.author_terms || [],
+          ...article.ieee_terms || []
+        ]),
+        categories: article.content_type ? [article.content_type] : [],
+        extra: {
+          ieeeArticleNumber: articleNumber,
+          ieeeContentType: article.content_type,
+          accessType,
+          isOa: isOpenAccess === true || accessType === "Open Access",
+          citingPatentCount: toInteger(article.citing_patent_count),
+          publicationNumber: article.publication_number,
+          publisher: article.publisher,
+          issn: article.issn,
+          isbn: article.isbn,
+          standardNumber: article.standard_number
+        }
+      });
+    } catch (error62) {
+      logDebug("Error parsing IEEE Xplore article:", error62);
+      return null;
+    }
+  }
+};
+function firstConfiguredKey2(...values) {
+  return values.find((value) => typeof value === "string" && value.trim().length > 0)?.trim();
+}
+function positiveNumber(value, fallback) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+function normalizeDoi2(value) {
+  if (typeof value !== "string") return "";
+  return value.trim().replace(/^doi:\s*/i, "").replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "").replace(/[.,;)\s]+$/, "");
+}
+function normalizeAuthors(value) {
+  const authors = Array.isArray(value) ? value : value?.authors;
+  if (!Array.isArray(authors)) return [];
+  return [...authors].sort((left, right) => (toInteger(left?.author_order) ?? 0) - (toInteger(right?.author_order) ?? 0)).map((author) => String(author.full_name || "").trim()).filter(Boolean);
+}
+function buildPages(start, end2) {
+  const first2 = String(start || "").trim();
+  const last2 = String(end2 || "").trim();
+  if (first2 && last2 && first2 !== last2) return `${first2}-${last2}`;
+  return first2 || last2 || void 0;
+}
+function parseIeeeDate(value, year) {
+  const text3 = String(value || "").trim();
+  if (text3) {
+    const parsed = new Date(text3);
+    if (!Number.isNaN(parsed.getTime())) return parsed;
+    const yearOnly = text3.match(/^(\d{4})$/);
+    if (yearOnly) return new Date(Number(yearOnly[1]), 0, 1);
+  }
+  return year ? new Date(year, 0, 1) : null;
+}
+function applyYearFilter(params, year) {
+  if (!year) return;
+  const normalized = year.trim();
+  const single = normalized.match(/^(\d{4})$/);
+  if (single) {
+    params.publication_year = Number(single[1]);
+    return;
+  }
+  const range = normalized.match(/^(\d{4})\s*-\s*(\d{4})$/);
+  if (range) {
+    params.start_year = Number(range[1]);
+    params.end_year = Number(range[2]);
+  }
+}
+function toInteger(value) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Math.trunc(parsed) : void 0;
+}
+function uniqueStrings(values) {
+  const seen = /* @__PURE__ */ new Set();
+  const result = [];
+  for (const value of values) {
+    const cleaned = String(value || "").replace(/\s+/g, " ").trim();
+    const key = cleaned.toLowerCase();
+    if (!cleaned || seen.has(key)) continue;
+    seen.add(key);
+    result.push(cleaned);
+  }
+  return result;
+}
+function throwIeeeError(error62, operation) {
+  const status = error62?.response?.status;
+  const header = String(error62?.response?.headers?.["x-mashery-error-code"] || "");
+  const detail = String(error62?.response?.headers?.["x-error-detail-header"] || "");
+  const body = JSON.stringify(error62?.response?.data || "");
+  if (header === "ERR_403_DEVELOPER_INACTIVE" || /developer inactive|account inactive/i.test(`${detail} ${body}`)) {
+    throw new Error(
+      "IEEE Xplore API key is inactive. Your application may still be under review; IEEE issues keys during 8am-5pm US Eastern time on weekdays."
+    );
+  }
+  if (status === 401) {
+    throw new Error("IEEE Xplore API key is invalid or missing.");
+  }
+  if (status === 403) {
+    throw new Error("IEEE Xplore rejected the request. Check API entitlements and rate limits.");
+  }
+  if (status === 429) {
+    throw new Error("IEEE Xplore rate limit exceeded. Wait before retrying.");
+  }
+  if (status) {
+    throw new Error(`IEEE Xplore ${operation} failed with HTTP ${status}.`);
+  }
+  throw error62 instanceof Error ? error62 : new Error(`IEEE Xplore ${operation} failed.`);
+}
+
 // src/mcp/searchers.ts
 init_Logger();
 
@@ -360640,15 +360926,16 @@ var TITLE_STOPWORDS = /* @__PURE__ */ new Set([
 var SOURCE_PRIORITY = {
   webofscience: 4,
   scopus: 3,
+  ieee: 3,
   openalex: 2,
   crossref: 1
 };
-function normalizeDoi2(value) {
+function normalizeDoi3(value) {
   if (typeof value !== "string") return "";
   return value.trim().replace(/^doi:\s*/i, "").replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "").replace(/[.,;)\s]+$/, "").toLowerCase();
 }
 function recordFromPaper(paper, source, rank) {
-  const doi = normalizeDoi2(paper.doi);
+  const doi = normalizeDoi3(paper.doi);
   const extra = paper.extra || {};
   const wosUid = normalizeWosUid(extra.uid ?? (source === "webofscience" ? paper.paperId : void 0));
   const scopusEid = normalizeScopusEid(extra.eid ?? extra.scopusId ?? (source === "scopus" ? paper.paperId : void 0));
@@ -360669,15 +360956,15 @@ function recordFromPaper(paper, source, rank) {
   const record2 = {
     recordId: makeRecordId({ doi, wosUid, scopusEid, openalexId, title: paper.title, year: paper.year }),
     title: cleanText3(paper.title) || "No title available",
-    authors: uniqueStrings(paper.authors || []),
+    authors: uniqueStrings2(paper.authors || []),
     year: paper.year,
     venue: cleanText3(paper.journal || "") || void 0,
     volume: cleanText3(paper.volume || "") || void 0,
     issue: cleanText3(paper.issue || "") || void 0,
     pages: cleanText3(paper.pages || "") || void 0,
     abstract: cleanText3(paper.abstract || ""),
-    keywords: uniqueStrings([...paper.keywords || [], ...paper.categories || []]),
-    categories: uniqueStrings(paper.categories || []),
+    keywords: uniqueStrings2([...paper.keywords || [], ...paper.categories || []]),
+    categories: uniqueStrings2(paper.categories || []),
     doi,
     url: cleanText3(paper.url || "") || (doi ? `https://doi.org/${doi}` : ""),
     pdfUrl: cleanText3(paper.pdfUrl || ""),
@@ -360692,7 +360979,7 @@ function recordFromPaper(paper, source, rank) {
     },
     sources: [sourceRef],
     citedBy: citationCount !== void 0 ? { [source]: citationCount } : {},
-    references: uniqueStrings(paper.references || []),
+    references: uniqueStrings2(paper.references || []),
     extra: {
       ...extra.openalexId ? { openalexId: String(extra.openalexId) } : {},
       ...extra.oaStatus ? { oaStatus: String(extra.oaStatus) } : {},
@@ -360702,7 +360989,7 @@ function recordFromPaper(paper, source, rank) {
   return record2;
 }
 function recordFromWosReference(reference) {
-  const doi = normalizeDoi2(reference.doi);
+  const doi = normalizeDoi3(reference.doi);
   const wosUid = normalizeWosUid(reference.uid);
   const title = cleanText3(reference.citedTitle || reference.citedWork || "") || "Untitled reference";
   const year = toNumber(reference.year);
@@ -360780,8 +361067,8 @@ function mergeRecords(existing, incoming) {
     issue: existing.issue || incoming.issue,
     pages: existing.pages || incoming.pages,
     abstract,
-    keywords: uniqueStrings([...existing.keywords, ...incoming.keywords]),
-    categories: uniqueStrings([...existing.categories, ...incoming.categories]),
+    keywords: uniqueStrings2([...existing.keywords, ...incoming.keywords]),
+    categories: uniqueStrings2([...existing.categories, ...incoming.categories]),
     doi,
     url: existing.url || incoming.url,
     pdfUrl: existing.pdfUrl || incoming.pdfUrl,
@@ -360789,7 +361076,7 @@ function mergeRecords(existing, incoming) {
     identifiers,
     sources,
     citedBy: mergeCitationCounts(existing.citedBy, incoming.citedBy),
-    references: uniqueStrings([...existing.references, ...incoming.references]),
+    references: uniqueStrings2([...existing.references, ...incoming.references]),
     score: Math.max(existing.score || 0, incoming.score || 0),
     extra: { ...incoming.extra || {}, ...existing.extra || {} }
   };
@@ -360844,7 +361131,7 @@ function toPublicRecord(record2, layer, abstractChars = 3e3) {
 }
 function recordsMatch(left, right) {
   if (left.doi && right.doi) {
-    if (normalizeDoi2(left.doi) !== normalizeDoi2(right.doi)) return false;
+    if (normalizeDoi3(left.doi) !== normalizeDoi3(right.doi)) return false;
     return true;
   }
   if (sharedIdentifier(left.identifiers, right.identifiers)) return true;
@@ -360927,7 +361214,7 @@ function sourceIdentifier(source, paper, doi, wosUid, scopusEid, openalexId) {
   return doi || paper.paperId;
 }
 function makeRecordId(input2) {
-  const key = input2.doi ? `doi:${normalizeDoi2(input2.doi)}` : input2.wosUid ? `wos:${input2.wosUid}` : input2.scopusEid ? `scopus:${input2.scopusEid}` : input2.openalexId ? `openalex:${input2.openalexId}` : `title:${[...titleTokens(input2.title)].sort().join(" ")}:${input2.year || ""}`;
+  const key = input2.doi ? `doi:${normalizeDoi3(input2.doi)}` : input2.wosUid ? `wos:${input2.wosUid}` : input2.scopusEid ? `scopus:${input2.scopusEid}` : input2.openalexId ? `openalex:${input2.openalexId}` : `title:${[...titleTokens(input2.title)].sort().join(" ")}:${input2.year || ""}`;
   return `lit_${(0, import_node_crypto3.createHash)("sha256").update(key).digest("hex").slice(0, 16)}`;
 }
 function normalizeWosUid(value) {
@@ -360956,9 +361243,9 @@ function normalizeArxivId(paperId, extra) {
 }
 function splitAuthors(value) {
   if (!value) return [];
-  return uniqueStrings(value.split(/\s*;\s*|\s*,\s*/).map(cleanText3).filter(Boolean));
+  return uniqueStrings2(value.split(/\s*;\s*|\s*,\s*/).map(cleanText3).filter(Boolean));
 }
-function uniqueStrings(values) {
+function uniqueStrings2(values) {
   const seen = /* @__PURE__ */ new Set();
   const result = [];
   for (const value of values) {
@@ -361120,7 +361407,8 @@ var SOURCE_LABELS = {
   webofscience: "Web of Science",
   scopus: "Scopus",
   openalex: "OpenAlex",
-  crossref: "Crossref"
+  crossref: "Crossref",
+  ieee: "IEEE Xplore"
 };
 var LiteratureService = class {
   constructor(getSearchers, store) {
@@ -361137,13 +361425,13 @@ var LiteratureService = class {
     }
     const seed = records[0];
     const citationContext = input2.includeCitationContext === false ? { references: [], citing: [] } : await this.getCitationContext(seed, warnings);
-    const keywords = uniqueStrings2([
+    const keywords = uniqueStrings3([
       ...seed.keywords,
       ...seed.categories,
       ...citationContext.references.flatMap((record2) => record2.keywords).slice(0, 10),
       ...citationContext.citing.flatMap((record2) => record2.keywords).slice(0, 10)
     ]).slice(0, 30);
-    const concepts = uniqueStrings2([
+    const concepts = uniqueStrings3([
       ...seed.categories,
       ...citationContext.references.flatMap((record2) => record2.categories).slice(0, 10),
       ...citationContext.citing.flatMap((record2) => record2.categories).slice(0, 10)
@@ -361154,7 +361442,7 @@ var LiteratureService = class {
     ]);
     const brief = this.store.createBrief({
       intent: input2.intent.trim(),
-      focus: uniqueStrings2(input2.focus || []),
+      focus: uniqueStrings3(input2.focus || []),
       scope: input2.scope || {},
       seed,
       seedProfile: {
@@ -361367,7 +361655,13 @@ var LiteratureService = class {
         crossref: {
           ...searchers2.crossref.getStatus(),
           rateLimiter: publicRateStatus(searchers2.crossref.getStatus().rateLimiter)
-        }
+        },
+        ...searchers2.ieee ? {
+          ieee: {
+            ...searchers2.ieee.getStatus(),
+            rateLimiter: publicRateStatus(searchers2.ieee.getStatus().rateLimiter)
+          }
+        } : {}
       },
       mode_defaults: MODE_CONFIG,
       session_store: this.store.stats()
@@ -361451,6 +361745,28 @@ var LiteratureService = class {
           }
         };
       }
+      if (source === "ieee") {
+        const papers2 = await withTimeout(
+          searchers2.ieee.search(input2.query, {
+            maxResults: perSource,
+            year: input2.year,
+            author: input2.author,
+            journal: input2.journal,
+            openAccess: input2.openAccess
+          }),
+          timeoutMs,
+          "IEEE Xplore search timed out"
+        );
+        return {
+          records: papers2.map((paper, index2) => recordFromPaper(paper, source, index2 + 1)),
+          run: {
+            source,
+            status: "ok",
+            returned: papers2.length,
+            elapsedMs: Date.now() - startedAt
+          }
+        };
+      }
       const papers = await withTimeout(
         searchers2.crossref.search(input2.query, {
           maxResults: perSource,
@@ -361511,7 +361827,7 @@ var LiteratureService = class {
         warnings.push(`OpenAlex ID lookup failed: ${sanitizeSensitiveText(error62?.message || "unknown error")}`);
       }
     }
-    const doi = normalizeDoi2(seed.doi || records.find((record2) => record2.doi)?.doi);
+    const doi = normalizeDoi3(seed.doi || records.find((record2) => record2.doi)?.doi);
     if (doi) {
       const existingSources = new Set(records.flatMap((record2) => record2.sources.map((source) => source.source)));
       records.push(...await this.resolveByDoi(doi, warnings, existingSources));
@@ -361538,6 +361854,12 @@ var LiteratureService = class {
       tasks.push({
         source: "scopus",
         promise: searchers2.scopus.getPaperByDoi(doi).then((paper) => paper ? recordFromPaper(paper, "scopus", 1) : null)
+      });
+    }
+    if (/^10\.1109\//i.test(doi) && searchers2.ieee?.hasApiKey() && !skipSources.has("ieee")) {
+      tasks.push({
+        source: "ieee",
+        promise: searchers2.ieee.getPaperByDoi(doi).then((paper) => paper ? recordFromPaper(paper, "ieee", 1) : null)
       });
     }
     if (!skipSources.has("openalex")) {
@@ -361574,6 +361896,9 @@ var LiteratureService = class {
     }
     if (searchers2.scopus.hasApiKey()) {
       sources.push(["scopus", () => searchers2.scopus.search(title, { maxResults: 5 })]);
+    }
+    if (searchers2.ieee?.hasApiKey()) {
+      sources.push(["ieee", () => searchers2.ieee.search(title, { maxResults: 5 })]);
     }
     sources.push(
       ["openalex", () => searchers2.openalex.search(title, { maxResults: 5 })],
@@ -361655,7 +361980,7 @@ var LiteratureService = class {
     }
     const resolved = [...selected];
     for (const doi of input2.dois || []) {
-      resolved.push(...await this.resolveByDoi(normalizeDoi2(doi), []));
+      resolved.push(...await this.resolveByDoi(normalizeDoi3(doi), []));
     }
     return dedupeRecords(resolved);
   }
@@ -361684,7 +362009,7 @@ var LiteratureService = class {
     try {
       const related = await this.getRelatedRecords(record2, "references", 50, "short");
       const references = related.records.map((reference) => reference.doi || reference.identifiers.wosUid || reference.identifiers.openalexId || reference.recordId).filter((reference) => Boolean(reference));
-      return { ...record2, references: uniqueStrings2(references) };
+      return { ...record2, references: uniqueStrings3(references) };
     } catch {
       return record2;
     }
@@ -361710,7 +362035,7 @@ var LiteratureService = class {
         continue;
       }
       if (/^10\.\d{4,}\//.test(seed)) {
-        resolved.push(...await this.resolveByDoi(normalizeDoi2(seed), []));
+        resolved.push(...await this.resolveByDoi(normalizeDoi3(seed), []));
         continue;
       }
       throw new Error(`Unsupported seed identifier: ${seed}`);
@@ -361772,6 +362097,7 @@ var LiteratureService = class {
     const searchers2 = this.getSearchers();
     if (source === "webofscience") return searchers2.webofscience.hasApiKey();
     if (source === "scopus") return searchers2.scopus.hasApiKey();
+    if (source === "ieee") return Boolean(searchers2.ieee?.hasApiKey());
     return true;
   }
   configurationWarnings() {
@@ -361808,7 +362134,7 @@ function frequentTitleTerms(titles) {
   }
   return Array.from(counts.entries()).filter(([, count]) => count >= 2).sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0])).slice(0, 20).map(([term, count]) => ({ term, count }));
 }
-function uniqueStrings2(values) {
+function uniqueStrings3(values) {
   const seen = /* @__PURE__ */ new Set();
   const result = [];
   for (const value of values) {
@@ -361882,6 +362208,7 @@ function initializeSearchers() {
     process.env.OPENALEX_API_KEY,
     process.env.OPENALEX_EMAIL
   );
+  const ieeeSearcher = new IEEEXploreSearcher(process.env.IEEE_XPLORE_API_KEY || process.env.IEEE_API_KEY);
   const publicPaper = new PublicPaperService({
     retrievalService,
     publicAccess: publicAccessDiscovery,
@@ -361905,6 +362232,7 @@ function initializeSearchers() {
     scopus: scopusSearcher,
     crossref: crossrefSearcher,
     openalex: openAlexSearcher,
+    ieee: ieeeSearcher,
     publicAccess: wosSearcher.getPublicAccessDiscovery(),
     platforms: {
       arxiv: arxivSearcher,
@@ -361921,7 +362249,8 @@ function initializeSearchers() {
       wiley: wileySearcher,
       scopus: scopusSearcher,
       crossref: crossrefSearcher,
-      openalex: openAlexSearcher
+      openalex: openAlexSearcher,
+      ieee: ieeeSearcher
     },
     retrievalService,
     publicPaper
@@ -361955,6 +362284,7 @@ var SearchPapersSchema = external_exports.object({
     "scopus",
     "crossref",
     "openalex",
+    "ieee",
     "all"
   ]).optional().default("crossref"),
   maxResults: external_exports.number().int().min(1).max(100).optional().default(10),
@@ -362065,7 +362395,7 @@ var DiscoverPaperAccessSchema = external_exports.object({
 });
 var GetPaperByDoiSchema = external_exports.object({
   doi: external_exports.string().min(1),
-  platform: external_exports.enum(["arxiv", "webofscience", "scihub", "all"]).optional().default("all")
+  platform: external_exports.enum(["arxiv", "webofscience", "scihub", "ieee", "all"]).optional().default("all")
 }).strip();
 var SearchSciHubSchema = external_exports.object({
   doiOrUrl: external_exports.string().min(1),
@@ -362112,6 +362442,15 @@ var SearchOpenAlexSchema = external_exports.object({
   sortBy: external_exports.enum(["relevance", "date", "citations"]).optional(),
   sortOrder: SortOrderSchema.optional()
 }).strip();
+var SearchIEEESchema = external_exports.object({
+  query: external_exports.string().min(1),
+  maxResults: external_exports.number().int().min(1).max(200).optional().default(25),
+  year: external_exports.string().optional(),
+  author: external_exports.string().optional(),
+  journal: external_exports.string().optional(),
+  openAccess: external_exports.boolean().optional(),
+  contentType: external_exports.enum(["Books", "Conferences", "Courses", "Early Access", "Journals", "Magazines", "Standards"]).optional()
+}).strip();
 var SearchCrossrefSchema = external_exports.object({
   query: external_exports.string().min(1),
   maxResults: external_exports.number().int().min(1).max(100).optional().default(10),
@@ -362127,7 +362466,7 @@ var GetCitationsSchema = external_exports.object({
   doi: external_exports.string().min(1),
   forceRefresh: external_exports.boolean().optional().default(false)
 }).strip();
-var LiteratureSourceSchema = external_exports.enum(["webofscience", "scopus", "openalex", "crossref"]);
+var LiteratureSourceSchema = external_exports.enum(["webofscience", "scopus", "openalex", "crossref", "ieee"]);
 var ResultLayerSchema = external_exports.enum(["metadata", "abstract", "evidence"]);
 var SearchModeSchema = external_exports.enum(["quick", "balanced", "deep"]);
 var CreateResearchBriefSchema = external_exports.object({
@@ -362156,7 +362495,7 @@ var SearchLiteratureSchema = external_exports.object({
   briefId: external_exports.string().optional(),
   mode: SearchModeSchema.optional().default("balanced"),
   layer: ResultLayerSchema.optional().default("abstract"),
-  sources: external_exports.array(LiteratureSourceSchema).max(4).optional(),
+  sources: external_exports.array(LiteratureSourceSchema).max(5).optional(),
   maxResults: external_exports.number().int().min(1).max(300).optional(),
   perSource: external_exports.number().int().min(1).max(100).optional(),
   year: external_exports.string().optional(),
@@ -362300,6 +362639,8 @@ function parseToolArgs(toolName, args) {
       return SearchCrossrefSchema.parse(args);
     case "search_openalex":
       return SearchOpenAlexSchema.parse(args);
+    case "search_ieee":
+      return SearchIEEESchema.parse(args);
     case "create_research_brief":
       return CreateResearchBriefSchema.parse(args);
     case "search_literature":
@@ -363244,6 +363585,26 @@ ${JSON.stringify(
       });
       return jsonTextResponse(
         `Found ${results.length} OpenAlex papers.
+
+${JSON.stringify(
+          results.map((paper) => PaperFactory.toDict(paper)),
+          null,
+          2
+        )}`
+      );
+    }
+    case "search_ieee": {
+      const { query, maxResults, year, author, journal, openAccess, contentType } = args;
+      const results = await searchers2.ieee.search(query, {
+        maxResults,
+        year,
+        author,
+        journal,
+        openAccess,
+        contentType
+      });
+      return jsonTextResponse(
+        `Found ${results.length} IEEE Xplore papers.
 
 ${JSON.stringify(
           results.map((paper) => PaperFactory.toDict(paper)),

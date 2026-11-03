@@ -69,7 +69,8 @@ export const API_ENDPOINTS = {
   BIORXIV: 'https://api.biorxiv.org',
   MEDRXIV: 'https://api.medrxiv.org',
   WILEY_TDM: 'https://api.wiley.com/onlinelibrary/tdm/v1',
-  OPENALEX: 'https://api.openalex.org'
+  OPENALEX: 'https://api.openalex.org',
+  IEEE_XPLORE: 'https://ieeexploreapi.ieee.org/api/v1'
 } as const;
 
 /**

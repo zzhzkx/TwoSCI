@@ -46,6 +46,8 @@ export interface SearchOptions {
   affiliation?: string;
   /** 文档类型过滤 (Scopus) */
   documentType?: 'ar' | 'cp' | 're' | 'bk' | 'ch';
+  /** 内容类型过滤 (IEEE Xplore) */
+  contentType?: 'Books' | 'Conferences' | 'Courses' | 'Early Access' | 'Journals' | 'Magazines' | 'Standards';
   /** 出版物类型 (PubMed) */
   publicationType?: string[];
 }

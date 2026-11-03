@@ -17,6 +17,7 @@ const TITLE_STOPWORDS = new Set([
 const SOURCE_PRIORITY: Record<LiteratureSource, number> = {
   webofscience: 4,
   scopus: 3,
+  ieee: 3,
   openalex: 2,
   crossref: 1
 };

@@ -1,7 +1,7 @@
 {
   "name": "twosci",
   "version": "0.1.0",
-  "description": "Seed-paper-driven literature discovery, abstract screening, citation expansion, and evidence export across Web of Science, Scopus, OpenAlex, and Crossref.",
+  "description": "Seed-paper-driven literature discovery, abstract screening, citation expansion, and evidence export across Web of Science, Scopus, OpenAlex, Crossref, and IEEE Xplore.",
   "author": {
     "name": "zzhzkx"
   },
@@ -11,6 +11,7 @@
     "web of science",
     "scopus",
     "openalex",
+    "ieee xplore",
     "citation graph",
     "systematic review",
     "MCP"

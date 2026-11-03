@@ -8,7 +8,8 @@ papers, trace citations, and export evidence-ready records.
 It is designed for speed and stability rather than maximizing the number of
 search boxes. Web of Science and Scopus are the primary entitlement-backed
 sources; OpenAlex and Crossref provide fast discovery, metadata, abstracts,
-open-access links, and fallback coverage.
+open-access links, and fallback coverage. IEEE Xplore is available as an
+opt-in source for IEEE journals, conferences, standards, and books.
 
 ## Core Workflow
 
@@ -29,7 +30,8 @@ open-access links, and fallback coverage.
 | Tool | Purpose |
 | --- | --- |
 | `create_research_brief` | Resolve a seed paper and build a reusable research context |
-| `search_literature` | Unified WoS/Scopus/OpenAlex/Crossref search with deduplication |
+| `search_literature` | Unified WoS/Scopus/OpenAlex/Crossref/IEEE search with deduplication |
+| `search_ieee` | Direct IEEE Xplore metadata and abstract search |
 | `get_literature_records` | Hydrate stored records without repeating discovery; `fetchReferences=true` optionally fills references |
 | `expand_citation_graph` | One-hop references, citing papers, or related works |
 | `save_screening` | Persist subagent screening decisions and reasons |
@@ -38,6 +40,10 @@ open-access links, and fallback coverage.
 
 The original per-platform tools remain available for targeted lookups, PDF
 access, and legacy workflows.
+
+`search_ieee` performs a direct IEEE Xplore metadata/abstract search. IEEE is
+also accepted as an explicit source in `search_literature`; it is not part of
+the default `quick`, `balanced`, or `deep` source sets.
 
 ## Result Layers
 
@@ -72,6 +78,25 @@ If only `WOS_API_KEY` is configured, TwoSCI falls back to Starter v2 and warns
 that abstracts and citation relations are limited. Starter trials are not
 sufficient for a practical abstract-screening workflow; institutional WoS
 access or Expanded is recommended.
+
+## IEEE Xplore Behavior
+
+Configure `IEEE_XPLORE_API_KEY` to enable IEEE Xplore. The integration uses the
+official Metadata API with the key passed as the `apikey` query parameter.
+
+- One request returns up to 200 records.
+- Search results include abstracts, author keywords, IEEE terms, citation
+  counts, open-access status, and IEEE article numbers.
+- IEEE metadata may include records outside your institution's subscription;
+  this does not grant full-text access.
+- IEEE has no references or citing-paper graph in this integration. Use WoS
+  Expanded or OpenAlex for citation expansion.
+- `IEEE_XPLORE_RPS` controls the local request rate. Keep it at or below the
+  rate limit shown during IEEE registration; the default is 1 request/second.
+
+After applying, IEEE reviews the application and issues keys during US Eastern
+business hours on weekdays. An unapproved key returns
+`ERR_403_DEVELOPER_INACTIVE`.
 
 ## Installation
 
@@ -119,6 +144,8 @@ WOS_EXPANDED_API_KEY=
 WOS_API_KEY=
 ELSEVIER_API_KEY=
 SCOPUS_SEARCH_API_KEY=
+IEEE_XPLORE_API_KEY=
+IEEE_XPLORE_RPS=1
 OPENALEX_EMAIL=
 CROSSREF_MAILTO=
 ```
@@ -127,6 +154,8 @@ CROSSREF_MAILTO=
 - `WOS_API_KEY`: Starter fallback.
 - `ELSEVIER_API_KEY`: Scopus detail/abstract entitlement.
 - `SCOPUS_SEARCH_API_KEY`: optional dedicated Scopus Search key.
+- `IEEE_XPLORE_API_KEY`: IEEE Xplore Metadata API key.
+- `IEEE_XPLORE_RPS`: local IEEE request rate; default `1`.
 - `OPENALEX_EMAIL`: polite-pool contact email.
 - `CROSSREF_MAILTO`: Crossref polite-pool contact email.
 
@@ -155,8 +184,8 @@ protocol and the full evidence workflow.
 
 ## Data and Compliance
 
-- WoS/Scopus full records are held in memory for the current research session.
-- No background disk cache is written for WoS/Scopus content.
+- WoS/Scopus/IEEE full records are held in memory for the current research session.
+- No background disk cache is written for WoS/Scopus/IEEE content.
 - User-initiated BibTeX/RIS/JSON export is the intended retention path.
 - Citation counts are kept per source and are not summed across databases.
 - OpenAlex/Crossref may use short-lived in-process caches.

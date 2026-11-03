@@ -12,6 +12,7 @@ import { WileySearcher } from '../platforms/WileySearcher.js';
 import { ScopusSearcher } from '../platforms/ScopusSearcher.js';
 import { CrossrefSearcher } from '../platforms/CrossrefSearcher.js';
 import { OpenAlexSearcher } from '../platforms/OpenAlexSearcher.js';
+import { IEEEXploreSearcher } from '../platforms/IEEEXploreSearcher.js';
 import { PublicAccessDiscovery } from '../services/PublicAccessDiscovery.js';
 import { RetrievalService } from '../retrieval/RetrievalService.js';
 import { DirectHttpProvider } from '../retrieval/DirectHttpProvider.js';
@@ -40,6 +41,7 @@ export interface Searchers {
   scopus: ScopusSearcher;
   crossref: CrossrefSearcher;
   openalex: OpenAlexSearcher;
+  ieee: IEEEXploreSearcher;
   publicAccess: PublicAccessDiscovery;
   /** Legacy status seam retained for injected test/adapter registries only. */
   scrapingAnt?: { getStatus(): Record<string, unknown> };
@@ -108,6 +110,7 @@ export function initializeSearchers(): Searchers {
     process.env.OPENALEX_API_KEY,
     process.env.OPENALEX_EMAIL
   );
+  const ieeeSearcher = new IEEEXploreSearcher(process.env.IEEE_XPLORE_API_KEY || process.env.IEEE_API_KEY);
   const publicPaper = new PublicPaperService({
     retrievalService,
     publicAccess: publicAccessDiscovery,
@@ -132,6 +135,7 @@ export function initializeSearchers(): Searchers {
     scopus: scopusSearcher,
     crossref: crossrefSearcher,
     openalex: openAlexSearcher,
+    ieee: ieeeSearcher,
     publicAccess: wosSearcher.getPublicAccessDiscovery(),
     platforms: {
       arxiv: arxivSearcher,
@@ -148,7 +152,8 @@ export function initializeSearchers(): Searchers {
       wiley: wileySearcher,
       scopus: scopusSearcher,
       crossref: crossrefSearcher,
-      openalex: openAlexSearcher
+      openalex: openAlexSearcher,
+      ieee: ieeeSearcher
     },
     retrievalService,
     publicPaper

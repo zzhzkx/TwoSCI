@@ -38,15 +38,15 @@ const packageJson = {
 
 const interfaceMetadata = {
   displayName: 'TwoSCI',
-  shortDescription: 'Run a human-like literature research workflow with WoS and Scopus.',
+  shortDescription: 'Run a human-like literature research workflow with WoS, Scopus, and IEEE.',
   longDescription:
-    'TwoSCI starts from a seed paper and the user research intent, discovers deduplicated literature across Web of Science, Scopus, OpenAlex, and Crossref, delegates abstract screening to subagents, expands one-hop citation networks, keeps screening decisions, and exports evidence-ready records.',
+    'TwoSCI starts from a seed paper and the user research intent, discovers deduplicated literature across Web of Science, Scopus, OpenAlex, Crossref, and IEEE Xplore, delegates abstract screening to subagents, expands one-hop citation networks, keeps screening decisions, and exports evidence-ready records.',
   developerName: 'zzhzkx',
   category: 'Science',
   capabilities: ['Interactive', 'Read', 'Write'],
   defaultPrompt: [
     'Use my seed paper to map the field, indicators, and follow-up studies.',
-    'Search WoS and Scopus, then screen the abstracts with subagents.',
+    'Search WoS, Scopus, and IEEE, then screen the abstracts with subagents.',
     'Expand the references and citing papers of these key papers.'
   ],
   brandColor: '#0F766E'
@@ -56,7 +56,7 @@ const baseManifest = {
   name: 'twosci',
   version: '0.1.0',
   description:
-    'Seed-paper-driven literature discovery, abstract screening, citation expansion, and evidence export across Web of Science, Scopus, OpenAlex, and Crossref.',
+    'Seed-paper-driven literature discovery, abstract screening, citation expansion, and evidence export across Web of Science, Scopus, OpenAlex, Crossref, and IEEE Xplore.',
   author: { name: 'zzhzkx' },
   license: 'MIT',
   keywords: [
@@ -64,6 +64,7 @@ const baseManifest = {
     'web of science',
     'scopus',
     'openalex',
+    'ieee xplore',
     'citation graph',
     'systematic review',
     'MCP'
@@ -149,6 +150,8 @@ variables in the host application:
 - \`WOS_API_KEY\`: Starter fallback.
 - \`ELSEVIER_API_KEY\`: Scopus details.
 - \`SCOPUS_SEARCH_API_KEY\`: optional dedicated Scopus Search key.
+- \`IEEE_XPLORE_API_KEY\`: IEEE Xplore Metadata API key.
+- \`IEEE_XPLORE_RPS\`: local IEEE request rate; default \`1\`.
 - \`OPENALEX_EMAIL\`: polite-pool contact email.
 
 If \`WOS_EXPANDED_API_KEY\` is present, all WoS calls use Expanded by default.

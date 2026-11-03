@@ -26,6 +26,7 @@ export const SearchPapersSchema = z
         'scopus',
         'crossref',
         'openalex',
+        'ieee',
         'all'
       ])
       .optional()
@@ -184,7 +185,7 @@ export const DiscoverPaperAccessSchema = z
 export const GetPaperByDoiSchema = z
   .object({
     doi: z.string().min(1),
-    platform: z.enum(['arxiv', 'webofscience', 'scihub', 'all']).optional().default('all')
+    platform: z.enum(['arxiv', 'webofscience', 'scihub', 'ieee', 'all']).optional().default('all')
   })
   .strip();
 
@@ -251,6 +252,20 @@ export const SearchOpenAlexSchema = z
   })
   .strip();
 
+export const SearchIEEESchema = z
+  .object({
+    query: z.string().min(1),
+    maxResults: z.number().int().min(1).max(200).optional().default(25),
+    year: z.string().optional(),
+    author: z.string().optional(),
+    journal: z.string().optional(),
+    openAccess: z.boolean().optional(),
+    contentType: z
+      .enum(['Books', 'Conferences', 'Courses', 'Early Access', 'Journals', 'Magazines', 'Standards'])
+      .optional()
+  })
+  .strip();
+
 export const SearchCrossrefSchema = z
   .object({
     query: z.string().min(1),
@@ -275,7 +290,7 @@ export const GetCitationsSchema = z
   })
   .strip();
 
-const LiteratureSourceSchema = z.enum(['webofscience', 'scopus', 'openalex', 'crossref']);
+const LiteratureSourceSchema = z.enum(['webofscience', 'scopus', 'openalex', 'crossref', 'ieee']);
 const ResultLayerSchema = z.enum(['metadata', 'abstract', 'evidence']);
 const SearchModeSchema = z.enum(['quick', 'balanced', 'deep']);
 
@@ -315,7 +330,7 @@ export const SearchLiteratureSchema = z
     briefId: z.string().optional(),
     mode: SearchModeSchema.optional().default('balanced'),
     layer: ResultLayerSchema.optional().default('abstract'),
-    sources: z.array(LiteratureSourceSchema).max(4).optional(),
+    sources: z.array(LiteratureSourceSchema).max(5).optional(),
     maxResults: z.number().int().min(1).max(300).optional(),
     perSource: z.number().int().min(1).max(100).optional(),
     year: z.string().optional(),
@@ -464,6 +479,7 @@ export type ToolName =
   | 'search_scopus'
   | 'search_crossref'
   | 'search_openalex'
+  | 'search_ieee'
   | 'create_research_brief'
   | 'search_literature'
   | 'get_literature_records'
@@ -527,6 +543,8 @@ export function parseToolArgs(toolName: ToolName, args: unknown): any {
       return SearchCrossrefSchema.parse(args);
     case 'search_openalex':
       return SearchOpenAlexSchema.parse(args);
+    case 'search_ieee':
+      return SearchIEEESchema.parse(args);
     case 'create_research_brief':
       return CreateResearchBriefSchema.parse(args);
     case 'search_literature':

@@ -33,6 +33,13 @@ describe('parseToolArgs', () => {
         parseToolArgs('search_papers', { query: 'test', maxResults: 101 })
       ).toThrow();
     });
+
+    it('should accept IEEE Xplore as a platform', () => {
+      expect(parseToolArgs('search_papers', {
+        query: 'optical phased array',
+        platform: 'ieee'
+      }).platform).toBe('ieee');
+    });
   });
 
   describe('search_webofscience', () => {
@@ -135,7 +142,7 @@ describe('parseToolArgs', () => {
   describe('get_paper_by_doi', () => {
     it('accepts exactly the declared platform values and applies the all default', () => {
       expect(parseToolArgs('get_paper_by_doi', { doi: '10.1038/nature12373' }).platform).toBe('all');
-      for (const platform of ['arxiv', 'webofscience', 'scihub', 'all']) {
+      for (const platform of ['arxiv', 'webofscience', 'scihub', 'ieee', 'all']) {
         expect(parseToolArgs('get_paper_by_doi', {
           doi: '10.1038/nature12373',
           platform
@@ -156,6 +163,40 @@ describe('parseToolArgs', () => {
         budget: 500
       });
       expect(args).toEqual({ doi: '10.1038/nature12373', platform: 'scihub' });
+    });
+  });
+
+  describe('search_ieee', () => {
+    it('applies IEEE defaults and accepts documented content types', () => {
+      expect(parseToolArgs('search_ieee', { query: 'photonic integration' })).toEqual({
+        query: 'photonic integration',
+        maxResults: 25
+      });
+      expect(parseToolArgs('search_ieee', {
+        query: 'photonic integration',
+        maxResults: 50,
+        contentType: 'Journals',
+        year: '2020-2025'
+      })).toEqual({
+        query: 'photonic integration',
+        maxResults: 50,
+        contentType: 'Journals',
+        year: '2020-2025'
+      });
+    });
+
+    it('rejects results above the IEEE single-request limit', () => {
+      expect(() => parseToolArgs('search_ieee', { query: 'test', maxResults: 201 })).toThrow();
+    });
+  });
+
+  describe('search_literature', () => {
+    it('accepts IEEE as an opt-in source', () => {
+      const args = parseToolArgs('search_literature', {
+        query: 'optical phased array',
+        sources: ['ieee', 'openalex']
+      });
+      expect(args.sources).toEqual(['ieee', 'openalex']);
     });
   });
 

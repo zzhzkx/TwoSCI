@@ -213,6 +213,7 @@ describe('MCP retrieval composition', () => {
       'arxiv',
       'webofscience',
       'scihub',
+      'ieee',
       'all'
     ]);
   });

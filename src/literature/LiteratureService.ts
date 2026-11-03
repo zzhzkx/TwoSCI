@@ -60,7 +60,8 @@ const SOURCE_LABELS: Record<LiteratureSource, string> = {
   webofscience: 'Web of Science',
   scopus: 'Scopus',
   openalex: 'OpenAlex',
-  crossref: 'Crossref'
+  crossref: 'Crossref',
+  ieee: 'IEEE Xplore'
 };
 
 export class LiteratureService {
@@ -348,7 +349,15 @@ export class LiteratureService {
         crossref: {
           ...searchers.crossref.getStatus(),
           rateLimiter: publicRateStatus(searchers.crossref.getStatus().rateLimiter)
-        }
+        },
+        ...(searchers.ieee
+          ? {
+              ieee: {
+                ...searchers.ieee.getStatus(),
+                rateLimiter: publicRateStatus(searchers.ieee.getStatus().rateLimiter)
+              }
+            }
+          : {})
       },
       mode_defaults: MODE_CONFIG,
       session_store: this.store.stats()
@@ -429,6 +438,29 @@ export class LiteratureService {
           }),
           timeoutMs,
           'OpenAlex search timed out'
+        );
+        return {
+          records: papers.map((paper, index) => recordFromPaper(paper, source, index + 1)),
+          run: {
+            source,
+            status: 'ok',
+            returned: papers.length,
+            elapsedMs: Date.now() - startedAt
+          }
+        };
+      }
+
+      if (source === 'ieee') {
+        const papers = await withTimeout(
+          searchers.ieee.search(input.query, {
+            maxResults: perSource,
+            year: input.year,
+            author: input.author,
+            journal: input.journal,
+            openAccess: input.openAccess
+          }),
+          timeoutMs,
+          'IEEE Xplore search timed out'
         );
         return {
           records: papers.map((paper, index) => recordFromPaper(paper, source, index + 1)),
@@ -544,6 +576,13 @@ export class LiteratureService {
           .then(paper => paper ? recordFromPaper(paper, 'scopus', 1) : null)
       });
     }
+    if (/^10\.1109\//i.test(doi) && searchers.ieee?.hasApiKey() && !skipSources.has('ieee')) {
+      tasks.push({
+        source: 'ieee',
+        promise: searchers.ieee.getPaperByDoi(doi)
+          .then(paper => paper ? recordFromPaper(paper, 'ieee', 1) : null)
+      });
+    }
     if (!skipSources.has('openalex')) {
       tasks.push({
         source: 'openalex',
@@ -581,6 +620,9 @@ export class LiteratureService {
     }
     if (searchers.scopus.hasApiKey()) {
       sources.push(['scopus', () => searchers.scopus.search(title, { maxResults: 5 })]);
+    }
+    if (searchers.ieee?.hasApiKey()) {
+      sources.push(['ieee', () => searchers.ieee.search(title, { maxResults: 5 })]);
     }
     sources.push(
       ['openalex', () => searchers.openalex.search(title, { maxResults: 5 })],
@@ -822,6 +864,7 @@ export class LiteratureService {
     const searchers = this.getSearchers();
     if (source === 'webofscience') return searchers.webofscience.hasApiKey();
     if (source === 'scopus') return searchers.scopus.hasApiKey();
+    if (source === 'ieee') return Boolean(searchers.ieee?.hasApiKey());
     return true;
   }
 

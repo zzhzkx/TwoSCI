@@ -42,6 +42,9 @@ afterEach(() => {
   delete process.env.SCIHUB_MIRRORS;
   delete process.env.CROSSREF_MAILTO;
   delete process.env.WOS_VERBOSE_LOGGING;
+  delete process.env.IEEE_XPLORE_API_KEY;
+  delete process.env.IEEE_API_KEY;
+  delete process.env.IEEE_XPLORE_RPS;
 });
 
 export {};

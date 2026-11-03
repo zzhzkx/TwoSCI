@@ -769,6 +769,26 @@ async function handleToolCallWithContext(
       );
     }
 
+    case 'search_ieee': {
+      const { query, maxResults, year, author, journal, openAccess, contentType } = args;
+      const results = await searchers.ieee.search(query, {
+        maxResults,
+        year,
+        author,
+        journal,
+        openAccess,
+        contentType
+      });
+
+      return jsonTextResponse(
+        `Found ${results.length} IEEE Xplore papers.\n\n${JSON.stringify(
+          results.map((paper: Paper) => PaperFactory.toDict(paper)),
+          null,
+          2
+        )}`
+      );
+    }
+
     case 'create_research_brief': {
       const brief = await searchers.literature.createBrief(args);
       return jsonValueResponse({

@@ -27,10 +27,11 @@ export const TOOLS: Tool[] = [
             'scopus',
             'crossref',
             'openalex',
+            'ieee',
             'all'
           ],
           description:
-            'Platform to search (default: crossref). Options: arxiv, webofscience/wos, pubmed, biorxiv, medrxiv, semantic, iacr, googlescholar/scholar, scihub, sciencedirect, springer, scopus, crossref, openalex, or all. "all" uses the unified multi-source path; prefer search_literature for seed-aware workflows. Note: Wiley only supports PDF download by DOI, use download_paper instead.'
+            'Platform to search (default: crossref). Options: arxiv, webofscience/wos, pubmed, biorxiv, medrxiv, semantic, iacr, googlescholar/scholar, scihub, sciencedirect, springer, scopus, crossref, openalex, ieee, or all. "all" uses the unified multi-source path; prefer search_literature for seed-aware workflows. Note: Wiley only supports PDF download by DOI, use download_paper instead.'
         },
         maxResults: {
           type: 'number',
@@ -388,7 +389,7 @@ export const TOOLS: Tool[] = [
         doi: { type: 'string', description: 'DOI (Digital Object Identifier)' },
         platform: {
           type: 'string',
-          enum: ['arxiv', 'webofscience', 'scihub', 'all'],
+          enum: ['arxiv', 'webofscience', 'scihub', 'ieee', 'all'],
           description: 'Platform to search'
         }
       },
@@ -604,6 +605,33 @@ export const TOOLS: Tool[] = [
     }
   },
   {
+    name: 'search_ieee',
+    description:
+      'Search IEEE Xplore metadata and abstracts (requires IEEE_XPLORE_API_KEY). One request returns up to 200 records; results may include metadata outside the caller\'s institutional subscription.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Free-text IEEE Xplore query' },
+        maxResults: {
+          type: 'number',
+          minimum: 1,
+          maximum: 200,
+          description: 'Maximum number of records (IEEE API limit: 200 per request)'
+        },
+        year: { type: 'string', description: 'Year filter (e.g., "2024" or "2020-2024")' },
+        author: { type: 'string', description: 'Author name filter' },
+        journal: { type: 'string', description: 'Publication title filter' },
+        openAccess: { type: 'boolean', description: 'Filter to IEEE open-access records' },
+        contentType: {
+          type: 'string',
+          enum: ['Books', 'Conferences', 'Courses', 'Early Access', 'Journals', 'Magazines', 'Standards'],
+          description: 'IEEE content type filter (case-sensitive)'
+        }
+      },
+      required: ['query']
+    }
+  },
+  {
     name: 'create_research_brief',
     description:
       'Create a research brief from a seed paper plus the user intent. Resolves the seed with WoS Expanded (when configured), Scopus, OpenAlex, and Crossref; returns its abstract, keywords, references, citing sample, and a brief_id for later searches.',
@@ -653,7 +681,7 @@ export const TOOLS: Tool[] = [
   {
     name: 'search_literature',
     description:
-      'Unified deduplicated literature search across WoS (Expanded by default when configured), Scopus, OpenAlex, and Crossref. Returns candidates with source provenance and a search_id. Use layer=metadata for cheap triage, abstract for screening, evidence for deeper evidence packets. Screening should be delegated to subagents in batches.',
+      'Unified deduplicated literature search across WoS (Expanded by default when configured), Scopus, OpenAlex, Crossref, and IEEE Xplore (opt-in source). Returns candidates with source provenance and a search_id. Use layer=metadata for cheap triage, abstract for screening, evidence for deeper evidence packets. Screening should be delegated to subagents in batches.',
     inputSchema: {
       type: 'object',
       additionalProperties: false,
@@ -674,7 +702,7 @@ export const TOOLS: Tool[] = [
         },
         sources: {
           type: 'array',
-          items: { type: 'string', enum: ['webofscience', 'scopus', 'openalex', 'crossref'] }
+          items: { type: 'string', enum: ['webofscience', 'scopus', 'openalex', 'crossref', 'ieee'] }
         },
         maxResults: { type: 'number', minimum: 1, maximum: 300 },
         perSource: { type: 'number', minimum: 1, maximum: 100 },
@@ -795,7 +823,7 @@ export const TOOLS: Tool[] = [
   {
     name: 'get_source_status',
     description:
-      'Report configured sources, WoS default product, quota/rate status, OpenAlex/Crossref cache state, and in-memory brief/search session counts. Set validate=true only when an actual key validation request is acceptable.',
+      'Report configured sources, WoS default product, quota/rate status, OpenAlex/Crossref cache state, IEEE rate status, and in-memory brief/search session counts. Set validate=true only when an actual key validation request is acceptable.',
     inputSchema: {
       type: 'object',
       additionalProperties: false,

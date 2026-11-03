@@ -283,6 +283,30 @@ describe('handleToolCall savePath guard', () => {
     }
   });
 
+  it('serializes IEEE Xplore results through the dedicated tool', async () => {
+    const paper = PaperFactory.create({
+      paperId: '11012345',
+      title: 'Optical Phased Arrays for Space Lasers',
+      source: 'ieee',
+      doi: '10.1109/JLT.2025.3581583'
+    });
+    const ieee = makeSearcher();
+    ieee.search = jest.fn(async () => [paper]);
+
+    const response = await handleToolCall(
+      'search_ieee',
+      { query: 'optical phased array', maxResults: 1, contentType: 'Journals' },
+      makeSearchers({ ieee }) as any
+    );
+
+    expect(ieee.search).toHaveBeenCalledWith(
+      'optical phased array',
+      expect.objectContaining({ maxResults: 1, contentType: 'Journals' })
+    );
+    expect(response.content[0].text).toContain('Found 1 IEEE Xplore papers');
+    expect(response.content[0].text).toContain('Optical Phased Arrays for Space Lasers');
+  });
+
   it('serializes related WoS papers through the unified Paper dictionary', async () => {
     const paper = PaperFactory.create({ paperId: 'WOS:2', title: 'Related', source: 'webofscience' });
     const searchers = makeSearchers({

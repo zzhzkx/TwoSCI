@@ -31,18 +31,19 @@ description: >
   - `metadata`：标题、作者、年份、期刊、DOI、来源。
   - `abstract`：增加摘要、关键词、分来源引用数。
   - `evidence`：增加参考文献、开放获取链接、全部标识符。仍然不是 PDF 全文。
-- WoS 和 Scopus 的完整记录只保存在当前进程的会话中，不落盘。用户主动导出 BibTeX/RIS/JSON 是预期留档方式。
+- WoS、Scopus 和 IEEE 的完整记录只保存在当前进程的会话中，不落盘。用户主动导出 BibTeX/RIS/JSON 是预期留档方式。
 - 不同来源的引用数分开保留，不要跨库相加。
 
 ## 工具地图
 
 - `create_research_brief`：种子文献 + 用户意图 -> 研究简报、种子画像、`brief_id`。
-- `search_literature`：多源检索、去重、排序 -> `search_id`。
+- `search_literature`：多源检索、去重、排序 -> `search_id`；需要 IEEE 覆盖时显式加入 `ieee`。
+- `search_ieee`：定向检索 IEEE Xplore 元数据和摘要。
 - `get_literature_records`：按 `record_id` 或 DOI 批量取完整记录；默认不重新请求 WoS/Scopus。
 - `expand_citation_graph`：从一个或多个种子扩展 `references`、`citing`、`related`。
 - `save_screening`：保存子 agent 的 include/exclude/maybe 决定和理由。
 - `export_literature`：导出 BibTeX、RIS、JSON。
-- `get_source_status`：查看 WoS 产品、Scopus、OpenAlex/Crossref 状态、配额和会话数。
+- `get_source_status`：查看 WoS 产品、Scopus、OpenAlex/Crossref、IEEE 状态、配额和会话数。
 
 ## 流程 A：用户给了一篇种子文献
 
@@ -97,6 +98,8 @@ AND (indicator OR metric OR assessment OR benchmarking)
 第一轮优先 `balanced` + `layer="abstract"`。不要一上来 `deep`，否则会增加无关摘要和配额消耗。
 
 调用 `search_literature` 时带上 `brief_id`。返回的 `search_id` 必须保留，后续筛选、补记录、导出都依赖它。
+
+如果研究主题集中在 IEEE 期刊、会议、标准或图书，可在 `sources` 中显式加入 `ieee`，或直接调用 `search_ieee`。IEEE 默认不进入 `quick`/`balanced`/`deep` 的来源集合；它提供元数据、摘要和引用数，但不提供参考文献或施引文献图。
 
 ## 流程 B：没有种子文献，只有主题
 
@@ -178,7 +181,7 @@ AND (indicator OR metric OR assessment OR benchmarking)
 - 种子优先用 `record_id` 或 DOI。
 - 第一轮 `limitPerSeed` 用 30 到 50。
 - 先用 `recordView="short"` 看标题和年份，再对入选节点取完整记录。
-- WoS Expanded 可用时优先 WoS；否则 OpenAlex，再否则 Crossref。
+- WoS Expanded 可用时优先 WoS；否则 OpenAlex，再否则 Crossref。IEEE 不参与引文扩展。
 - 引文图节点也要经过筛选，不要把所有施引文献都写进综述。
 
 ## 导出与留痕
@@ -191,6 +194,7 @@ AND (indicator OR metric OR assessment OR benchmarking)
 ## 失败与边界
 
 - WoS/Scopus 未配置：先调用 `get_source_status`，说明缺失的覆盖范围。不要假装检索过。
+- IEEE 返回 `ERR_403_DEVELOPER_INACTIVE`：说明申请仍在审核或密钥未激活，不要把它当成检索无结果。
 - 只有 WoS Starter：提醒用户 Starter 没有摘要和完整引文关系；建议申请机构版或配置 Expanded。不要静默降级。
 - 某个来源超时或报错：保留部分成功结果，明确报告哪个来源失败。
 - 摘要缺失：标记 `maybe`，不要根据标题下结论。

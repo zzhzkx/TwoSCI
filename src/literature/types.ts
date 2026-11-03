@@ -1,4 +1,4 @@
-export type LiteratureSource = 'webofscience' | 'scopus' | 'openalex' | 'crossref';
+export type LiteratureSource = 'webofscience' | 'scopus' | 'openalex' | 'crossref' | 'ieee';
 export type SearchMode = 'quick' | 'balanced' | 'deep';
 export type ResultLayer = 'metadata' | 'abstract' | 'evidence';
 export type ScreeningVerdict = 'include' | 'exclude' | 'maybe';
