@@ -8,18 +8,29 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import * as dotenv from 'dotenv';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
+import * as os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { registerMcpHandlers } from './mcp/registerHandlers.js';
 import { isMCPMode, logDebug } from './utils/Logger.js';
 
 function loadEnvironment(): void {
-  // 1. 尝试当前工作空间目录下的 .env (方便用户在自己的工程根目录统一配置，插件重装或升级不丢失)
+  // 1. 尝试用户全局配置目录 ~/.twosci/.env (全系统共享，任何终端或应用通用，插件重装或升级不丢失)
+  try {
+    const homeEnv = path.resolve(os.homedir(), '.twosci', '.env');
+    if (fs.existsSync(homeEnv)) {
+      dotenv.config({ path: homeEnv });
+    }
+  } catch {
+    // ignore home resolution error
+  }
+
+  // 2. 尝试当前工作空间目录下的 .env (方便在特定工程根目录放 .env)
   const cwdEnv = path.resolve(process.cwd(), '.env');
   if (fs.existsSync(cwdEnv)) {
     dotenv.config({ path: cwdEnv });
   }
 
-  // 2. 尝试插件自身安装目录下的 .env
+  // 3. 尝试插件自身安装目录下的 .env
   try {
     const currentDir = typeof __dirname !== 'undefined'
       ? __dirname
@@ -32,8 +43,42 @@ function loadEnvironment(): void {
     // ignore resolution error
   }
 
-  // 3. 兜底默认加载
+  // 4. 自动继承 Claude Desktop 客户端配置文件中的已有密钥 (免去重复配置)
+  loadClaudeDesktopConfig();
+
+  // 5. 兜底默认加载
   dotenv.config();
+}
+
+function loadClaudeDesktopConfig(): void {
+  try {
+    const platform = process.platform;
+    let configPath = '';
+    if (platform === 'win32') {
+      configPath = path.join(process.env.APPDATA || '', 'Claude', 'claude_desktop_config.json');
+    } else if (platform === 'darwin') {
+      configPath = path.join(process.env.HOME || '', 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json');
+    } else {
+      configPath = path.join(process.env.HOME || '', '.config', 'Claude', 'claude_desktop_config.json');
+    }
+
+    if (configPath && fs.existsSync(configPath)) {
+      const raw = fs.readFileSync(configPath, 'utf8');
+      const parsed = JSON.parse(raw);
+      const mcpServers = parsed?.mcpServers || {};
+      // 优先读取 twosci 的 env，或兼容继承 paper-search 的原有 env
+      const envSource = mcpServers.twosci?.env || mcpServers['paper-search']?.env;
+      if (envSource && typeof envSource === 'object') {
+        for (const [key, value] of Object.entries(envSource)) {
+          if (!process.env[key] && typeof value === 'string' && value.trim()) {
+            process.env[key] = value.trim();
+          }
+        }
+      }
+    }
+  } catch {
+    // 静默安全处理，绝不中断服务启动
+  }
 }
 
 loadEnvironment();

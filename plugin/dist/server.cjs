@@ -7342,7 +7342,7 @@ var require_main = __commonJS({
   "node_modules/dotenv/lib/main.js"(exports2, module2) {
     var fs11 = require("fs");
     var path10 = require("path");
-    var os = require("os");
+    var os2 = require("os");
     var crypto2 = require("crypto");
     var packageJson = require_package();
     var version2 = packageJson.version;
@@ -7465,7 +7465,7 @@ var require_main = __commonJS({
       return null;
     }
     function _resolveHome(envPath) {
-      return envPath[0] === "~" ? path10.join(os.homedir(), envPath.slice(1)) : envPath;
+      return envPath[0] === "~" ? path10.join(os2.homedir(), envPath.slice(1)) : envPath;
     }
     function _configVault(options) {
       const debug = Boolean(options && options.debug);
@@ -20650,7 +20650,7 @@ var require_has_flag = __commonJS({
 var require_supports_color = __commonJS({
   "node_modules/supports-color/index.js"(exports2, module2) {
     "use strict";
-    var os = require("os");
+    var os2 = require("os");
     var tty = require("tty");
     var hasFlag = require_has_flag();
     var { env } = process;
@@ -20698,7 +20698,7 @@ var require_supports_color = __commonJS({
         return min;
       }
       if (process.platform === "win32") {
-        const osRelease = os.release().split(".");
+        const osRelease = os2.release().split(".");
         if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
           return Number(osRelease[2]) >= 14931 ? 3 : 2;
         }
@@ -61136,7 +61136,7 @@ var require_pdf_worker = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join7(separator) {
+                join: function join8(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -88179,7 +88179,7 @@ var require_pdf = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join7(separator) {
+                join: function join8(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -123351,7 +123351,7 @@ var require_pdf_worker2 = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join7(separator) {
+                join: function join8(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -150498,7 +150498,7 @@ var require_pdf2 = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join7(separator) {
+                join: function join8(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -334241,6 +334241,7 @@ var StdioServerTransport = class {
 var dotenv = __toESM(require_main(), 1);
 var path9 = __toESM(require("node:path"), 1);
 var fs10 = __toESM(require("node:fs"), 1);
+var os = __toESM(require("node:os"), 1);
 var import_node_url = require("node:url");
 
 // src/mcp/tools.ts
@@ -364676,6 +364677,13 @@ function registerMcpHandlers(server2, searcherFactory = initializeSearchers) {
 init_Logger();
 var import_meta = {};
 function loadEnvironment() {
+  try {
+    const homeEnv = path9.resolve(os.homedir(), ".twosci", ".env");
+    if (fs10.existsSync(homeEnv)) {
+      dotenv.config({ path: homeEnv });
+    }
+  } catch {
+  }
   const cwdEnv = path9.resolve(process.cwd(), ".env");
   if (fs10.existsSync(cwdEnv)) {
     dotenv.config({ path: cwdEnv });
@@ -364688,7 +364696,35 @@ function loadEnvironment() {
     }
   } catch {
   }
+  loadClaudeDesktopConfig();
   dotenv.config();
+}
+function loadClaudeDesktopConfig() {
+  try {
+    const platform = process.platform;
+    let configPath = "";
+    if (platform === "win32") {
+      configPath = path9.join(process.env.APPDATA || "", "Claude", "claude_desktop_config.json");
+    } else if (platform === "darwin") {
+      configPath = path9.join(process.env.HOME || "", "Library", "Application Support", "Claude", "claude_desktop_config.json");
+    } else {
+      configPath = path9.join(process.env.HOME || "", ".config", "Claude", "claude_desktop_config.json");
+    }
+    if (configPath && fs10.existsSync(configPath)) {
+      const raw = fs10.readFileSync(configPath, "utf8");
+      const parsed = JSON.parse(raw);
+      const mcpServers = parsed?.mcpServers || {};
+      const envSource = mcpServers.twosci?.env || mcpServers["paper-search"]?.env;
+      if (envSource && typeof envSource === "object") {
+        for (const [key, value] of Object.entries(envSource)) {
+          if (!process.env[key] && typeof value === "string" && value.trim()) {
+            process.env[key] = value.trim();
+          }
+        }
+      }
+    }
+  } catch {
+  }
 }
 loadEnvironment();
 var server = new Server(
