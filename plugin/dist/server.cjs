@@ -33220,7 +33220,7 @@ var init_constants = __esm({
       OPENALEX: "https://api.openalex.org",
       IEEE_XPLORE: "https://ieeexploreapi.ieee.org/api/v1"
     };
-    USER_AGENT = "TwoSCI/0.1.0 (Academic Research Tool)";
+    USER_AGENT = "TwoSCI/0.2.0 (Academic Research Tool)";
     DEFAULT_MAILTO = process.env.CROSSREF_MAILTO || "twosci@example.com";
   }
 });
@@ -364651,7 +364651,7 @@ function registerMcpHandlers(server2, searcherFactory = initializeSearchers) {
       },
       serverInfo: {
         name: "twosci",
-        version: "0.1.0"
+        version: "0.2.0"
       }
     };
   });
@@ -364694,7 +364694,7 @@ loadEnvironment();
 var server = new Server(
   {
     name: "twosci",
-    version: "0.1.0"
+    version: "0.2.0"
   },
   {
     capabilities: {

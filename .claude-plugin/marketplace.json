@@ -9,7 +9,7 @@
       "name": "twosci",
       "source": "./plugin",
       "description": "Seed-paper-driven literature discovery and evidence export across WoS, Scopus, OpenAlex, Crossref, and IEEE Xplore.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ]
 }
