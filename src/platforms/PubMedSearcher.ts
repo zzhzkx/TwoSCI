@@ -449,22 +449,34 @@ export class PubMedSearcher extends PaperSource {
   }
 
   /**
-   * 提取摘要
+   * 提取摘要，支持纯文本与包含 Label (如 BACKGROUND, METHODS) 的结构化摘要
    */
   private extractAbstract(abstractData: any): string {
-    if (!abstractData) {
+    if (!abstractData || !abstractData.AbstractText) {
       return '';
     }
 
-    if (typeof abstractData.AbstractText === 'string') {
-      return abstractData.AbstractText;
+    const text = abstractData.AbstractText;
+    if (typeof text === 'string') {
+      return text;
     }
 
-    if (Array.isArray(abstractData.AbstractText)) {
-      return abstractData.AbstractText.join(' ');
+    if (Array.isArray(text)) {
+      return text.map(item => this.parseAbstractPart(item)).filter(Boolean).join(' ');
     }
 
-    return '';
+    return this.parseAbstractPart(text);
+  }
+
+  private parseAbstractPart(item: any): string {
+    if (!item) return '';
+    if (typeof item === 'string') return item;
+    const body = typeof item._ === 'string' ? item._ : (typeof item === 'string' ? item : '');
+    const label = item.$?.Label || item.$?.label;
+    if (label && body) {
+      return `${label}: ${body}`;
+    }
+    return body || (item._ ? String(item._) : '');
   }
 
   /**

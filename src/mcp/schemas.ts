@@ -402,6 +402,26 @@ export const ExportLiteratureSchema = z
   .strict()
   .refine(value => Boolean(value.searchId || value.briefId), 'Provide searchId or briefId');
 
+export const ResolveFullTextAccessSchema = z
+  .object({
+    searchId: z.string().optional(),
+    briefId: z.string().optional(),
+    recordIds: z.array(z.string()).max(200).optional(),
+    verdict: z.enum(['include', 'exclude', 'maybe', 'all']).optional().default('include')
+  })
+  .strict()
+  .refine(value => Boolean(value.searchId || value.briefId || value.recordIds?.length), 'Provide searchId, briefId, or recordIds');
+
+export const GenerateReadingCardsSchema = z
+  .object({
+    searchId: z.string().optional(),
+    briefId: z.string().optional(),
+    recordIds: z.array(z.string()).max(100).optional(),
+    verdict: z.enum(['include', 'exclude', 'maybe', 'all']).optional().default('include')
+  })
+  .strict()
+  .refine(value => Boolean(value.searchId || value.briefId || value.recordIds?.length), 'Provide searchId, briefId, or recordIds');
+
 export const GetSourceStatusSchema = z
   .object({
     validate: z.boolean().optional().default(false)
@@ -487,6 +507,8 @@ export type ToolName =
   | 'expand_citation_graph'
   | 'save_screening'
   | 'export_literature'
+  | 'resolve_fulltext_access'
+  | 'generate_reading_cards'
   | 'get_source_status'
   | 'get_citations';
 
@@ -558,6 +580,10 @@ export function parseToolArgs(toolName: ToolName, args: unknown): any {
       return SaveScreeningSchema.parse(args);
     case 'export_literature':
       return ExportLiteratureSchema.parse(args);
+    case 'resolve_fulltext_access':
+      return ResolveFullTextAccessSchema.parse(args);
+    case 'generate_reading_cards':
+      return GenerateReadingCardsSchema.parse(args);
     case 'get_source_status':
       return GetSourceStatusSchema.parse(args ?? {});
     default:

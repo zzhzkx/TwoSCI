@@ -3,9 +3,8 @@
     "twosci": {
       "command": "node",
       "args": [
-        "./dist/server.cjs"
-      ],
-      "cwd": "."
+        "${CLAUDE_PLUGIN_ROOT}/dist/server.cjs"
+      ]
     }
   }
 }

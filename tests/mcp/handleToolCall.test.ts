@@ -307,6 +307,36 @@ describe('handleToolCall savePath guard', () => {
     expect(response.content[0].text).toContain('Optical Phased Arrays for Space Lasers');
   });
 
+  it('routes resolve_fulltext_access and generate_reading_cards to literature service', async () => {
+    const literature = {
+      resolveFullText: jest.fn(() => ({ totalRecords: 1, routes: [] })),
+      generateReadingCards: jest.fn(() => ({ totalCards: 1, cards: [], combinedMarkdown: '# Packet' }))
+    };
+    const searchers = makeSearchers({ literature }) as any;
+
+    const ftResponse = await handleToolCall(
+      'resolve_fulltext_access',
+      { searchId: 'srch_1', verdict: 'include' },
+      searchers
+    );
+    expect(literature.resolveFullText).toHaveBeenCalledWith(expect.objectContaining({
+      searchId: 'srch_1',
+      verdict: 'include'
+    }));
+    expect(JSON.parse(ftResponse.content[0].text).totalRecords).toBe(1);
+
+    const rcResponse = await handleToolCall(
+      'generate_reading_cards',
+      { searchId: 'srch_1', verdict: 'include' },
+      searchers
+    );
+    expect(literature.generateReadingCards).toHaveBeenCalledWith(expect.objectContaining({
+      searchId: 'srch_1',
+      verdict: 'include'
+    }));
+    expect(JSON.parse(rcResponse.content[0].text).combinedMarkdown).toBe('# Packet');
+  });
+
   it('serializes related WoS papers through the unified Paper dictionary', async () => {
     const paper = PaperFactory.create({ paperId: 'WOS:2', title: 'Related', source: 'webofscience' });
     const searchers = makeSearchers({

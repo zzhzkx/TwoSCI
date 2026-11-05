@@ -6,10 +6,37 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import * as dotenv from 'dotenv';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { registerMcpHandlers } from './mcp/registerHandlers.js';
 import { isMCPMode, logDebug } from './utils/Logger.js';
 
-dotenv.config();
+function loadEnvironment(): void {
+  // 1. 尝试当前工作空间目录下的 .env (方便用户在自己的工程根目录统一配置，插件重装或升级不丢失)
+  const cwdEnv = path.resolve(process.cwd(), '.env');
+  if (fs.existsSync(cwdEnv)) {
+    dotenv.config({ path: cwdEnv });
+  }
+
+  // 2. 尝试插件自身安装目录下的 .env
+  try {
+    const currentDir = typeof __dirname !== 'undefined'
+      ? __dirname
+      : path.dirname(fileURLToPath(import.meta.url));
+    const pluginEnv = path.resolve(currentDir, '..', '.env');
+    if (fs.existsSync(pluginEnv)) {
+      dotenv.config({ path: pluginEnv });
+    }
+  } catch {
+    // ignore resolution error
+  }
+
+  // 3. 兜底默认加载
+  dotenv.config();
+}
+
+loadEnvironment();
 
 const server = new Server(
   {

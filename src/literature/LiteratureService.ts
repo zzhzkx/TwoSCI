@@ -3,6 +3,8 @@ import type { Searchers } from '../mcp/searchers.js';
 import type { WosReference } from '../services/WebOfScienceParser.js';
 import { sanitizeSensitiveText, withTimeout } from '../utils/SecurityUtils.js';
 import { exportRecords } from './export.js';
+import { FullTextRouter, type FullTextResolutionResult, type FullTextRoute } from './FullTextRouter.js';
+import { ReadingCardService, type ReadingPacketResult } from './ReadingCardService.js';
 import {
   applyReciprocalRankFusion,
   dedupeRecords,
@@ -20,6 +22,8 @@ import type {
   CitationDirection,
   ExpandInput,
   ExportInput,
+  FullTextAccessInput,
+  ReadingCardsInput,
   HydrateInput,
   LiteratureRecord,
   LiteratureSource,
@@ -299,6 +303,47 @@ export class LiteratureService {
   }
 
   export(input: ExportInput): { format: string; count: number; content: string } {
+    const { records, search, brief } = this.selectRecordsForOperation(input);
+    const content = exportRecords(records, input.format, {
+      includeAbstract: input.includeAbstract !== false,
+      context: {
+        query: search?.query,
+        search,
+        brief,
+        screening: search?.screening
+      }
+    });
+    return { format: input.format, count: records.length, content };
+  }
+
+  resolveFullText(input: FullTextAccessInput): FullTextResolutionResult {
+    const { records } = this.selectRecordsForOperation(input);
+    return FullTextRouter.resolveBatch(records);
+  }
+
+  generateReadingCards(input: ReadingCardsInput): ReadingPacketResult {
+    const { records, search, brief } = this.selectRecordsForOperation(input);
+    const resolution = FullTextRouter.resolveBatch(records);
+    const routesMap = new Map<string, FullTextRoute>(resolution.routes.map(r => [r.recordId, r]));
+    const screeningMap: Record<string, { verdict: string; reason: string }> = {};
+    if (search?.screening) {
+      for (const [id, dec] of Object.entries(search.screening)) {
+        screeningMap[id] = { verdict: dec.verdict, reason: dec.reason };
+      }
+    }
+    return ReadingCardService.generatePacket(records, routesMap, screeningMap, brief);
+  }
+
+  private selectRecordsForOperation(input: {
+    searchId?: string;
+    briefId?: string;
+    recordIds?: string[];
+    verdict?: 'include' | 'exclude' | 'maybe' | 'all';
+  }): {
+    records: LiteratureRecord[];
+    search?: SearchSession;
+    brief?: ResearchBrief;
+  } {
     let records: LiteratureRecord[] = [];
     let search: SearchSession | undefined;
     let brief: ResearchBrief | undefined;
@@ -325,16 +370,7 @@ export class LiteratureService {
     }
 
     if (records.length === 0) throw new Error('No records matched the export selection.');
-    const content = exportRecords(records, input.format, {
-      includeAbstract: input.includeAbstract !== false,
-      context: {
-        query: search?.query,
-        search,
-        brief,
-        screening: search?.screening
-      }
-    });
-    return { format: input.format, count: records.length, content };
+    return { records, search, brief };
   }
 
   async status(validate = false) {

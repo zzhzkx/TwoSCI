@@ -230,6 +230,25 @@ describe('LiteratureService', () => {
       format: 'markdown',
       verdict: 'exclude'
     })).toThrow(/No records matched/i);
+
+    // Full-Text Router resolution
+    const fulltext = service.resolveFullText({
+      searchId: result.search.searchId,
+      verdict: 'include'
+    });
+    expect(fulltext.totalRecords).toBe(1);
+    expect(fulltext.routes[0].recordId).toBe(recordId);
+    expect(fulltext.routes[0].channel).toBeDefined();
+
+    // Reading Cards generation
+    const packet = service.generateReadingCards({
+      searchId: result.search.searchId,
+      verdict: 'include'
+    });
+    expect(packet.totalCards).toBe(1);
+    expect(packet.cards[0].recordId).toBe(recordId);
+    expect(packet.cards[0].markdownTemplate).toContain('【文献精读卡 #1】');
+    expect(packet.cards[0].mineruPrompt).toContain('请作为光电信息与空间通信领域的严谨科研评审专家');
   });
 
   it('expands a stored seed through WoS and returns graph edges', async () => {

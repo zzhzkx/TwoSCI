@@ -9,8 +9,8 @@ TwoSCI 是一个面向 Codex 和 Claude Code 的文献研究 MCP 服务与插件
 1. **研究简报**：用 DOI、WoS UID、Scopus EID、OpenAlex ID 或精确标题解析种子文献，记录研究意图、指标、范围和排除项。
 2. **多源发现**：在 `quick`、`balanced`、`deep` 三种模式下检索并去重。
 3. **摘要筛选**：把摘要按批交给子 agent 做语义判断，保存 include/exclude/maybe 和理由。
-4. **证据整理**：批量取完整记录，追踪参考文献、施引文献和相关文献。
-5. **导出**：生成 Markdown（综述报告与证据卡片）、JSON（含筛选决策与元数据）、BibTeX 或 RIS。支持按筛选结果（如仅 `include`）快速导出。全文获取与解析属于独立 companion 流程。
+4. **全文路由与精读**：调用 `resolve_fulltext_access` 分析最优获取路径，调用 `generate_reading_cards` 配合 MinerU 完成算法、指标、局限性的结构化深读。
+5. **证据扩展与导出**：引文网络一跳拓扑追踪，生成综述报告 Markdown、审计 JSON、BibTeX。
 
 ## MCP 工具
 
@@ -22,6 +22,8 @@ TwoSCI 是一个面向 Codex 和 Claude Code 的文献研究 MCP 服务与插件
 | `get_literature_records` | 从会话中补全记录，不重复请求发现接口；`fetchReferences=true` 可补参考文献 |
 | `expand_citation_graph` | 一跳 references、citing、related 扩展 |
 | `save_screening` | 保存子 agent 的筛选决定与理由 |
+| `resolve_fulltext_access` | 解析筛选后文献的最优全文获取路由（OA直链、出版商API、机构通道） |
+| `generate_reading_cards` | 生成专供 MinerU 全文解析的结构化精读证据卡与提取 Prompt |
 | `export_literature` | 导出 Markdown、JSON、BibTeX、RIS；支持 `verdict` 筛选过滤 |
 | `get_source_status` | 查看来源配置、产品等级、配额和会话状态 |
 

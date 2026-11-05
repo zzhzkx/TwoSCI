@@ -247,6 +247,22 @@ describe('parseToolArgs', () => {
       expect(args.includeAbstract).toBe(false);
     });
 
+    it('parses resolve_fulltext_access and generate_reading_cards schemas', () => {
+      const resolveArgs = parseToolArgs('resolve_fulltext_access', {
+        searchId: 'search_123',
+        verdict: 'include'
+      });
+      expect(resolveArgs.searchId).toBe('search_123');
+      expect(resolveArgs.verdict).toBe('include');
+
+      const cardsArgs = parseToolArgs('generate_reading_cards', {
+        briefId: 'brief_123',
+        verdict: 'all'
+      });
+      expect(cardsArgs.briefId).toBe('brief_123');
+      expect(cardsArgs.verdict).toBe('all');
+    });
+
     it('requires a seed identifier and a valid screening decision', () => {
       expect(() => parseToolArgs('create_research_brief', {
         seed: {},

@@ -35,6 +35,8 @@ opt-in source for IEEE journals, conferences, standards, and books.
 | `get_literature_records` | Hydrate stored records without repeating discovery; `fetchReferences=true` optionally fills references |
 | `expand_citation_graph` | One-hop references, citing papers, or related works |
 | `save_screening` | Persist subagent screening decisions and reasons |
+| `resolve_fulltext_access` | Resolve optimal full-text PDF acquisition routes (direct OA, Elsevier API, IEEE, WebVPN) |
+| `generate_reading_cards` | Generate structured deep-reading evidence cards and MinerU companion prompts |
 | `export_literature` | Export Markdown, JSON, BibTeX, or RIS; supports `verdict` filtering |
 | `get_source_status` | Inspect source configuration, product tier, quotas, and sessions |
 

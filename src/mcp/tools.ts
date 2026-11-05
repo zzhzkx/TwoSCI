@@ -830,6 +830,46 @@ export const TOOLS: Tool[] = [
     }
   },
   {
+    name: 'resolve_fulltext_access',
+    description:
+      'Resolve optimal full-text PDF acquisition routes for screened literature (scansci-inspired tiered routing: direct OA/CDN, Elsevier API fast lane, IEEE Xplore, Springer TDM, or institutional WebVPN). Defaults to verdict=include.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        searchId: { type: 'string', description: 'Search session ID' },
+        briefId: { type: 'string', description: 'Brief ID' },
+        recordIds: { type: 'array', items: { type: 'string' }, maxItems: 200 },
+        verdict: {
+          type: 'string',
+          enum: ['include', 'exclude', 'maybe', 'all'],
+          default: 'include',
+          description: 'Filter by screening verdict; defaults to include to target core screened papers'
+        }
+      }
+    }
+  },
+  {
+    name: 'generate_reading_cards',
+    description:
+      'Generate structured deep-reading evidence cards and extraction prompts tailored for MinerU PDF-to-Markdown full-text outputs. Extracts problem statement, algorithmic formulation, quantitative benchmark metrics, experimental setup, and limitations.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        searchId: { type: 'string', description: 'Search session ID' },
+        briefId: { type: 'string', description: 'Brief ID' },
+        recordIds: { type: 'array', items: { type: 'string' }, maxItems: 100 },
+        verdict: {
+          type: 'string',
+          enum: ['include', 'exclude', 'maybe', 'all'],
+          default: 'include',
+          description: 'Filter by screening verdict; defaults to include'
+        }
+      }
+    }
+  },
+  {
     name: 'get_source_status',
     description:
       'Report configured sources, WoS default product, quota/rate status, OpenAlex/Crossref cache state, IEEE rate status, and in-memory brief/search session counts. Set validate=true only when an actual key validation request is acceptable.',

@@ -881,6 +881,12 @@ async function handleToolCallWithContext(
     case 'export_literature':
       return jsonValueResponse(searchers.literature.export(args));
 
+    case 'resolve_fulltext_access':
+      return jsonValueResponse(searchers.literature.resolveFullText(args));
+
+    case 'generate_reading_cards':
+      return jsonValueResponse(searchers.literature.generateReadingCards(args));
+
     case 'get_source_status':
       return jsonValueResponse(await searchers.literature.status(args.validate));
 

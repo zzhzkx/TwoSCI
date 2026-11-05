@@ -62,4 +62,33 @@ describe('PubMedSearcher', () => {
       expect((searcher as any).getPaperByPmid || searcher.search).toBeDefined();
     });
   });
+
+  describe('extractAbstract', () => {
+    it('correctly formats structured PubMed abstracts with labels and avoids [object Object]', () => {
+      const extractAbstract = (searcher as any).extractAbstract.bind(searcher);
+
+      // Plain string
+      expect(extractAbstract({ AbstractText: 'A simple abstract.' })).toBe('A simple abstract.');
+
+      // Structured abstract array with labels
+      const structuredData = {
+        AbstractText: [
+          { _: 'Background on cancer therapy.', $: { Label: 'BACKGROUND' } },
+          { _: 'A randomized trial was conducted.', $: { Label: 'METHODS' } },
+          { _: 'Survival improved significantly.', $: { Label: 'RESULTS' } }
+        ]
+      };
+      const result = extractAbstract(structuredData);
+      expect(result).not.toContain('[object Object]');
+      expect(result).toContain('BACKGROUND: Background on cancer therapy.');
+      expect(result).toContain('METHODS: A randomized trial was conducted.');
+      expect(result).toContain('RESULTS: Survival improved significantly.');
+
+      // Single structured object
+      const singleObject = {
+        AbstractText: { _: 'To evaluate the outcome.', $: { Label: 'OBJECTIVE' } }
+      };
+      expect(extractAbstract(singleObject)).toBe('OBJECTIVE: To evaluate the outcome.');
+    });
+  });
 });

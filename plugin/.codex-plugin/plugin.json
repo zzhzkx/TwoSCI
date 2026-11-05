@@ -19,7 +19,7 @@
   "homepage": "https://github.com/zzhzkx/TwoSCI",
   "repository": "https://github.com/zzhzkx/TwoSCI",
   "skills": "./skills/",
-  "mcpServers": "./mcp.json",
+  "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "TwoSCI",
     "shortDescription": "Run a human-like literature research workflow with WoS, Scopus, and IEEE.",

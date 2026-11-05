@@ -72,7 +72,7 @@ const baseManifest = {
   homepage: 'https://github.com/zzhzkx/TwoSCI',
   repository: 'https://github.com/zzhzkx/TwoSCI',
   skills: './skills/',
-  mcpServers: './mcp.json'
+  mcpServers: './.mcp.json'
 };
 
 const portableManifest = {
@@ -98,8 +98,7 @@ writeJson(join(outDir, 'mcp.json'), {
   mcpServers: {
     twosci: {
       command: 'node',
-      args: ['./dist/server.cjs'],
-      cwd: '.'
+      args: ['${CLAUDE_PLUGIN_ROOT}/dist/server.cjs']
     }
   }
 });

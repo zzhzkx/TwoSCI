@@ -6,10 +6,10 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __glob = (map3) => (path9) => {
-  var fn = map3[path9];
+var __glob = (map3) => (path10) => {
+  var fn = map3[path10];
   if (fn) return fn();
-  throw new Error("Module not found in bundle: " + path9);
+  throw new Error("Module not found in bundle: " + path10);
 };
 var __esm = (fn, res, err) => function __init() {
   if (err) throw err[0];
@@ -2998,7 +2998,7 @@ var require_compile = __commonJS({
       const schOrFunc = root2.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve3.call(this, root2, ref);
+      let _sch = resolve4.call(this, root2, ref);
       if (_sch === void 0) {
         const schema = (_a5 = root2.localRefs) === null || _a5 === void 0 ? void 0 : _a5[ref];
         const { schemaId } = this.opts;
@@ -3025,7 +3025,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve3(root2, ref) {
+    function resolve4(root2, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -3276,8 +3276,8 @@ var require_utils = __commonJS({
       }
       return ind;
     }
-    function removeDotSegments(path9) {
-      let input2 = path9;
+    function removeDotSegments(path10) {
+      let input2 = path10;
       const output2 = [];
       let nextSlash = -1;
       let len = 0;
@@ -3351,11 +3351,11 @@ var require_utils = __commonJS({
       }
       return output2.join("");
     }
-    function removeDotSegmentsRelative(path9) {
-      if (path9 === "" || path9[0] === "/") {
-        return removeDotSegments(path9);
+    function removeDotSegmentsRelative(path10) {
+      if (path10 === "" || path10[0] === "/") {
+        return removeDotSegments(path10);
       }
-      const segments = path9.split("/");
+      const segments = path10.split("/");
       const last2 = segments.length - 1;
       const output2 = [];
       let trailingDirectory = false;
@@ -3718,8 +3718,8 @@ var require_schemes = __commonJS({
       }
       if (wsComponent.resourceName) {
         const queryIndex = wsComponent.resourceName.indexOf("?");
-        const path9 = queryIndex === -1 ? wsComponent.resourceName : wsComponent.resourceName.slice(0, queryIndex);
-        wsComponent.path = path9 && path9 !== "/" ? path9 : void 0;
+        const path10 = queryIndex === -1 ? wsComponent.resourceName : wsComponent.resourceName.slice(0, queryIndex);
+        wsComponent.path = path10 && path10 !== "/" ? path10 : void 0;
         wsComponent.query = queryIndex === -1 ? void 0 : wsComponent.resourceName.slice(queryIndex + 1);
         wsComponent.resourceName = void 0;
       }
@@ -3889,7 +3889,7 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve3(baseURI, relativeURI, options) {
+    function resolve4(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const {
         parsed: baseParsed,
@@ -4280,7 +4280,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize,
-      resolve: resolve3,
+      resolve: resolve4,
       resolveComponent,
       equal,
       serialize: serialize3,
@@ -7256,12 +7256,12 @@ var require_dist = __commonJS({
         throw new Error(`Unknown format "${name}"`);
       return f;
     };
-    function addFormats(ajv, list, fs10, exportName) {
+    function addFormats(ajv, list, fs11, exportName) {
       var _a5;
       var _b;
       (_a5 = (_b = ajv.opts.code).formats) !== null && _a5 !== void 0 ? _a5 : _b.formats = (0, codegen_1._)`require("ajv-formats/dist/formats").${exportName}`;
       for (const f of list)
-        ajv.addFormat(f, fs10[f]);
+        ajv.addFormat(f, fs11[f]);
     }
     module2.exports = exports2 = formatsPlugin;
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -7340,8 +7340,8 @@ var require_package = __commonJS({
 // node_modules/dotenv/lib/main.js
 var require_main = __commonJS({
   "node_modules/dotenv/lib/main.js"(exports2, module2) {
-    var fs10 = require("fs");
-    var path9 = require("path");
+    var fs11 = require("fs");
+    var path10 = require("path");
     var os = require("os");
     var crypto2 = require("crypto");
     var packageJson = require_package();
@@ -7449,7 +7449,7 @@ var require_main = __commonJS({
       if (options && options.path && options.path.length > 0) {
         if (Array.isArray(options.path)) {
           for (const filepath of options.path) {
-            if (fs10.existsSync(filepath)) {
+            if (fs11.existsSync(filepath)) {
               possibleVaultPath = filepath.endsWith(".vault") ? filepath : `${filepath}.vault`;
             }
           }
@@ -7457,15 +7457,15 @@ var require_main = __commonJS({
           possibleVaultPath = options.path.endsWith(".vault") ? options.path : `${options.path}.vault`;
         }
       } else {
-        possibleVaultPath = path9.resolve(process.cwd(), ".env.vault");
+        possibleVaultPath = path10.resolve(process.cwd(), ".env.vault");
       }
-      if (fs10.existsSync(possibleVaultPath)) {
+      if (fs11.existsSync(possibleVaultPath)) {
         return possibleVaultPath;
       }
       return null;
     }
     function _resolveHome(envPath) {
-      return envPath[0] === "~" ? path9.join(os.homedir(), envPath.slice(1)) : envPath;
+      return envPath[0] === "~" ? path10.join(os.homedir(), envPath.slice(1)) : envPath;
     }
     function _configVault(options) {
       const debug = Boolean(options && options.debug);
@@ -7482,7 +7482,7 @@ var require_main = __commonJS({
       return { parsed };
     }
     function configDotenv(options) {
-      const dotenvPath = path9.resolve(process.cwd(), ".env");
+      const dotenvPath = path10.resolve(process.cwd(), ".env");
       let encoding = "utf8";
       const debug = Boolean(options && options.debug);
       const quiet = options && "quiet" in options ? options.quiet : true;
@@ -7506,13 +7506,13 @@ var require_main = __commonJS({
       }
       let lastError;
       const parsedAll = {};
-      for (const path10 of optionPaths) {
+      for (const path11 of optionPaths) {
         try {
-          const parsed = DotenvModule.parse(fs10.readFileSync(path10, { encoding }));
+          const parsed = DotenvModule.parse(fs11.readFileSync(path11, { encoding }));
           DotenvModule.populate(parsedAll, parsed, options);
         } catch (e) {
           if (debug) {
-            _debug(`Failed to load ${path10} ${e.message}`);
+            _debug(`Failed to load ${path11} ${e.message}`);
           }
           lastError = e;
         }
@@ -7527,7 +7527,7 @@ var require_main = __commonJS({
         const shortPaths = [];
         for (const filePath of optionPaths) {
           try {
-            const relative3 = path9.relative(process.cwd(), filePath);
+            const relative3 = path10.relative(process.cwd(), filePath);
             shortPaths.push(relative3);
           } catch (e) {
             if (debug) {
@@ -17709,11 +17709,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path9) {
-      if (!path9 || typeof path9 !== "string") {
+    function lookup(path10) {
+      if (!path10 || typeof path10 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path9).toLowerCase().substr(1);
+      var extension2 = extname("x." + path10).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -18818,11 +18818,11 @@ var require_form_data = __commonJS({
     "use strict";
     var CombinedStream = require_combined_stream();
     var util4 = require("util");
-    var path9 = require("path");
+    var path10 = require("path");
     var http3 = require("http");
     var https2 = require("https");
     var parseUrl2 = require("url").parse;
-    var fs10 = require("fs");
+    var fs11 = require("fs");
     var Stream = require("stream").Stream;
     var crypto2 = require("crypto");
     var mime = require_mime_types();
@@ -18892,7 +18892,7 @@ var require_form_data = __commonJS({
         if (value.end != void 0 && value.end != Infinity && value.start != void 0) {
           callback(null, value.end + 1 - (value.start ? value.start : 0));
         } else {
-          fs10.stat(value.path, function(err, stat) {
+          fs11.stat(value.path, function(err, stat) {
             if (err) {
               callback(err);
               return;
@@ -18949,11 +18949,11 @@ var require_form_data = __commonJS({
     FormData3.prototype._getContentDisposition = function(value, options) {
       var filename;
       if (typeof options.filepath === "string") {
-        filename = path9.normalize(options.filepath).replace(/\\/g, "/");
+        filename = path10.normalize(options.filepath).replace(/\\/g, "/");
       } else if (options.filename || value && (value.name || value.path)) {
-        filename = path9.basename(options.filename || value && (value.name || value.path));
+        filename = path10.basename(options.filename || value && (value.name || value.path));
       } else if (value && value.readable && hasOwn2(value, "httpVersion")) {
-        filename = path9.basename(value.client._httpMessage.path || "");
+        filename = path10.basename(value.client._httpMessage.path || "");
       }
       if (filename) {
         return 'filename="' + escapeHeaderParam(filename) + '"';
@@ -19166,9 +19166,9 @@ function isVisitable(thing) {
 function removeBrackets(key) {
   return utils_default.endsWith(key, "[]") ? key.slice(0, -2) : key;
 }
-function renderKey(path9, key, dots) {
-  if (!path9) return key;
-  return path9.concat(key).map(function each2(token, i) {
+function renderKey(path10, key, dots) {
+  if (!path10) return key;
+  return path10.concat(key).map(function each2(token, i) {
     token = removeBrackets(token);
     return !dots && i ? "[" + token + "]" : token;
   }).join(dots ? "." : "");
@@ -19246,13 +19246,13 @@ function toFormData(obj, formData, options) {
       return currentValue;
     });
   }
-  function defaultVisitor(value, key, path9) {
+  function defaultVisitor(value, key, path10) {
     let arr = value;
     if (utils_default.isReactNative(formData) && utils_default.isReactNativeBlob(value)) {
-      formData.append(renderKey(path9, key, dots), convertValue(value));
+      formData.append(renderKey(path10, key, dots), convertValue(value));
       return false;
     }
-    if (value && !path9 && typeof value === "object") {
+    if (value && !path10 && typeof value === "object") {
       if (utils_default.endsWith(key, "{}")) {
         key = metaTokens ? key : key.slice(0, -2);
         value = stringifyWithDepthLimit(value, 1);
@@ -19271,7 +19271,7 @@ function toFormData(obj, formData, options) {
     if (isVisitable(value)) {
       return true;
     }
-    formData.append(renderKey(path9, key, dots), convertValue(value));
+    formData.append(renderKey(path10, key, dots), convertValue(value));
     return false;
   }
   const exposedHelpers = Object.assign(predicates, {
@@ -19279,17 +19279,17 @@ function toFormData(obj, formData, options) {
     convertValue,
     isVisitable
   });
-  function build(value, path9, depth = 0) {
+  function build(value, path10, depth = 0) {
     if (utils_default.isUndefined(value)) return;
     throwIfMaxDepthExceeded(depth);
     if (stack.indexOf(value) !== -1) {
-      throw new Error("Circular reference detected in " + path9.join("."));
+      throw new Error("Circular reference detected in " + path10.join("."));
     }
     stack.push(value);
     utils_default.forEach(value, function each2(el, key) {
-      const result = !(utils_default.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default.isString(key) ? key.trim() : key, path9, exposedHelpers);
+      const result = !(utils_default.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default.isString(key) ? key.trim() : key, path10, exposedHelpers);
       if (result === true) {
-        build(el, path9 ? path9.concat(key) : [key], depth + 1);
+        build(el, path10 ? path10.concat(key) : [key], depth + 1);
       }
     });
     stack.pop();
@@ -19646,7 +19646,7 @@ var init_platform = __esm({
 // node_modules/axios/lib/helpers/toURLEncodedForm.js
 function toURLEncodedForm(data2, options) {
   return toFormData_default(data2, new platform_default.classes.URLSearchParams(), {
-    visitor: function(value, key, path9, helpers) {
+    visitor: function(value, key, path10, helpers) {
       if (platform_default.isNode && utils_default.isBuffer(value)) {
         this.append(key, value.toString("base64"));
         return false;
@@ -19675,14 +19675,14 @@ function throwIfDepthExceeded(index2) {
   }
 }
 function parsePropPath(name) {
-  const path9 = [];
+  const path10 = [];
   const pattern = /[^.[\]]+|\[([^.[\]]*)]/g;
   let match;
   while ((match = pattern.exec(name)) !== null) {
-    throwIfDepthExceeded(path9.length);
-    path9.push(match[0] === "[]" ? "" : match[1] || match[0]);
+    throwIfDepthExceeded(path10.length);
+    path10.push(match[0] === "[]" ? "" : match[1] || match[0]);
   }
-  return path9;
+  return path10;
 }
 function arrayToObject(arr) {
   const obj = {};
@@ -19715,12 +19715,12 @@ function normalizeArrays(obj) {
   return obj;
 }
 function formDataToJSON(formData) {
-  function buildPath(path9, value, target, index2) {
+  function buildPath(path10, value, target, index2) {
     throwIfDepthExceeded(index2);
-    let name = path9[index2++];
+    let name = path10[index2++];
     if (name === "__proto__") return true;
     const isNumericKey = Number.isFinite(+name);
-    const isLast = index2 >= path9.length;
+    const isLast = index2 >= path10.length;
     name = !name && utils_default.isArray(target) ? target.length : name;
     if (isLast) {
       if (utils_default.hasOwnProp(target, name)) {
@@ -19734,7 +19734,7 @@ function formDataToJSON(formData) {
     if (!utils_default.hasOwnProp(target, name) || !utils_default.isObject(target[name])) {
       target[name] = [];
     }
-    const result = buildPath(path9, value, target[name], index2);
+    const result = buildPath(path10, value, target[name], index2);
     if (result && utils_default.isArray(target[name])) {
       target[name] = arrayToObject(target[name]);
     }
@@ -19972,10 +19972,10 @@ var init_CanceledError = __esm({
 });
 
 // node_modules/axios/lib/core/settle.js
-function settle2(resolve3, reject, response) {
+function settle2(resolve4, reject, response) {
   const validateStatus2 = response.config.validateStatus;
   if (!response.status || !validateStatus2 || validateStatus2(response.status)) {
-    resolve3(response);
+    resolve4(response);
   } else {
     reject(new AxiosError_default(
       "Request failed with status code " + response.status,
@@ -20940,12 +20940,12 @@ var require_promisify = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     function promisify(fn) {
       return function(req, opts) {
-        return new Promise((resolve3, reject) => {
+        return new Promise((resolve4, reject) => {
           fn.call(this, req, opts, (err, rtn) => {
             if (err) {
               reject(err);
             } else {
-              resolve3(rtn);
+              resolve4(rtn);
             }
           });
         });
@@ -21149,7 +21149,7 @@ var require_parse_proxy_response = __commonJS({
     var debug_1 = __importDefault(require_src());
     var debug = debug_1.default("https-proxy-agent:parse-proxy-response");
     function parseProxyResponse(socket) {
-      return new Promise((resolve3, reject) => {
+      return new Promise((resolve4, reject) => {
         let buffersLength = 0;
         const buffers = [];
         function read() {
@@ -21189,7 +21189,7 @@ var require_parse_proxy_response = __commonJS({
           const firstLine = buffered.toString("ascii", 0, buffered.indexOf("\r\n"));
           const statusCode = +firstLine.split(" ")[1];
           debug("got proxy server response: %o", firstLine);
-          resolve3({
+          resolve4({
             statusCode,
             buffered
           });
@@ -21210,11 +21210,11 @@ var require_agent = __commonJS({
     "use strict";
     var __awaiter = exports2 && exports2.__awaiter || function(thisArg, _arguments, P, generator) {
       function adopt(value) {
-        return value instanceof P ? value : new P(function(resolve3) {
-          resolve3(value);
+        return value instanceof P ? value : new P(function(resolve4) {
+          resolve4(value);
         });
       }
-      return new (P || (P = Promise))(function(resolve3, reject) {
+      return new (P || (P = Promise))(function(resolve4, reject) {
         function fulfilled(value) {
           try {
             step(generator.next(value));
@@ -21230,7 +21230,7 @@ var require_agent = __commonJS({
           }
         }
         function step(result) {
-          result.done ? resolve3(result.value) : adopt(result.value).then(fulfilled, rejected);
+          result.done ? resolve4(result.value) : adopt(result.value).then(fulfilled, rejected);
         }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
@@ -23339,7 +23339,7 @@ var init_http = __esm({
     http2Sessions = new Http2Sessions_default();
     isHttpAdapterSupported = typeof process !== "undefined" && utils_default.kindOf(process) === "process";
     wrapAsync = (asyncExecutor) => {
-      return new Promise((resolve3, reject) => {
+      return new Promise((resolve4, reject) => {
         let onDone;
         let isDone;
         const done = (value, isRejected) => {
@@ -23349,7 +23349,7 @@ var init_http = __esm({
         };
         const _resolve = (value) => {
           done(value);
-          resolve3(value);
+          resolve4(value);
         };
         const _reject = (reason) => {
           done(reason, true);
@@ -23420,7 +23420,7 @@ var init_http = __esm({
       }
     };
     http_default = isHttpAdapterSupported && function httpAdapter(config3) {
-      return wrapAsync(async function dispatchHttpRequest(resolve3, reject, onDone) {
+      return wrapAsync(async function dispatchHttpRequest(resolve4, reject, onDone) {
         const own3 = (key) => utils_default.getSafeProp(config3, key);
         const transitional2 = own3("transitional") || transitional_default;
         let data2 = own3("data");
@@ -23557,7 +23557,7 @@ var init_http = __esm({
           }
           let convertedData;
           if (method !== "GET") {
-            return settle2(resolve3, reject, {
+            return settle2(resolve4, reject, {
               status: 405,
               statusText: "method not allowed",
               headers: {},
@@ -23588,7 +23588,7 @@ var init_http = __esm({
           } else if (responseType === "stream") {
             convertedData = import_stream4.default.Readable.from(convertedData);
           }
-          return settle2(resolve3, reject, {
+          return settle2(resolve4, reject, {
             data: convertedData,
             status: 200,
             statusText: "OK",
@@ -23702,9 +23702,9 @@ var init_http = __esm({
           auth = urlUsername + ":" + urlPassword;
         }
         auth && headers.delete("authorization");
-        let path9;
+        let path10;
         try {
-          path9 = buildURL(
+          path10 = buildURL(
             parsed.pathname + parsed.search,
             own3("params"),
             own3("paramsSerializer")
@@ -23726,7 +23726,7 @@ var init_http = __esm({
           http2Options = Object.assign(/* @__PURE__ */ Object.create(null), http2Options, { lookup });
         }
         const options = Object.assign(/* @__PURE__ */ Object.create(null), {
-          path: path9,
+          path: path10,
           method,
           headers: toByteStringHeaderObject(headers),
           agents: { http: httpAgent, https: httpsAgent },
@@ -23963,7 +23963,7 @@ var init_http = __esm({
               });
             }
             response.data = responseStream;
-            settle2(resolve3, reject, response);
+            settle2(resolve4, reject, response);
           } else {
             const responseBuffer = [];
             let totalResponseBytes = 0;
@@ -24014,7 +24014,7 @@ var init_http = __esm({
               } catch (err) {
                 return reject(AxiosError_default.from(err, null, config3, response.request, response));
               }
-              settle2(resolve3, reject, response);
+              settle2(resolve4, reject, response);
             });
           }
           abortEmitter.once("abort", (err) => {
@@ -24150,14 +24150,14 @@ var init_cookies = __esm({
     cookies_default = platform_default.hasStandardBrowserEnv ? (
       // Standard browser envs support document.cookie
       {
-        write(name, value, expires, path9, domain2, secure, sameSite) {
+        write(name, value, expires, path10, domain2, secure, sameSite) {
           if (typeof document === "undefined") return;
           const cookie = [`${name}=${encodeURIComponent(value)}`];
           if (utils_default.isNumber(expires)) {
             cookie.push(`expires=${new Date(expires).toUTCString()}`);
           }
-          if (utils_default.isString(path9)) {
-            cookie.push(`path=${path9}`);
+          if (utils_default.isString(path10)) {
+            cookie.push(`path=${path10}`);
           }
           if (utils_default.isString(domain2)) {
             cookie.push(`domain=${domain2}`);
@@ -24557,7 +24557,7 @@ var init_xhr = __esm({
     init_sanitizeHeaderValue();
     isXHRAdapterSupported = typeof XMLHttpRequest !== "undefined";
     xhr_default = isXHRAdapterSupported && function(config3) {
-      return new Promise(function dispatchXhrRequest(resolve3, reject) {
+      return new Promise(function dispatchXhrRequest(resolve4, reject) {
         let useAsyncXsrf;
         try {
           const store = platform_default.hasStandardBrowserEnv && typeof window !== "undefined" && window.cookieStore;
@@ -24646,7 +24646,7 @@ var init_xhr = __esm({
           };
           settle2(
             function _resolve(value) {
-              resolve3(value);
+              resolve4(value);
               done();
             },
             function _reject(err) {
@@ -25492,8 +25492,8 @@ var init_fetch = __esm({
             }
           }
           !isStreamResponse && unsubscribe && unsubscribe();
-          return await new Promise((resolve3, reject) => {
-            settle2(resolve3, reject, {
+          return await new Promise((resolve4, reject) => {
+            settle2(resolve4, reject, {
               data: responseData,
               headers: AxiosHeaders_default.from(response.headers),
               status: response.status,
@@ -26075,8 +26075,8 @@ var init_CancelToken = __esm({
           throw new TypeError("executor must be a function.");
         }
         let resolvePromise;
-        this.promise = new Promise(function promiseExecutor(resolve3) {
-          resolvePromise = resolve3;
+        this.promise = new Promise(function promiseExecutor(resolve4) {
+          resolvePromise = resolve4;
         });
         const token = this;
         this.promise.then((cancel) => {
@@ -26089,9 +26089,9 @@ var init_CancelToken = __esm({
         });
         this.promise.then = (onfulfilled) => {
           let _resolve;
-          const promise2 = new Promise((resolve3) => {
-            token.subscribe(resolve3);
-            _resolve = resolve3;
+          const promise2 = new Promise((resolve4) => {
+            token.subscribe(resolve4);
+            _resolve = resolve4;
           }).then(onfulfilled);
           promise2.cancel = function reject() {
             token.unsubscribe(_resolve);
@@ -32234,12 +32234,12 @@ var require_parser = __commonJS({
         };
         Parser5.prototype.parseStringPromise = function(str) {
           return new Promise(/* @__PURE__ */ (function(_this) {
-            return function(resolve3, reject) {
+            return function(resolve4, reject) {
               return _this.parseString(str, function(err, value) {
                 if (err) {
                   return reject(err);
                 } else {
-                  return resolve3(value);
+                  return resolve4(value);
                 }
               });
             };
@@ -32768,7 +32768,7 @@ async function waitForRetry(sleep, milliseconds, signal) {
     return;
   }
   throwIfAborted(signal);
-  await new Promise((resolve3, reject) => {
+  await new Promise((resolve4, reject) => {
     let settled = false;
     const cleanup = () => signal.removeEventListener("abort", onAbort);
     const onAbort = () => {
@@ -32782,7 +32782,7 @@ async function waitForRetry(sleep, milliseconds, signal) {
       if (settled) return;
       settled = true;
       cleanup();
-      resolve3();
+      resolve4();
     }, (error62) => {
       if (settled) return;
       settled = true;
@@ -32792,8 +32792,8 @@ async function waitForRetry(sleep, milliseconds, signal) {
   });
 }
 function sleepWithAbort(milliseconds, signal) {
-  if (!signal) return new Promise((resolve3) => setTimeout(resolve3, milliseconds));
-  return new Promise((resolve3, reject) => {
+  if (!signal) return new Promise((resolve4) => setTimeout(resolve4, milliseconds));
+  return new Promise((resolve4, reject) => {
     let timer;
     const cleanup = () => {
       if (timer !== void 0) clearTimeout(timer);
@@ -32809,7 +32809,7 @@ function sleepWithAbort(milliseconds, signal) {
     }
     timer = setTimeout(() => {
       cleanup();
-      resolve3();
+      resolve4();
     }, milliseconds);
     signal.addEventListener("abort", onAbort, { once: true });
   });
@@ -33262,9 +33262,9 @@ var init_RateLimiter = __esm({
           }
           return Promise.resolve();
         }
-        return new Promise((resolve3) => {
+        return new Promise((resolve4) => {
           this.pendingRequests.push({
-            resolve: resolve3,
+            resolve: resolve4,
             timestamp: Date.now()
           });
           if (this.debug) {
@@ -35728,8 +35728,8 @@ var require_pdf_worker = __commonJS({
             }
             function createPromiseCapability() {
               var capability = {};
-              capability.promise = new Promise(function(resolve3, reject) {
-                capability.resolve = resolve3;
+              capability.promise = new Promise(function(resolve4, reject) {
+                capability.resolve = resolve4;
                 capability.reject = reject;
               });
               return capability;
@@ -35823,8 +35823,8 @@ var require_pdf_worker = __commonJS({
               if (!fn) {
                 return Promise.resolve(void 0);
               }
-              return new Promise(function(resolve3, reject) {
-                resolve3(fn.apply(thisArg, args));
+              return new Promise(function(resolve4, reject) {
+                resolve4(fn.apply(thisArg, args));
               });
             }
             function wrapReason(reason) {
@@ -40098,13 +40098,13 @@ var require_pdf_worker = __commonJS({
             "use strict";
             var aFunction = __w_pdfjs_require__(22);
             function PromiseCapability(C) {
-              var resolve3, reject;
+              var resolve4, reject;
               this.promise = new C(function($$resolve, $$reject) {
-                if (resolve3 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
-                resolve3 = $$resolve;
+                if (resolve4 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
+                resolve4 = $$resolve;
                 reject = $$reject;
               });
-              this.resolve = aFunction(resolve3);
+              this.resolve = aFunction(resolve4);
               this.reject = aFunction(reject);
             }
             module3.exports.f = function(C) {
@@ -45279,8 +45279,8 @@ var require_pdf_worker = __commonJS({
               anObject(C);
               if (isObject4(x) && x.constructor === C) return x;
               var promiseCapability = newPromiseCapability.f(C);
-              var resolve3 = promiseCapability.resolve;
-              resolve3(x);
+              var resolve4 = promiseCapability.resolve;
+              resolve4(x);
               return promiseCapability.promise;
             };
           }),
@@ -45536,7 +45536,7 @@ var require_pdf_worker = __commonJS({
                   }
                   var chunks = [], loaded = 0;
                   var manager = this;
-                  var promise2 = new Promise(function(resolve3, reject) {
+                  var promise2 = new Promise(function(resolve4, reject) {
                     var readChunk = function readChunk2(chunk) {
                       try {
                         if (!chunk.done) {
@@ -45551,7 +45551,7 @@ var require_pdf_worker = __commonJS({
                         }
                         var chunkData = (0, _util.arraysToBytes)(chunks);
                         chunks = null;
-                        resolve3(chunkData);
+                        resolve4(chunkData);
                       } catch (e) {
                         reject(e);
                       }
@@ -46109,11 +46109,11 @@ var require_pdf_worker = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs10 = new FileSpec(names[name], xref);
+                      var fs11 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs10.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs11.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -46941,13 +46941,13 @@ var require_pdf_worker = __commonJS({
                 fetchAsync: function XRef_fetchAsync(ref, suppressEncryption) {
                   var streamManager = this.stream.manager;
                   var xref = this;
-                  return new Promise(function tryFetch(resolve3, reject) {
+                  return new Promise(function tryFetch(resolve4, reject) {
                     try {
-                      resolve3(xref.fetch(ref, suppressEncryption));
+                      resolve4(xref.fetch(ref, suppressEncryption));
                     } catch (e) {
                       if (e instanceof _util.MissingDataException) {
                         streamManager.requestRange(e.begin, e.end).then(function() {
-                          tryFetch(resolve3, reject);
+                          tryFetch(resolve4, reject);
                         }, reject);
                         return;
                       }
@@ -51413,8 +51413,8 @@ var require_pdf_worker = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace)) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path9 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path9]);
+                        var path10 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path10]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -51659,11 +51659,11 @@ var require_pdf_worker = __commonJS({
                       operatorList.addOp(_util.OPS.restore, []);
                     }
                   }
-                  return new Promise(function promiseBody(resolve3, reject) {
+                  return new Promise(function promiseBody(resolve4, reject) {
                     var next2 = function next3(promise2) {
                       promise2.then(function() {
                         try {
-                          promiseBody(resolve3, reject);
+                          promiseBody(resolve4, reject);
                         } catch (ex) {
                           reject(ex);
                         }
@@ -51906,7 +51906,7 @@ var require_pdf_worker = __commonJS({
                       return;
                     }
                     closePendingRestoreOPS();
-                    resolve3();
+                    resolve4();
                   }).catch(function(reason) {
                     if (_this8.options.ignoreErrors) {
                       _this8.handler.send("UnsupportedFeature", { featureId: _util.UNSUPPORTED_FEATURES.unknown });
@@ -52121,12 +52121,12 @@ var require_pdf_worker = __commonJS({
                     }
                   }
                   var timeSlotManager = new TimeSlotManager();
-                  return new Promise(function promiseBody(resolve3, reject) {
+                  return new Promise(function promiseBody(resolve4, reject) {
                     var next2 = function next3(promise2) {
                       enqueueChunk();
                       Promise.all([promise2, sink.ready]).then(function() {
                         try {
-                          promiseBody(resolve3, reject);
+                          promiseBody(resolve4, reject);
                         } catch (ex) {
                           reject(ex);
                         }
@@ -52374,7 +52374,7 @@ var require_pdf_worker = __commonJS({
                     }
                     flushTextContentItem();
                     enqueueChunk();
-                    resolve3();
+                    resolve4();
                   }).catch(function(reason) {
                     if (reason instanceof _util.AbortException) {
                       return;
@@ -59413,7 +59413,7 @@ var require_pdf_worker = __commonJS({
                     }
                     cachedChunks = [];
                   };
-                  var readPromise = new Promise(function(resolve3, reject) {
+                  var readPromise = new Promise(function(resolve4, reject) {
                     var readChunk = function readChunk2(chunk) {
                       try {
                         ensureNotTerminated();
@@ -61945,7 +61945,7 @@ var require_pdf_worker = __commonJS({
                 var i = 0;
                 var run = function run2(reaction) {
                   var handler = ok ? reaction.ok : reaction.fail;
-                  var resolve3 = reaction.resolve;
+                  var resolve4 = reaction.resolve;
                   var reject = reaction.reject;
                   var domain2 = reaction.domain;
                   var result, then, exited;
@@ -61967,8 +61967,8 @@ var require_pdf_worker = __commonJS({
                       if (result === reaction.promise) {
                         reject(TypeError2("Promise-chain cycle"));
                       } else if (then = isThenable2(result)) {
-                        then.call(result, resolve3, reject);
-                      } else resolve3(result);
+                        then.call(result, resolve4, reject);
+                      } else resolve4(result);
                     } else reject(value);
                   } catch (e) {
                     if (domain2 && !exited) domain2.exit();
@@ -62123,7 +62123,7 @@ var require_pdf_worker = __commonJS({
               }
             });
             $export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
-              resolve: function resolve3(x) {
+              resolve: function resolve4(x) {
                 return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
               }
             });
@@ -62133,7 +62133,7 @@ var require_pdf_worker = __commonJS({
               all: function all3(iterable) {
                 var C = this;
                 var capability = newPromiseCapability(C);
-                var resolve3 = capability.resolve;
+                var resolve4 = capability.resolve;
                 var reject = capability.reject;
                 var result = perform(function() {
                   var values = [];
@@ -62148,10 +62148,10 @@ var require_pdf_worker = __commonJS({
                       if (alreadyCalled) return;
                       alreadyCalled = true;
                       values[$index] = value;
-                      --remaining || resolve3(values);
+                      --remaining || resolve4(values);
                     }, reject);
                   });
-                  --remaining || resolve3(values);
+                  --remaining || resolve4(values);
                 });
                 if (result.e) reject(result.v);
                 return capability.promise;
@@ -63058,9 +63058,9 @@ var require_pdf_worker = __commonJS({
                   wasAlreadyErroring = true;
                   reason = void 0;
                 }
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   stream4._pendingAbortRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject,
                     _reason: reason,
                     _wasAlreadyErroring: wasAlreadyErroring
@@ -63074,9 +63074,9 @@ var require_pdf_worker = __commonJS({
               function WritableStreamAddWriteRequest(stream4) {
                 assert2(IsWritableStreamLocked(stream4) === true);
                 assert2(stream4._state === "writable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var writeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._writeRequests.push(writeRequest);
@@ -63374,9 +63374,9 @@ var require_pdf_worker = __commonJS({
                 }
                 assert2(state === "writable" || state === "erroring");
                 assert2(WritableStreamCloseQueuedOrInFlight(stream4) === false);
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var closeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._closeRequest = closeRequest;
@@ -63647,8 +63647,8 @@ var require_pdf_worker = __commonJS({
                 return new TypeError("Cannot " + name + " a stream using a released writer");
               }
               function defaultWriterClosedPromiseInitialize(writer) {
-                writer._closedPromise = new Promise(function(resolve3, reject) {
-                  writer._closedPromise_resolve = resolve3;
+                writer._closedPromise = new Promise(function(resolve4, reject) {
+                  writer._closedPromise_resolve = resolve4;
                   writer._closedPromise_reject = reject;
                   writer._closedPromiseState = "pending";
                 });
@@ -63691,8 +63691,8 @@ var require_pdf_worker = __commonJS({
                 writer._closedPromiseState = "resolved";
               }
               function defaultWriterReadyPromiseInitialize(writer) {
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -63720,8 +63720,8 @@ var require_pdf_worker = __commonJS({
               function defaultWriterReadyPromiseReset(writer) {
                 assert2(writer._readyPromise_resolve === void 0, "writer._readyPromise_resolve === undefined");
                 assert2(writer._readyPromise_reject === void 0, "writer._readyPromise_reject === undefined");
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -63890,7 +63890,7 @@ var require_pdf_worker = __commonJS({
                     var writer = AcquireWritableStreamDefaultWriter(dest);
                     var shuttingDown = false;
                     var currentWrite = Promise.resolve();
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       function pipeLoop() {
                         currentWrite = Promise.resolve();
                         if (shuttingDown === true) {
@@ -64005,7 +64005,7 @@ var require_pdf_worker = __commonJS({
                         if (isError) {
                           reject(error62);
                         } else {
-                          resolve3(void 0);
+                          resolve4(void 0);
                         }
                       }
                     });
@@ -64075,8 +64075,8 @@ var require_pdf_worker = __commonJS({
                   reason1: void 0,
                   reason2: void 0
                 };
-                teeState.promise = new Promise(function(resolve3) {
-                  teeState._resolve = resolve3;
+                teeState.promise = new Promise(function(resolve4) {
+                  teeState._resolve = resolve4;
                 });
                 var pull = create_ReadableStreamTeePullFunction();
                 pull._reader = reader;
@@ -64171,9 +64171,9 @@ var require_pdf_worker = __commonJS({
               function ReadableStreamAddReadIntoRequest(stream4) {
                 assert2(IsReadableStreamBYOBReader(stream4._reader) === true);
                 assert2(stream4._state === "readable" || stream4._state === "closed");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readIntoRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readIntoRequests.push(readIntoRequest);
@@ -64183,9 +64183,9 @@ var require_pdf_worker = __commonJS({
               function ReadableStreamAddReadRequest(stream4) {
                 assert2(IsReadableStreamDefaultReader(stream4._reader) === true);
                 assert2(stream4._state === "readable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readRequests.push(readRequest);
@@ -65255,8 +65255,8 @@ var require_pdf_worker = __commonJS({
                 return new TypeError("ReadableStreamDefaultReader.prototype." + name + " can only be used on a ReadableStreamDefaultReader");
               }
               function defaultReaderClosedPromiseInitialize(reader) {
-                reader._closedPromise = new Promise(function(resolve3, reject) {
-                  reader._closedPromise_resolve = resolve3;
+                reader._closedPromise = new Promise(function(resolve4, reject) {
+                  reader._closedPromise_resolve = resolve4;
                   reader._closedPromise_reject = reject;
                 });
               }
@@ -65431,8 +65431,8 @@ var require_pdf_worker = __commonJS({
                 if (transformStream._backpressureChangePromise !== void 0) {
                   transformStream._backpressureChangePromise_resolve(backpressure);
                 }
-                transformStream._backpressureChangePromise = new Promise(function(resolve3) {
-                  transformStream._backpressureChangePromise_resolve = resolve3;
+                transformStream._backpressureChangePromise = new Promise(function(resolve4) {
+                  transformStream._backpressureChangePromise_resolve = resolve4;
                 });
                 transformStream._backpressureChangePromise.then(function(resolution) {
                   assert2(resolution !== backpressure, "_backpressureChangePromise should be fulfilled only when backpressure is changed");
@@ -65635,8 +65635,8 @@ var require_pdf_worker = __commonJS({
                   this._backpressureChangePromise_resolve = void 0;
                   this._transformStreamController = new TransformStreamDefaultController(this);
                   var startPromise_resolve = void 0;
-                  var startPromise = new Promise(function(resolve3) {
-                    startPromise_resolve = resolve3;
+                  var startPromise = new Promise(function(resolve4) {
+                    startPromise_resolve = resolve4;
                   });
                   var source = new TransformStreamSource(this, startPromise);
                   this._readable = new ReadableStream2(source, readableStrategy);
@@ -65773,7 +65773,7 @@ var require_pdf_worker = __commonJS({
               }
               _util.Util.inherit(LocalPdfManager2, BasePdfManager, {
                 ensure: function LocalPdfManager_ensure(obj, prop2, args) {
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     try {
                       var value = obj[prop2];
                       var result;
@@ -65782,7 +65782,7 @@ var require_pdf_worker = __commonJS({
                       } else {
                         result = value;
                       }
-                      resolve3(result);
+                      resolve4(result);
                     } catch (e) {
                       reject(e);
                     }
@@ -65821,7 +65821,7 @@ var require_pdf_worker = __commonJS({
               _util.Util.inherit(NetworkPdfManager2, BasePdfManager, {
                 ensure: function NetworkPdfManager_ensure(obj, prop2, args) {
                   var pdfManager = this;
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     function ensureHelper() {
                       try {
                         var result;
@@ -65831,7 +65831,7 @@ var require_pdf_worker = __commonJS({
                         } else {
                           result = value;
                         }
-                        resolve3(result);
+                        resolve4(result);
                       } catch (e) {
                         if (!(e instanceof _util.MissingDataException)) {
                           reject(e);
@@ -69447,7 +69447,7 @@ var require_pdf_worker = __commonJS({
                 }
               };
               function processBinaryCMap(data2, cMap, extend3) {
-                return new Promise(function(resolve3, reject) {
+                return new Promise(function(resolve4, reject) {
                   var stream4 = new BinaryCMapStream(data2);
                   var header = stream4.readByte();
                   cMap.vertical = !!(header & 1);
@@ -69585,10 +69585,10 @@ var require_pdf_worker = __commonJS({
                     }
                   }
                   if (useCMap) {
-                    resolve3(extend3(useCMap));
+                    resolve4(extend3(useCMap));
                     return;
                   }
-                  resolve3(cMap);
+                  resolve4(cMap);
                 });
               }
               function BinaryCMapReader2() {
@@ -80093,8 +80093,8 @@ var require_pdf = __commonJS({
             }
             function createPromiseCapability() {
               var capability = {};
-              capability.promise = new Promise(function(resolve3, reject) {
-                capability.resolve = resolve3;
+              capability.promise = new Promise(function(resolve4, reject) {
+                capability.resolve = resolve4;
                 capability.reject = reject;
               });
               return capability;
@@ -80188,8 +80188,8 @@ var require_pdf = __commonJS({
               if (!fn) {
                 return Promise.resolve(void 0);
               }
-              return new Promise(function(resolve3, reject) {
-                resolve3(fn.apply(thisArg, args));
+              return new Promise(function(resolve4, reject) {
+                resolve4(fn.apply(thisArg, args));
               });
             }
             function wrapReason(reason) {
@@ -80979,7 +80979,7 @@ var require_pdf = __commonJS({
                   if (!name) {
                     return Promise.reject(new Error("CMap name must be specified."));
                   }
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     var url3 = _this.baseUrl + name + (_this.isCompressed ? ".bcmap" : "");
                     var request = new XMLHttpRequest();
                     request.open("GET", url3, true);
@@ -80998,7 +80998,7 @@ var require_pdf = __commonJS({
                           data2 = (0, _util.stringToBytes)(request.responseText);
                         }
                         if (data2) {
-                          resolve3({
+                          resolve4({
                             cMapData: data2,
                             compressionType: _this.isCompressed ? _util.CMapCompressionType.BINARY : _util.CMapCompressionType.NONE
                           });
@@ -81559,13 +81559,13 @@ var require_pdf = __commonJS({
             "use strict";
             var aFunction = __w_pdfjs_require__(22);
             function PromiseCapability(C) {
-              var resolve3, reject;
+              var resolve4, reject;
               this.promise = new C(function($$resolve, $$reject) {
-                if (resolve3 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
-                resolve3 = $$resolve;
+                if (resolve4 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
+                resolve4 = $$resolve;
                 reject = $$reject;
               });
-              this.resolve = aFunction(resolve3);
+              this.resolve = aFunction(resolve4);
               this.reject = aFunction(reject);
             }
             module3.exports.f = function(C) {
@@ -82255,8 +82255,8 @@ var require_pdf = __commonJS({
               anObject(C);
               if (isObject4(x) && x.constructor === C) return x;
               var promiseCapability = newPromiseCapability.f(C);
-              var resolve3 = promiseCapability.resolve;
-              resolve3(x);
+              var resolve4 = promiseCapability.resolve;
+              resolve4(x);
               return promiseCapability.promise;
             };
           }),
@@ -82810,12 +82810,12 @@ var require_pdf = __commonJS({
                 getTextContent: function PDFPageProxy_getTextContent(params) {
                   params = params || {};
                   var readableStream = this.streamTextContent(params);
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     function pump() {
                       reader.read().then(function(_ref) {
                         var value = _ref.value, done = _ref.done;
                         if (done) {
-                          resolve3(textContent2);
+                          resolve4(textContent2);
                           return;
                         }
                         _util.Util.extendObj(textContent2.styles, value.styles);
@@ -83494,7 +83494,7 @@ var require_pdf = __commonJS({
                     if (components !== 3 && components !== 1) {
                       return Promise.reject(new Error("Only 3 components or 1 component can be returned"));
                     }
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       var img = new Image();
                       img.onload = function() {
                         var width = img.width;
@@ -83520,7 +83520,7 @@ var require_pdf = __commonJS({
                             buf[j] = data3[i];
                           }
                         }
-                        resolve3({
+                        resolve4({
                           data: buf,
                           width,
                           height
@@ -86016,12 +86016,12 @@ var require_pdf = __commonJS({
                           var common = obj.substring(0, 2) === "g_";
                           var promise2;
                           if (common) {
-                            promise2 = new Promise(function(resolve3) {
-                              _this.commonObjs.get(obj, resolve3);
+                            promise2 = new Promise(function(resolve4) {
+                              _this.commonObjs.get(obj, resolve4);
                             });
                           } else {
-                            promise2 = new Promise(function(resolve3) {
-                              _this.objs.get(obj, resolve3);
+                            promise2 = new Promise(function(resolve4) {
+                              _this.objs.get(obj, resolve4);
                             });
                           }
                           this.current.dependencies.push(promise2);
@@ -88988,7 +88988,7 @@ var require_pdf = __commonJS({
                 var i = 0;
                 var run = function run2(reaction) {
                   var handler = ok ? reaction.ok : reaction.fail;
-                  var resolve3 = reaction.resolve;
+                  var resolve4 = reaction.resolve;
                   var reject = reaction.reject;
                   var domain2 = reaction.domain;
                   var result, then, exited;
@@ -89010,8 +89010,8 @@ var require_pdf = __commonJS({
                       if (result === reaction.promise) {
                         reject(TypeError2("Promise-chain cycle"));
                       } else if (then = isThenable2(result)) {
-                        then.call(result, resolve3, reject);
-                      } else resolve3(result);
+                        then.call(result, resolve4, reject);
+                      } else resolve4(result);
                     } else reject(value);
                   } catch (e) {
                     if (domain2 && !exited) domain2.exit();
@@ -89166,7 +89166,7 @@ var require_pdf = __commonJS({
               }
             });
             $export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
-              resolve: function resolve3(x) {
+              resolve: function resolve4(x) {
                 return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
               }
             });
@@ -89176,7 +89176,7 @@ var require_pdf = __commonJS({
               all: function all3(iterable) {
                 var C = this;
                 var capability = newPromiseCapability(C);
-                var resolve3 = capability.resolve;
+                var resolve4 = capability.resolve;
                 var reject = capability.reject;
                 var result = perform(function() {
                   var values = [];
@@ -89191,10 +89191,10 @@ var require_pdf = __commonJS({
                       if (alreadyCalled) return;
                       alreadyCalled = true;
                       values[$index] = value;
-                      --remaining || resolve3(values);
+                      --remaining || resolve4(values);
                     }, reject);
                   });
-                  --remaining || resolve3(values);
+                  --remaining || resolve4(values);
                 });
                 if (result.e) reject(result.v);
                 return capability.promise;
@@ -90101,9 +90101,9 @@ var require_pdf = __commonJS({
                   wasAlreadyErroring = true;
                   reason = void 0;
                 }
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   stream4._pendingAbortRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject,
                     _reason: reason,
                     _wasAlreadyErroring: wasAlreadyErroring
@@ -90117,9 +90117,9 @@ var require_pdf = __commonJS({
               function WritableStreamAddWriteRequest(stream4) {
                 assert2(IsWritableStreamLocked(stream4) === true);
                 assert2(stream4._state === "writable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var writeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._writeRequests.push(writeRequest);
@@ -90417,9 +90417,9 @@ var require_pdf = __commonJS({
                 }
                 assert2(state === "writable" || state === "erroring");
                 assert2(WritableStreamCloseQueuedOrInFlight(stream4) === false);
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var closeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._closeRequest = closeRequest;
@@ -90690,8 +90690,8 @@ var require_pdf = __commonJS({
                 return new TypeError("Cannot " + name + " a stream using a released writer");
               }
               function defaultWriterClosedPromiseInitialize(writer) {
-                writer._closedPromise = new Promise(function(resolve3, reject) {
-                  writer._closedPromise_resolve = resolve3;
+                writer._closedPromise = new Promise(function(resolve4, reject) {
+                  writer._closedPromise_resolve = resolve4;
                   writer._closedPromise_reject = reject;
                   writer._closedPromiseState = "pending";
                 });
@@ -90734,8 +90734,8 @@ var require_pdf = __commonJS({
                 writer._closedPromiseState = "resolved";
               }
               function defaultWriterReadyPromiseInitialize(writer) {
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -90763,8 +90763,8 @@ var require_pdf = __commonJS({
               function defaultWriterReadyPromiseReset(writer) {
                 assert2(writer._readyPromise_resolve === void 0, "writer._readyPromise_resolve === undefined");
                 assert2(writer._readyPromise_reject === void 0, "writer._readyPromise_reject === undefined");
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -90933,7 +90933,7 @@ var require_pdf = __commonJS({
                     var writer = AcquireWritableStreamDefaultWriter(dest);
                     var shuttingDown = false;
                     var currentWrite = Promise.resolve();
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       function pipeLoop() {
                         currentWrite = Promise.resolve();
                         if (shuttingDown === true) {
@@ -91048,7 +91048,7 @@ var require_pdf = __commonJS({
                         if (isError) {
                           reject(error62);
                         } else {
-                          resolve3(void 0);
+                          resolve4(void 0);
                         }
                       }
                     });
@@ -91118,8 +91118,8 @@ var require_pdf = __commonJS({
                   reason1: void 0,
                   reason2: void 0
                 };
-                teeState.promise = new Promise(function(resolve3) {
-                  teeState._resolve = resolve3;
+                teeState.promise = new Promise(function(resolve4) {
+                  teeState._resolve = resolve4;
                 });
                 var pull = create_ReadableStreamTeePullFunction();
                 pull._reader = reader;
@@ -91214,9 +91214,9 @@ var require_pdf = __commonJS({
               function ReadableStreamAddReadIntoRequest(stream4) {
                 assert2(IsReadableStreamBYOBReader(stream4._reader) === true);
                 assert2(stream4._state === "readable" || stream4._state === "closed");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readIntoRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readIntoRequests.push(readIntoRequest);
@@ -91226,9 +91226,9 @@ var require_pdf = __commonJS({
               function ReadableStreamAddReadRequest(stream4) {
                 assert2(IsReadableStreamDefaultReader(stream4._reader) === true);
                 assert2(stream4._state === "readable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readRequests.push(readRequest);
@@ -92298,8 +92298,8 @@ var require_pdf = __commonJS({
                 return new TypeError("ReadableStreamDefaultReader.prototype." + name + " can only be used on a ReadableStreamDefaultReader");
               }
               function defaultReaderClosedPromiseInitialize(reader) {
-                reader._closedPromise = new Promise(function(resolve3, reject) {
-                  reader._closedPromise_resolve = resolve3;
+                reader._closedPromise = new Promise(function(resolve4, reject) {
+                  reader._closedPromise_resolve = resolve4;
                   reader._closedPromise_reject = reject;
                 });
               }
@@ -92474,8 +92474,8 @@ var require_pdf = __commonJS({
                 if (transformStream._backpressureChangePromise !== void 0) {
                   transformStream._backpressureChangePromise_resolve(backpressure);
                 }
-                transformStream._backpressureChangePromise = new Promise(function(resolve3) {
-                  transformStream._backpressureChangePromise_resolve = resolve3;
+                transformStream._backpressureChangePromise = new Promise(function(resolve4) {
+                  transformStream._backpressureChangePromise_resolve = resolve4;
                 });
                 transformStream._backpressureChangePromise.then(function(resolution) {
                   assert2(resolution !== backpressure, "_backpressureChangePromise should be fulfilled only when backpressure is changed");
@@ -92678,8 +92678,8 @@ var require_pdf = __commonJS({
                   this._backpressureChangePromise_resolve = void 0;
                   this._transformStreamController = new TransformStreamDefaultController(this);
                   var startPromise_resolve = void 0;
-                  var startPromise = new Promise(function(resolve3) {
-                    startPromise_resolve = resolve3;
+                  var startPromise = new Promise(function(resolve4) {
+                    startPromise_resolve = resolve4;
                   });
                   var source = new TransformStreamSource(this, startPromise);
                   this._readable = new ReadableStream2(source, readableStrategy);
@@ -94102,10 +94102,10 @@ var require_pdf = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path9 = paths[i];
-                    ctx.setTransform.apply(ctx, path9.transform);
-                    ctx.translate(path9.x, path9.y);
-                    path9.addToPath(ctx, path9.fontSize);
+                    var path10 = paths[i];
+                    ctx.setTransform.apply(ctx, path10.transform);
+                    ctx.translate(path10.x, path10.y);
+                    path10.addToPath(ctx, path10.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -95965,7 +95965,7 @@ var require_pdf = __commonJS({
                 throw new TypeError("Cannot call a class as a function");
               }
             }
-            var fs10 = require("fs");
+            var fs11 = require("fs");
             var http3 = require("http");
             var https2 = require("https");
             var url3 = require("url");
@@ -96298,8 +96298,8 @@ var require_pdf = __commonJS({
               function PDFNodeStreamFsFullReader2(stream4) {
                 _classCallCheck(this, PDFNodeStreamFsFullReader2);
                 var _this7 = _possibleConstructorReturn(this, (PDFNodeStreamFsFullReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsFullReader2)).call(this, stream4));
-                var path9 = decodeURI(_this7._url.path);
-                fs10.lstat(path9, function(error62, stat) {
+                var path10 = decodeURI(_this7._url.path);
+                fs11.lstat(path10, function(error62, stat) {
                   if (error62) {
                     _this7._errored = true;
                     _this7._reason = error62;
@@ -96307,7 +96307,7 @@ var require_pdf = __commonJS({
                     return;
                   }
                   _this7._contentLength = stat.size;
-                  _this7._setReadableStream(fs10.createReadStream(path9));
+                  _this7._setReadableStream(fs11.createReadStream(path10));
                   _this7._headersCapability.resolve();
                 });
                 return _this7;
@@ -96319,7 +96319,7 @@ var require_pdf = __commonJS({
               function PDFNodeStreamFsRangeReader2(stream4, start, end2) {
                 _classCallCheck(this, PDFNodeStreamFsRangeReader2);
                 var _this8 = _possibleConstructorReturn(this, (PDFNodeStreamFsRangeReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsRangeReader2)).call(this, stream4));
-                _this8._setReadableStream(fs10.createReadStream(decodeURI(_this8._url.path), {
+                _this8._setReadableStream(fs11.createReadStream(decodeURI(_this8._url.path), {
                   start,
                   end: end2 - 1
                 }));
@@ -97936,8 +97936,8 @@ var require_pdf_worker2 = __commonJS({
             }
             function createPromiseCapability() {
               var capability = {};
-              capability.promise = new Promise(function(resolve3, reject) {
-                capability.resolve = resolve3;
+              capability.promise = new Promise(function(resolve4, reject) {
+                capability.resolve = resolve4;
                 capability.reject = reject;
               });
               return capability;
@@ -98031,8 +98031,8 @@ var require_pdf_worker2 = __commonJS({
               if (!fn) {
                 return Promise.resolve(void 0);
               }
-              return new Promise(function(resolve3, reject) {
-                resolve3(fn.apply(thisArg, args));
+              return new Promise(function(resolve4, reject) {
+                resolve4(fn.apply(thisArg, args));
               });
             }
             function wrapReason(reason) {
@@ -102306,13 +102306,13 @@ var require_pdf_worker2 = __commonJS({
             "use strict";
             var aFunction = __w_pdfjs_require__(21);
             function PromiseCapability(C) {
-              var resolve3, reject;
+              var resolve4, reject;
               this.promise = new C(function($$resolve, $$reject) {
-                if (resolve3 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
-                resolve3 = $$resolve;
+                if (resolve4 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
+                resolve4 = $$resolve;
                 reject = $$reject;
               });
-              this.resolve = aFunction(resolve3);
+              this.resolve = aFunction(resolve4);
               this.reject = aFunction(reject);
             }
             module3.exports.f = function(C) {
@@ -107483,8 +107483,8 @@ var require_pdf_worker2 = __commonJS({
               anObject(C);
               if (isObject4(x) && x.constructor === C) return x;
               var promiseCapability = newPromiseCapability.f(C);
-              var resolve3 = promiseCapability.resolve;
-              resolve3(x);
+              var resolve4 = promiseCapability.resolve;
+              resolve4(x);
               return promiseCapability.promise;
             };
           }),
@@ -107740,7 +107740,7 @@ var require_pdf_worker2 = __commonJS({
                   }
                   var chunks = [], loaded = 0;
                   var manager = this;
-                  var promise2 = new Promise(function(resolve3, reject) {
+                  var promise2 = new Promise(function(resolve4, reject) {
                     var readChunk = function readChunk2(chunk) {
                       try {
                         if (!chunk.done) {
@@ -107755,7 +107755,7 @@ var require_pdf_worker2 = __commonJS({
                         }
                         var chunkData = (0, _util.arraysToBytes)(chunks);
                         chunks = null;
-                        resolve3(chunkData);
+                        resolve4(chunkData);
                       } catch (e) {
                         reject(e);
                       }
@@ -108313,11 +108313,11 @@ var require_pdf_worker2 = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs10 = new FileSpec(names[name], xref);
+                      var fs11 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs10.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs11.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -109145,13 +109145,13 @@ var require_pdf_worker2 = __commonJS({
                 fetchAsync: function XRef_fetchAsync(ref, suppressEncryption) {
                   var streamManager = this.stream.manager;
                   var xref = this;
-                  return new Promise(function tryFetch(resolve3, reject) {
+                  return new Promise(function tryFetch(resolve4, reject) {
                     try {
-                      resolve3(xref.fetch(ref, suppressEncryption));
+                      resolve4(xref.fetch(ref, suppressEncryption));
                     } catch (e) {
                       if (e instanceof _util.MissingDataException) {
                         streamManager.requestRange(e.begin, e.end).then(function() {
-                          tryFetch(resolve3, reject);
+                          tryFetch(resolve4, reject);
                         }, reject);
                         return;
                       }
@@ -113617,8 +113617,8 @@ var require_pdf_worker2 = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace)) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path9 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path9]);
+                        var path10 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path10]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -113863,11 +113863,11 @@ var require_pdf_worker2 = __commonJS({
                       operatorList.addOp(_util.OPS.restore, []);
                     }
                   }
-                  return new Promise(function promiseBody(resolve3, reject) {
+                  return new Promise(function promiseBody(resolve4, reject) {
                     var next2 = function next3(promise2) {
                       promise2.then(function() {
                         try {
-                          promiseBody(resolve3, reject);
+                          promiseBody(resolve4, reject);
                         } catch (ex) {
                           reject(ex);
                         }
@@ -114110,7 +114110,7 @@ var require_pdf_worker2 = __commonJS({
                       return;
                     }
                     closePendingRestoreOPS();
-                    resolve3();
+                    resolve4();
                   }).catch(function(reason) {
                     if (_this8.options.ignoreErrors) {
                       _this8.handler.send("UnsupportedFeature", { featureId: _util.UNSUPPORTED_FEATURES.unknown });
@@ -114325,12 +114325,12 @@ var require_pdf_worker2 = __commonJS({
                     }
                   }
                   var timeSlotManager = new TimeSlotManager();
-                  return new Promise(function promiseBody(resolve3, reject) {
+                  return new Promise(function promiseBody(resolve4, reject) {
                     var next2 = function next3(promise2) {
                       enqueueChunk();
                       Promise.all([promise2, sink.ready]).then(function() {
                         try {
-                          promiseBody(resolve3, reject);
+                          promiseBody(resolve4, reject);
                         } catch (ex) {
                           reject(ex);
                         }
@@ -114578,7 +114578,7 @@ var require_pdf_worker2 = __commonJS({
                     }
                     flushTextContentItem();
                     enqueueChunk();
-                    resolve3();
+                    resolve4();
                   }).catch(function(reason) {
                     if (reason instanceof _util.AbortException) {
                       return;
@@ -121628,7 +121628,7 @@ var require_pdf_worker2 = __commonJS({
                     }
                     cachedChunks = [];
                   };
-                  var readPromise = new Promise(function(resolve3, reject) {
+                  var readPromise = new Promise(function(resolve4, reject) {
                     var readChunk = function readChunk2(chunk) {
                       try {
                         ensureNotTerminated();
@@ -124157,7 +124157,7 @@ var require_pdf_worker2 = __commonJS({
                 var i = 0;
                 var run = function run2(reaction) {
                   var handler = ok ? reaction.ok : reaction.fail;
-                  var resolve3 = reaction.resolve;
+                  var resolve4 = reaction.resolve;
                   var reject = reaction.reject;
                   var domain2 = reaction.domain;
                   var result, then;
@@ -124176,8 +124176,8 @@ var require_pdf_worker2 = __commonJS({
                       if (result === reaction.promise) {
                         reject(TypeError2("Promise-chain cycle"));
                       } else if (then = isThenable2(result)) {
-                        then.call(result, resolve3, reject);
-                      } else resolve3(result);
+                        then.call(result, resolve4, reject);
+                      } else resolve4(result);
                     } else reject(value);
                   } catch (e) {
                     reject(e);
@@ -124339,7 +124339,7 @@ var require_pdf_worker2 = __commonJS({
               }
             });
             $export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
-              resolve: function resolve3(x) {
+              resolve: function resolve4(x) {
                 return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
               }
             });
@@ -124349,7 +124349,7 @@ var require_pdf_worker2 = __commonJS({
               all: function all3(iterable) {
                 var C = this;
                 var capability = newPromiseCapability(C);
-                var resolve3 = capability.resolve;
+                var resolve4 = capability.resolve;
                 var reject = capability.reject;
                 var result = perform(function() {
                   var values = [];
@@ -124364,10 +124364,10 @@ var require_pdf_worker2 = __commonJS({
                       if (alreadyCalled) return;
                       alreadyCalled = true;
                       values[$index] = value;
-                      --remaining || resolve3(values);
+                      --remaining || resolve4(values);
                     }, reject);
                   });
-                  --remaining || resolve3(values);
+                  --remaining || resolve4(values);
                 });
                 if (result.e) reject(result.v);
                 return capability.promise;
@@ -125266,9 +125266,9 @@ var require_pdf_worker2 = __commonJS({
                   wasAlreadyErroring = true;
                   reason = void 0;
                 }
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   stream4._pendingAbortRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject,
                     _reason: reason,
                     _wasAlreadyErroring: wasAlreadyErroring
@@ -125282,9 +125282,9 @@ var require_pdf_worker2 = __commonJS({
               function WritableStreamAddWriteRequest(stream4) {
                 assert2(IsWritableStreamLocked(stream4) === true);
                 assert2(stream4._state === "writable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var writeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._writeRequests.push(writeRequest);
@@ -125582,9 +125582,9 @@ var require_pdf_worker2 = __commonJS({
                 }
                 assert2(state === "writable" || state === "erroring");
                 assert2(WritableStreamCloseQueuedOrInFlight(stream4) === false);
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var closeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._closeRequest = closeRequest;
@@ -125855,8 +125855,8 @@ var require_pdf_worker2 = __commonJS({
                 return new TypeError("Cannot " + name + " a stream using a released writer");
               }
               function defaultWriterClosedPromiseInitialize(writer) {
-                writer._closedPromise = new Promise(function(resolve3, reject) {
-                  writer._closedPromise_resolve = resolve3;
+                writer._closedPromise = new Promise(function(resolve4, reject) {
+                  writer._closedPromise_resolve = resolve4;
                   writer._closedPromise_reject = reject;
                   writer._closedPromiseState = "pending";
                 });
@@ -125899,8 +125899,8 @@ var require_pdf_worker2 = __commonJS({
                 writer._closedPromiseState = "resolved";
               }
               function defaultWriterReadyPromiseInitialize(writer) {
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -125928,8 +125928,8 @@ var require_pdf_worker2 = __commonJS({
               function defaultWriterReadyPromiseReset(writer) {
                 assert2(writer._readyPromise_resolve === void 0, "writer._readyPromise_resolve === undefined");
                 assert2(writer._readyPromise_reject === void 0, "writer._readyPromise_reject === undefined");
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -126098,7 +126098,7 @@ var require_pdf_worker2 = __commonJS({
                     var writer = AcquireWritableStreamDefaultWriter(dest);
                     var shuttingDown = false;
                     var currentWrite = Promise.resolve();
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       function pipeLoop() {
                         currentWrite = Promise.resolve();
                         if (shuttingDown === true) {
@@ -126213,7 +126213,7 @@ var require_pdf_worker2 = __commonJS({
                         if (isError) {
                           reject(error62);
                         } else {
-                          resolve3(void 0);
+                          resolve4(void 0);
                         }
                       }
                     });
@@ -126283,8 +126283,8 @@ var require_pdf_worker2 = __commonJS({
                   reason1: void 0,
                   reason2: void 0
                 };
-                teeState.promise = new Promise(function(resolve3) {
-                  teeState._resolve = resolve3;
+                teeState.promise = new Promise(function(resolve4) {
+                  teeState._resolve = resolve4;
                 });
                 var pull = create_ReadableStreamTeePullFunction();
                 pull._reader = reader;
@@ -126379,9 +126379,9 @@ var require_pdf_worker2 = __commonJS({
               function ReadableStreamAddReadIntoRequest(stream4) {
                 assert2(IsReadableStreamBYOBReader(stream4._reader) === true);
                 assert2(stream4._state === "readable" || stream4._state === "closed");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readIntoRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readIntoRequests.push(readIntoRequest);
@@ -126391,9 +126391,9 @@ var require_pdf_worker2 = __commonJS({
               function ReadableStreamAddReadRequest(stream4) {
                 assert2(IsReadableStreamDefaultReader(stream4._reader) === true);
                 assert2(stream4._state === "readable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readRequests.push(readRequest);
@@ -127463,8 +127463,8 @@ var require_pdf_worker2 = __commonJS({
                 return new TypeError("ReadableStreamDefaultReader.prototype." + name + " can only be used on a ReadableStreamDefaultReader");
               }
               function defaultReaderClosedPromiseInitialize(reader) {
-                reader._closedPromise = new Promise(function(resolve3, reject) {
-                  reader._closedPromise_resolve = resolve3;
+                reader._closedPromise = new Promise(function(resolve4, reject) {
+                  reader._closedPromise_resolve = resolve4;
                   reader._closedPromise_reject = reject;
                 });
               }
@@ -127639,8 +127639,8 @@ var require_pdf_worker2 = __commonJS({
                 if (transformStream._backpressureChangePromise !== void 0) {
                   transformStream._backpressureChangePromise_resolve(backpressure);
                 }
-                transformStream._backpressureChangePromise = new Promise(function(resolve3) {
-                  transformStream._backpressureChangePromise_resolve = resolve3;
+                transformStream._backpressureChangePromise = new Promise(function(resolve4) {
+                  transformStream._backpressureChangePromise_resolve = resolve4;
                 });
                 transformStream._backpressureChangePromise.then(function(resolution) {
                   assert2(resolution !== backpressure, "_backpressureChangePromise should be fulfilled only when backpressure is changed");
@@ -127843,8 +127843,8 @@ var require_pdf_worker2 = __commonJS({
                   this._backpressureChangePromise_resolve = void 0;
                   this._transformStreamController = new TransformStreamDefaultController(this);
                   var startPromise_resolve = void 0;
-                  var startPromise = new Promise(function(resolve3) {
-                    startPromise_resolve = resolve3;
+                  var startPromise = new Promise(function(resolve4) {
+                    startPromise_resolve = resolve4;
                   });
                   var source = new TransformStreamSource(this, startPromise);
                   this._readable = new ReadableStream2(source, readableStrategy);
@@ -127981,7 +127981,7 @@ var require_pdf_worker2 = __commonJS({
               }
               _util.Util.inherit(LocalPdfManager2, BasePdfManager, {
                 ensure: function LocalPdfManager_ensure(obj, prop2, args) {
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     try {
                       var value = obj[prop2];
                       var result;
@@ -127990,7 +127990,7 @@ var require_pdf_worker2 = __commonJS({
                       } else {
                         result = value;
                       }
-                      resolve3(result);
+                      resolve4(result);
                     } catch (e) {
                       reject(e);
                     }
@@ -128029,7 +128029,7 @@ var require_pdf_worker2 = __commonJS({
               _util.Util.inherit(NetworkPdfManager2, BasePdfManager, {
                 ensure: function NetworkPdfManager_ensure(obj, prop2, args) {
                   var pdfManager = this;
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     function ensureHelper() {
                       try {
                         var result;
@@ -128039,7 +128039,7 @@ var require_pdf_worker2 = __commonJS({
                         } else {
                           result = value;
                         }
-                        resolve3(result);
+                        resolve4(result);
                       } catch (e) {
                         if (!(e instanceof _util.MissingDataException)) {
                           reject(e);
@@ -131655,7 +131655,7 @@ var require_pdf_worker2 = __commonJS({
                 }
               };
               function processBinaryCMap(data2, cMap, extend3) {
-                return new Promise(function(resolve3, reject) {
+                return new Promise(function(resolve4, reject) {
                   var stream4 = new BinaryCMapStream(data2);
                   var header = stream4.readByte();
                   cMap.vertical = !!(header & 1);
@@ -131793,10 +131793,10 @@ var require_pdf_worker2 = __commonJS({
                     }
                   }
                   if (useCMap) {
-                    resolve3(extend3(useCMap));
+                    resolve4(extend3(useCMap));
                     return;
                   }
-                  resolve3(cMap);
+                  resolve4(cMap);
                 });
               }
               function BinaryCMapReader2() {
@@ -142295,8 +142295,8 @@ var require_pdf2 = __commonJS({
             }
             function createPromiseCapability() {
               var capability = {};
-              capability.promise = new Promise(function(resolve3, reject) {
-                capability.resolve = resolve3;
+              capability.promise = new Promise(function(resolve4, reject) {
+                capability.resolve = resolve4;
                 capability.reject = reject;
               });
               return capability;
@@ -142390,8 +142390,8 @@ var require_pdf2 = __commonJS({
               if (!fn) {
                 return Promise.resolve(void 0);
               }
-              return new Promise(function(resolve3, reject) {
-                resolve3(fn.apply(thisArg, args));
+              return new Promise(function(resolve4, reject) {
+                resolve4(fn.apply(thisArg, args));
               });
             }
             function wrapReason(reason) {
@@ -143127,7 +143127,7 @@ var require_pdf2 = __commonJS({
                   if (!name) {
                     return Promise.reject(new Error("CMap name must be specified."));
                   }
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     var url3 = _this.baseUrl + name + (_this.isCompressed ? ".bcmap" : "");
                     var request = new XMLHttpRequest();
                     request.open("GET", url3, true);
@@ -143146,7 +143146,7 @@ var require_pdf2 = __commonJS({
                           data2 = (0, _util.stringToBytes)(request.responseText);
                         }
                         if (data2) {
-                          resolve3({
+                          resolve4({
                             cMapData: data2,
                             compressionType: _this.isCompressed ? _util.CMapCompressionType.BINARY : _util.CMapCompressionType.NONE
                           });
@@ -143884,13 +143884,13 @@ var require_pdf2 = __commonJS({
             "use strict";
             var aFunction = __w_pdfjs_require__(21);
             function PromiseCapability(C) {
-              var resolve3, reject;
+              var resolve4, reject;
               this.promise = new C(function($$resolve, $$reject) {
-                if (resolve3 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
-                resolve3 = $$resolve;
+                if (resolve4 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
+                resolve4 = $$resolve;
                 reject = $$reject;
               });
-              this.resolve = aFunction(resolve3);
+              this.resolve = aFunction(resolve4);
               this.reject = aFunction(reject);
             }
             module3.exports.f = function(C) {
@@ -144576,8 +144576,8 @@ var require_pdf2 = __commonJS({
               anObject(C);
               if (isObject4(x) && x.constructor === C) return x;
               var promiseCapability = newPromiseCapability.f(C);
-              var resolve3 = promiseCapability.resolve;
-              resolve3(x);
+              var resolve4 = promiseCapability.resolve;
+              resolve4(x);
               return promiseCapability.promise;
             };
           }),
@@ -145131,12 +145131,12 @@ var require_pdf2 = __commonJS({
                 getTextContent: function PDFPageProxy_getTextContent(params) {
                   params = params || {};
                   var readableStream = this.streamTextContent(params);
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     function pump() {
                       reader.read().then(function(_ref) {
                         var value = _ref.value, done = _ref.done;
                         if (done) {
-                          resolve3(textContent2);
+                          resolve4(textContent2);
                           return;
                         }
                         _util.Util.extendObj(textContent2.styles, value.styles);
@@ -145815,7 +145815,7 @@ var require_pdf2 = __commonJS({
                     if (components !== 3 && components !== 1) {
                       return Promise.reject(new Error("Only 3 components or 1 component can be returned"));
                     }
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       var img = new Image();
                       img.onload = function() {
                         var width = img.width;
@@ -145841,7 +145841,7 @@ var require_pdf2 = __commonJS({
                             buf[j] = data3[i];
                           }
                         }
-                        resolve3({
+                        resolve4({
                           data: buf,
                           width,
                           height
@@ -148335,12 +148335,12 @@ var require_pdf2 = __commonJS({
                           var common = obj.substring(0, 2) === "g_";
                           var promise2;
                           if (common) {
-                            promise2 = new Promise(function(resolve3) {
-                              _this.commonObjs.get(obj, resolve3);
+                            promise2 = new Promise(function(resolve4) {
+                              _this.commonObjs.get(obj, resolve4);
                             });
                           } else {
-                            promise2 = new Promise(function(resolve3) {
-                              _this.objs.get(obj, resolve3);
+                            promise2 = new Promise(function(resolve4) {
+                              _this.objs.get(obj, resolve4);
                             });
                           }
                           this.current.dependencies.push(promise2);
@@ -151304,7 +151304,7 @@ var require_pdf2 = __commonJS({
                 var i = 0;
                 var run = function run2(reaction) {
                   var handler = ok ? reaction.ok : reaction.fail;
-                  var resolve3 = reaction.resolve;
+                  var resolve4 = reaction.resolve;
                   var reject = reaction.reject;
                   var domain2 = reaction.domain;
                   var result, then;
@@ -151323,8 +151323,8 @@ var require_pdf2 = __commonJS({
                       if (result === reaction.promise) {
                         reject(TypeError2("Promise-chain cycle"));
                       } else if (then = isThenable2(result)) {
-                        then.call(result, resolve3, reject);
-                      } else resolve3(result);
+                        then.call(result, resolve4, reject);
+                      } else resolve4(result);
                     } else reject(value);
                   } catch (e) {
                     reject(e);
@@ -151486,7 +151486,7 @@ var require_pdf2 = __commonJS({
               }
             });
             $export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
-              resolve: function resolve3(x) {
+              resolve: function resolve4(x) {
                 return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
               }
             });
@@ -151496,7 +151496,7 @@ var require_pdf2 = __commonJS({
               all: function all3(iterable) {
                 var C = this;
                 var capability = newPromiseCapability(C);
-                var resolve3 = capability.resolve;
+                var resolve4 = capability.resolve;
                 var reject = capability.reject;
                 var result = perform(function() {
                   var values = [];
@@ -151511,10 +151511,10 @@ var require_pdf2 = __commonJS({
                       if (alreadyCalled) return;
                       alreadyCalled = true;
                       values[$index] = value;
-                      --remaining || resolve3(values);
+                      --remaining || resolve4(values);
                     }, reject);
                   });
-                  --remaining || resolve3(values);
+                  --remaining || resolve4(values);
                 });
                 if (result.e) reject(result.v);
                 return capability.promise;
@@ -152413,9 +152413,9 @@ var require_pdf2 = __commonJS({
                   wasAlreadyErroring = true;
                   reason = void 0;
                 }
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   stream4._pendingAbortRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject,
                     _reason: reason,
                     _wasAlreadyErroring: wasAlreadyErroring
@@ -152429,9 +152429,9 @@ var require_pdf2 = __commonJS({
               function WritableStreamAddWriteRequest(stream4) {
                 assert2(IsWritableStreamLocked(stream4) === true);
                 assert2(stream4._state === "writable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var writeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._writeRequests.push(writeRequest);
@@ -152729,9 +152729,9 @@ var require_pdf2 = __commonJS({
                 }
                 assert2(state === "writable" || state === "erroring");
                 assert2(WritableStreamCloseQueuedOrInFlight(stream4) === false);
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var closeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._closeRequest = closeRequest;
@@ -153002,8 +153002,8 @@ var require_pdf2 = __commonJS({
                 return new TypeError("Cannot " + name + " a stream using a released writer");
               }
               function defaultWriterClosedPromiseInitialize(writer) {
-                writer._closedPromise = new Promise(function(resolve3, reject) {
-                  writer._closedPromise_resolve = resolve3;
+                writer._closedPromise = new Promise(function(resolve4, reject) {
+                  writer._closedPromise_resolve = resolve4;
                   writer._closedPromise_reject = reject;
                   writer._closedPromiseState = "pending";
                 });
@@ -153046,8 +153046,8 @@ var require_pdf2 = __commonJS({
                 writer._closedPromiseState = "resolved";
               }
               function defaultWriterReadyPromiseInitialize(writer) {
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -153075,8 +153075,8 @@ var require_pdf2 = __commonJS({
               function defaultWriterReadyPromiseReset(writer) {
                 assert2(writer._readyPromise_resolve === void 0, "writer._readyPromise_resolve === undefined");
                 assert2(writer._readyPromise_reject === void 0, "writer._readyPromise_reject === undefined");
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -153245,7 +153245,7 @@ var require_pdf2 = __commonJS({
                     var writer = AcquireWritableStreamDefaultWriter(dest);
                     var shuttingDown = false;
                     var currentWrite = Promise.resolve();
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       function pipeLoop() {
                         currentWrite = Promise.resolve();
                         if (shuttingDown === true) {
@@ -153360,7 +153360,7 @@ var require_pdf2 = __commonJS({
                         if (isError) {
                           reject(error62);
                         } else {
-                          resolve3(void 0);
+                          resolve4(void 0);
                         }
                       }
                     });
@@ -153430,8 +153430,8 @@ var require_pdf2 = __commonJS({
                   reason1: void 0,
                   reason2: void 0
                 };
-                teeState.promise = new Promise(function(resolve3) {
-                  teeState._resolve = resolve3;
+                teeState.promise = new Promise(function(resolve4) {
+                  teeState._resolve = resolve4;
                 });
                 var pull = create_ReadableStreamTeePullFunction();
                 pull._reader = reader;
@@ -153526,9 +153526,9 @@ var require_pdf2 = __commonJS({
               function ReadableStreamAddReadIntoRequest(stream4) {
                 assert2(IsReadableStreamBYOBReader(stream4._reader) === true);
                 assert2(stream4._state === "readable" || stream4._state === "closed");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readIntoRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readIntoRequests.push(readIntoRequest);
@@ -153538,9 +153538,9 @@ var require_pdf2 = __commonJS({
               function ReadableStreamAddReadRequest(stream4) {
                 assert2(IsReadableStreamDefaultReader(stream4._reader) === true);
                 assert2(stream4._state === "readable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readRequests.push(readRequest);
@@ -154610,8 +154610,8 @@ var require_pdf2 = __commonJS({
                 return new TypeError("ReadableStreamDefaultReader.prototype." + name + " can only be used on a ReadableStreamDefaultReader");
               }
               function defaultReaderClosedPromiseInitialize(reader) {
-                reader._closedPromise = new Promise(function(resolve3, reject) {
-                  reader._closedPromise_resolve = resolve3;
+                reader._closedPromise = new Promise(function(resolve4, reject) {
+                  reader._closedPromise_resolve = resolve4;
                   reader._closedPromise_reject = reject;
                 });
               }
@@ -154786,8 +154786,8 @@ var require_pdf2 = __commonJS({
                 if (transformStream._backpressureChangePromise !== void 0) {
                   transformStream._backpressureChangePromise_resolve(backpressure);
                 }
-                transformStream._backpressureChangePromise = new Promise(function(resolve3) {
-                  transformStream._backpressureChangePromise_resolve = resolve3;
+                transformStream._backpressureChangePromise = new Promise(function(resolve4) {
+                  transformStream._backpressureChangePromise_resolve = resolve4;
                 });
                 transformStream._backpressureChangePromise.then(function(resolution) {
                   assert2(resolution !== backpressure, "_backpressureChangePromise should be fulfilled only when backpressure is changed");
@@ -154990,8 +154990,8 @@ var require_pdf2 = __commonJS({
                   this._backpressureChangePromise_resolve = void 0;
                   this._transformStreamController = new TransformStreamDefaultController(this);
                   var startPromise_resolve = void 0;
-                  var startPromise = new Promise(function(resolve3) {
-                    startPromise_resolve = resolve3;
+                  var startPromise = new Promise(function(resolve4) {
+                    startPromise_resolve = resolve4;
                   });
                   var source = new TransformStreamSource(this, startPromise);
                   this._readable = new ReadableStream2(source, readableStrategy);
@@ -156414,10 +156414,10 @@ var require_pdf2 = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path9 = paths[i];
-                    ctx.setTransform.apply(ctx, path9.transform);
-                    ctx.translate(path9.x, path9.y);
-                    path9.addToPath(ctx, path9.fontSize);
+                    var path10 = paths[i];
+                    ctx.setTransform.apply(ctx, path10.transform);
+                    ctx.translate(path10.x, path10.y);
+                    path10.addToPath(ctx, path10.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -157801,7 +157801,7 @@ var require_pdf2 = __commonJS({
                 throw new TypeError("Cannot call a class as a function");
               }
             }
-            var fs10 = require("fs");
+            var fs11 = require("fs");
             var http3 = require("http");
             var https2 = require("https");
             var url3 = require("url");
@@ -158134,8 +158134,8 @@ var require_pdf2 = __commonJS({
               function PDFNodeStreamFsFullReader2(stream4) {
                 _classCallCheck(this, PDFNodeStreamFsFullReader2);
                 var _this7 = _possibleConstructorReturn(this, (PDFNodeStreamFsFullReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsFullReader2)).call(this, stream4));
-                var path9 = decodeURI(_this7._url.path);
-                fs10.lstat(path9, function(error62, stat) {
+                var path10 = decodeURI(_this7._url.path);
+                fs11.lstat(path10, function(error62, stat) {
                   if (error62) {
                     _this7._errored = true;
                     _this7._reason = error62;
@@ -158143,7 +158143,7 @@ var require_pdf2 = __commonJS({
                     return;
                   }
                   _this7._contentLength = stat.size;
-                  _this7._setReadableStream(fs10.createReadStream(path9));
+                  _this7._setReadableStream(fs11.createReadStream(path10));
                   _this7._headersCapability.resolve();
                 });
                 return _this7;
@@ -158155,7 +158155,7 @@ var require_pdf2 = __commonJS({
               function PDFNodeStreamFsRangeReader2(stream4, start, end2) {
                 _classCallCheck(this, PDFNodeStreamFsRangeReader2);
                 var _this8 = _possibleConstructorReturn(this, (PDFNodeStreamFsRangeReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsRangeReader2)).call(this, stream4));
-                _this8._setReadableStream(fs10.createReadStream(decodeURI(_this8._url.path), {
+                _this8._setReadableStream(fs11.createReadStream(decodeURI(_this8._url.path), {
                   start,
                   end: end2 - 1
                 }));
@@ -159785,8 +159785,8 @@ var require_pdf_worker3 = __commonJS({
             }
             function createPromiseCapability() {
               var capability = {};
-              capability.promise = new Promise(function(resolve3, reject) {
-                capability.resolve = resolve3;
+              capability.promise = new Promise(function(resolve4, reject) {
+                capability.resolve = resolve4;
                 capability.reject = reject;
               });
               return capability;
@@ -159880,8 +159880,8 @@ var require_pdf_worker3 = __commonJS({
               if (!fn) {
                 return Promise.resolve(void 0);
               }
-              return new Promise(function(resolve3, reject) {
-                resolve3(fn.apply(thisArg, args));
+              return new Promise(function(resolve4, reject) {
+                resolve4(fn.apply(thisArg, args));
               });
             }
             function wrapReason(reason) {
@@ -173587,7 +173587,7 @@ var require_pdf_worker3 = __commonJS({
                   }
                   var chunks = [], loaded = 0;
                   var manager = this;
-                  var promise2 = new Promise(function(resolve3, reject) {
+                  var promise2 = new Promise(function(resolve4, reject) {
                     var readChunk = function readChunk2(chunk) {
                       try {
                         if (!chunk.done) {
@@ -173602,7 +173602,7 @@ var require_pdf_worker3 = __commonJS({
                         }
                         var chunkData = (0, _util.arraysToBytes)(chunks);
                         chunks = null;
-                        resolve3(chunkData);
+                        resolve4(chunkData);
                       } catch (e) {
                         reject(e);
                       }
@@ -175720,8 +175720,8 @@ var require_pdf_worker3 = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace)) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path9 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path9]);
+                        var path10 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path10]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -175966,11 +175966,11 @@ var require_pdf_worker3 = __commonJS({
                       operatorList.addOp(_util.OPS.restore, []);
                     }
                   }
-                  return new Promise(function promiseBody(resolve3, reject) {
+                  return new Promise(function promiseBody(resolve4, reject) {
                     var next2 = function next3(promise2) {
                       promise2.then(function() {
                         try {
-                          promiseBody(resolve3, reject);
+                          promiseBody(resolve4, reject);
                         } catch (ex) {
                           reject(ex);
                         }
@@ -176203,7 +176203,7 @@ var require_pdf_worker3 = __commonJS({
                       return;
                     }
                     closePendingRestoreOPS();
-                    resolve3();
+                    resolve4();
                   }).catch(function(reason) {
                     if (_this8.options.ignoreErrors) {
                       _this8.handler.send("UnsupportedFeature", { featureId: _util.UNSUPPORTED_FEATURES.unknown });
@@ -176418,12 +176418,12 @@ var require_pdf_worker3 = __commonJS({
                     }
                   }
                   var timeSlotManager = new TimeSlotManager();
-                  return new Promise(function promiseBody(resolve3, reject) {
+                  return new Promise(function promiseBody(resolve4, reject) {
                     var next2 = function next3(promise2) {
                       enqueueChunk();
                       Promise.all([promise2, sink.ready]).then(function() {
                         try {
-                          promiseBody(resolve3, reject);
+                          promiseBody(resolve4, reject);
                         } catch (ex) {
                           reject(ex);
                         }
@@ -176679,7 +176679,7 @@ var require_pdf_worker3 = __commonJS({
                     }
                     flushTextContentItem();
                     enqueueChunk();
-                    resolve3();
+                    resolve4();
                   }).catch(function(reason) {
                     if (reason instanceof _util.AbortException) {
                       return;
@@ -180539,11 +180539,11 @@ var require_pdf_worker3 = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs10 = new FileSpec(names[name], xref);
+                      var fs11 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs10.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs11.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -181350,13 +181350,13 @@ var require_pdf_worker3 = __commonJS({
                 fetchAsync: function XRef_fetchAsync(ref, suppressEncryption) {
                   var streamManager = this.stream.manager;
                   var xref = this;
-                  return new Promise(function tryFetch(resolve3, reject) {
+                  return new Promise(function tryFetch(resolve4, reject) {
                     try {
-                      resolve3(xref.fetch(ref, suppressEncryption));
+                      resolve4(xref.fetch(ref, suppressEncryption));
                     } catch (e) {
                       if (e instanceof _util.MissingDataException) {
                         streamManager.requestRange(e.begin, e.end).then(function() {
-                          tryFetch(resolve3, reject);
+                          tryFetch(resolve4, reject);
                         }, reject);
                         return;
                       }
@@ -182612,7 +182612,7 @@ var require_pdf_worker3 = __commonJS({
                     }
                     cachedChunks = [];
                   };
-                  var readPromise = new Promise(function(resolve3, reject) {
+                  var readPromise = new Promise(function(resolve4, reject) {
                     var readChunk = function readChunk2(chunk) {
                       try {
                         ensureNotTerminated();
@@ -183226,9 +183226,9 @@ var require_pdf_worker3 = __commonJS({
                   wasAlreadyErroring = true;
                   reason = void 0;
                 }
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   stream4._pendingAbortRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject,
                     _reason: reason,
                     _wasAlreadyErroring: wasAlreadyErroring
@@ -183242,9 +183242,9 @@ var require_pdf_worker3 = __commonJS({
               function WritableStreamAddWriteRequest(stream4) {
                 assert2(IsWritableStreamLocked(stream4) === true);
                 assert2(stream4._state === "writable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var writeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._writeRequests.push(writeRequest);
@@ -183542,9 +183542,9 @@ var require_pdf_worker3 = __commonJS({
                 }
                 assert2(state === "writable" || state === "erroring");
                 assert2(WritableStreamCloseQueuedOrInFlight(stream4) === false);
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var closeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._closeRequest = closeRequest;
@@ -183815,8 +183815,8 @@ var require_pdf_worker3 = __commonJS({
                 return new TypeError("Cannot " + name + " a stream using a released writer");
               }
               function defaultWriterClosedPromiseInitialize(writer) {
-                writer._closedPromise = new Promise(function(resolve3, reject) {
-                  writer._closedPromise_resolve = resolve3;
+                writer._closedPromise = new Promise(function(resolve4, reject) {
+                  writer._closedPromise_resolve = resolve4;
                   writer._closedPromise_reject = reject;
                   writer._closedPromiseState = "pending";
                 });
@@ -183859,8 +183859,8 @@ var require_pdf_worker3 = __commonJS({
                 writer._closedPromiseState = "resolved";
               }
               function defaultWriterReadyPromiseInitialize(writer) {
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -183888,8 +183888,8 @@ var require_pdf_worker3 = __commonJS({
               function defaultWriterReadyPromiseReset(writer) {
                 assert2(writer._readyPromise_resolve === void 0, "writer._readyPromise_resolve === undefined");
                 assert2(writer._readyPromise_reject === void 0, "writer._readyPromise_reject === undefined");
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -184058,7 +184058,7 @@ var require_pdf_worker3 = __commonJS({
                     var writer = AcquireWritableStreamDefaultWriter(dest);
                     var shuttingDown = false;
                     var currentWrite = Promise.resolve();
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       function pipeLoop() {
                         currentWrite = Promise.resolve();
                         if (shuttingDown === true) {
@@ -184173,7 +184173,7 @@ var require_pdf_worker3 = __commonJS({
                         if (isError) {
                           reject(error62);
                         } else {
-                          resolve3(void 0);
+                          resolve4(void 0);
                         }
                       }
                     });
@@ -184243,8 +184243,8 @@ var require_pdf_worker3 = __commonJS({
                   reason1: void 0,
                   reason2: void 0
                 };
-                teeState.promise = new Promise(function(resolve3) {
-                  teeState._resolve = resolve3;
+                teeState.promise = new Promise(function(resolve4) {
+                  teeState._resolve = resolve4;
                 });
                 var pull = create_ReadableStreamTeePullFunction();
                 pull._reader = reader;
@@ -184339,9 +184339,9 @@ var require_pdf_worker3 = __commonJS({
               function ReadableStreamAddReadIntoRequest(stream4) {
                 assert2(IsReadableStreamBYOBReader(stream4._reader) === true);
                 assert2(stream4._state === "readable" || stream4._state === "closed");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readIntoRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readIntoRequests.push(readIntoRequest);
@@ -184351,9 +184351,9 @@ var require_pdf_worker3 = __commonJS({
               function ReadableStreamAddReadRequest(stream4) {
                 assert2(IsReadableStreamDefaultReader(stream4._reader) === true);
                 assert2(stream4._state === "readable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readRequests.push(readRequest);
@@ -185423,8 +185423,8 @@ var require_pdf_worker3 = __commonJS({
                 return new TypeError("ReadableStreamDefaultReader.prototype." + name + " can only be used on a ReadableStreamDefaultReader");
               }
               function defaultReaderClosedPromiseInitialize(reader) {
-                reader._closedPromise = new Promise(function(resolve3, reject) {
-                  reader._closedPromise_resolve = resolve3;
+                reader._closedPromise = new Promise(function(resolve4, reject) {
+                  reader._closedPromise_resolve = resolve4;
                   reader._closedPromise_reject = reject;
                 });
               }
@@ -185599,8 +185599,8 @@ var require_pdf_worker3 = __commonJS({
                 if (transformStream._backpressureChangePromise !== void 0) {
                   transformStream._backpressureChangePromise_resolve(backpressure);
                 }
-                transformStream._backpressureChangePromise = new Promise(function(resolve3) {
-                  transformStream._backpressureChangePromise_resolve = resolve3;
+                transformStream._backpressureChangePromise = new Promise(function(resolve4) {
+                  transformStream._backpressureChangePromise_resolve = resolve4;
                 });
                 transformStream._backpressureChangePromise.then(function(resolution) {
                   assert2(resolution !== backpressure, "_backpressureChangePromise should be fulfilled only when backpressure is changed");
@@ -185803,8 +185803,8 @@ var require_pdf_worker3 = __commonJS({
                   this._backpressureChangePromise_resolve = void 0;
                   this._transformStreamController = new TransformStreamDefaultController(this);
                   var startPromise_resolve = void 0;
-                  var startPromise = new Promise(function(resolve3) {
-                    startPromise_resolve = resolve3;
+                  var startPromise = new Promise(function(resolve4) {
+                    startPromise_resolve = resolve4;
                   });
                   var source = new TransformStreamSource(this, startPromise);
                   this._readable = new ReadableStream2(source, readableStrategy);
@@ -187036,7 +187036,7 @@ var require_pdf_worker3 = __commonJS({
                 }
               };
               function processBinaryCMap(data2, cMap, extend3) {
-                return new Promise(function(resolve3, reject) {
+                return new Promise(function(resolve4, reject) {
                   var stream4 = new BinaryCMapStream(data2);
                   var header = stream4.readByte();
                   cMap.vertical = !!(header & 1);
@@ -187174,10 +187174,10 @@ var require_pdf_worker3 = __commonJS({
                     }
                   }
                   if (useCMap) {
-                    resolve3(extend3(useCMap));
+                    resolve4(extend3(useCMap));
                     return;
                   }
-                  resolve3(cMap);
+                  resolve4(cMap);
                 });
               }
               function BinaryCMapReader2() {
@@ -197447,7 +197447,7 @@ var require_pdf_worker3 = __commonJS({
               }
               _util.Util.inherit(LocalPdfManager2, BasePdfManager, {
                 ensure: function LocalPdfManager_ensure(obj, prop2, args) {
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     try {
                       var value = obj[prop2];
                       var result;
@@ -197456,7 +197456,7 @@ var require_pdf_worker3 = __commonJS({
                       } else {
                         result = value;
                       }
-                      resolve3(result);
+                      resolve4(result);
                     } catch (e) {
                       reject(e);
                     }
@@ -197495,7 +197495,7 @@ var require_pdf_worker3 = __commonJS({
               _util.Util.inherit(NetworkPdfManager2, BasePdfManager, {
                 ensure: function NetworkPdfManager_ensure(obj, prop2, args) {
                   var pdfManager = this;
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     function ensureHelper() {
                       try {
                         var result;
@@ -197505,7 +197505,7 @@ var require_pdf_worker3 = __commonJS({
                         } else {
                           result = value;
                         }
-                        resolve3(result);
+                        resolve4(result);
                       } catch (e) {
                         if (!(e instanceof _util.MissingDataException)) {
                           reject(e);
@@ -198954,9 +198954,9 @@ var require_pdf_worker3 = __commonJS({
                 if (globalScope.Promise) {
                   if (typeof globalScope.Promise.all !== "function") {
                     globalScope.Promise.all = function(iterable) {
-                      var count = 0, results = [], resolve3, reject;
+                      var count = 0, results = [], resolve4, reject;
                       var promise2 = new globalScope.Promise(function(resolve_, reject_) {
-                        resolve3 = resolve_;
+                        resolve4 = resolve_;
                         reject = reject_;
                       });
                       iterable.forEach(function(p, i) {
@@ -198965,26 +198965,26 @@ var require_pdf_worker3 = __commonJS({
                           results[i] = result;
                           count--;
                           if (count === 0) {
-                            resolve3(results);
+                            resolve4(results);
                           }
                         }, reject);
                       });
                       if (count === 0) {
-                        resolve3(results);
+                        resolve4(results);
                       }
                       return promise2;
                     };
                   }
                   if (typeof globalScope.Promise.resolve !== "function") {
                     globalScope.Promise.resolve = function(value) {
-                      return new globalScope.Promise(function(resolve3) {
-                        resolve3(value);
+                      return new globalScope.Promise(function(resolve4) {
+                        resolve4(value);
                       });
                     };
                   }
                   if (typeof globalScope.Promise.reject !== "function") {
                     globalScope.Promise.reject = function(reason) {
-                      return new globalScope.Promise(function(resolve3, reject) {
+                      return new globalScope.Promise(function(resolve4, reject) {
                         reject(reason);
                       });
                     };
@@ -199109,8 +199109,8 @@ var require_pdf_worker3 = __commonJS({
                 };
                 Promise2.all = function Promise_all(promises4) {
                   var resolveAll, rejectAll;
-                  var deferred = new Promise2(function(resolve4, reject2) {
-                    resolveAll = resolve4;
+                  var deferred = new Promise2(function(resolve5, reject2) {
+                    resolveAll = resolve5;
                     rejectAll = reject2;
                   });
                   var unresolved = promises4.length;
@@ -199128,7 +199128,7 @@ var require_pdf_worker3 = __commonJS({
                   }
                   for (var i = 0, ii = promises4.length; i < ii; ++i) {
                     var promise2 = promises4[i];
-                    var resolve3 = /* @__PURE__ */ (function(i2) {
+                    var resolve4 = /* @__PURE__ */ (function(i2) {
                       return function(value) {
                         if (deferred._status === STATUS_REJECTED) {
                           return;
@@ -199141,9 +199141,9 @@ var require_pdf_worker3 = __commonJS({
                       };
                     })(i);
                     if (Promise2.isPromise(promise2)) {
-                      promise2.then(resolve3, reject);
+                      promise2.then(resolve4, reject);
                     } else {
-                      resolve3(promise2);
+                      resolve4(promise2);
                     }
                   }
                   return deferred;
@@ -199152,12 +199152,12 @@ var require_pdf_worker3 = __commonJS({
                   return value && typeof value.then === "function";
                 };
                 Promise2.resolve = function Promise_resolve(value) {
-                  return new Promise2(function(resolve3) {
-                    resolve3(value);
+                  return new Promise2(function(resolve4) {
+                    resolve4(value);
                   });
                 };
                 Promise2.reject = function Promise_reject(reason) {
-                  return new Promise2(function(resolve3, reject) {
+                  return new Promise2(function(resolve4, reject) {
                     reject(reason);
                   });
                 };
@@ -199189,8 +199189,8 @@ var require_pdf_worker3 = __commonJS({
                     this._updateStatus(STATUS_REJECTED, reason);
                   },
                   then: function Promise_then(onResolve, onReject) {
-                    var nextPromise = new Promise2(function(resolve3, reject) {
-                      this.resolve = resolve3;
+                    var nextPromise = new Promise2(function(resolve4, reject) {
+                      this.resolve = resolve4;
                       this.reject = reject;
                     });
                     this._handlers.push({
@@ -200701,8 +200701,8 @@ var require_pdf3 = __commonJS({
             }
             function createPromiseCapability() {
               var capability = {};
-              capability.promise = new Promise(function(resolve3, reject) {
-                capability.resolve = resolve3;
+              capability.promise = new Promise(function(resolve4, reject) {
+                capability.resolve = resolve4;
                 capability.reject = reject;
               });
               return capability;
@@ -200796,8 +200796,8 @@ var require_pdf3 = __commonJS({
               if (!fn) {
                 return Promise.resolve(void 0);
               }
-              return new Promise(function(resolve3, reject) {
-                resolve3(fn.apply(thisArg, args));
+              return new Promise(function(resolve4, reject) {
+                resolve4(fn.apply(thisArg, args));
               });
             }
             function wrapReason(reason) {
@@ -201349,7 +201349,7 @@ var require_pdf3 = __commonJS({
                   if (!name) {
                     return Promise.reject(new Error("CMap name must be specified."));
                   }
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     var url3 = _this.baseUrl + name + (_this.isCompressed ? ".bcmap" : "");
                     var request = new XMLHttpRequest();
                     request.open("GET", url3, true);
@@ -201368,7 +201368,7 @@ var require_pdf3 = __commonJS({
                           data2 = (0, _util.stringToBytes)(request.responseText);
                         }
                         if (data2) {
-                          resolve3({
+                          resolve4({
                             cMapData: data2,
                             compressionType: _this.isCompressed ? _util.CMapCompressionType.BINARY : _util.CMapCompressionType.NONE
                           });
@@ -202075,12 +202075,12 @@ var require_pdf3 = __commonJS({
                 getTextContent: function PDFPageProxy_getTextContent(params) {
                   params = params || {};
                   var readableStream = this.streamTextContent(params);
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     function pump() {
                       reader.read().then(function(_ref) {
                         var value = _ref.value, done = _ref.done;
                         if (done) {
-                          resolve3(textContent2);
+                          resolve4(textContent2);
                           return;
                         }
                         _util.Util.extendObj(textContent2.styles, value.styles);
@@ -202759,7 +202759,7 @@ var require_pdf3 = __commonJS({
                     if (components !== 3 && components !== 1) {
                       return Promise.reject(new Error("Only 3 components or 1 component can be returned"));
                     }
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       var img = new Image();
                       img.onload = function() {
                         var width = img.width;
@@ -202785,7 +202785,7 @@ var require_pdf3 = __commonJS({
                             buf[j] = data3[i];
                           }
                         }
-                        resolve3({
+                        resolve4({
                           data: buf,
                           width,
                           height
@@ -204089,12 +204089,12 @@ var require_pdf3 = __commonJS({
                           var common = obj.substring(0, 2) === "g_";
                           var promise2;
                           if (common) {
-                            promise2 = new Promise(function(resolve3) {
-                              _this.commonObjs.get(obj, resolve3);
+                            promise2 = new Promise(function(resolve4) {
+                              _this.commonObjs.get(obj, resolve4);
                             });
                           } else {
-                            promise2 = new Promise(function(resolve3) {
-                              _this.objs.get(obj, resolve3);
+                            promise2 = new Promise(function(resolve4) {
+                              _this.objs.get(obj, resolve4);
                             });
                           }
                           this.current.dependencies.push(promise2);
@@ -206593,9 +206593,9 @@ var require_pdf3 = __commonJS({
                   wasAlreadyErroring = true;
                   reason = void 0;
                 }
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   stream4._pendingAbortRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject,
                     _reason: reason,
                     _wasAlreadyErroring: wasAlreadyErroring
@@ -206609,9 +206609,9 @@ var require_pdf3 = __commonJS({
               function WritableStreamAddWriteRequest(stream4) {
                 assert2(IsWritableStreamLocked(stream4) === true);
                 assert2(stream4._state === "writable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var writeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._writeRequests.push(writeRequest);
@@ -206909,9 +206909,9 @@ var require_pdf3 = __commonJS({
                 }
                 assert2(state === "writable" || state === "erroring");
                 assert2(WritableStreamCloseQueuedOrInFlight(stream4) === false);
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var closeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._closeRequest = closeRequest;
@@ -207182,8 +207182,8 @@ var require_pdf3 = __commonJS({
                 return new TypeError("Cannot " + name + " a stream using a released writer");
               }
               function defaultWriterClosedPromiseInitialize(writer) {
-                writer._closedPromise = new Promise(function(resolve3, reject) {
-                  writer._closedPromise_resolve = resolve3;
+                writer._closedPromise = new Promise(function(resolve4, reject) {
+                  writer._closedPromise_resolve = resolve4;
                   writer._closedPromise_reject = reject;
                   writer._closedPromiseState = "pending";
                 });
@@ -207226,8 +207226,8 @@ var require_pdf3 = __commonJS({
                 writer._closedPromiseState = "resolved";
               }
               function defaultWriterReadyPromiseInitialize(writer) {
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -207255,8 +207255,8 @@ var require_pdf3 = __commonJS({
               function defaultWriterReadyPromiseReset(writer) {
                 assert2(writer._readyPromise_resolve === void 0, "writer._readyPromise_resolve === undefined");
                 assert2(writer._readyPromise_reject === void 0, "writer._readyPromise_reject === undefined");
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -207425,7 +207425,7 @@ var require_pdf3 = __commonJS({
                     var writer = AcquireWritableStreamDefaultWriter(dest);
                     var shuttingDown = false;
                     var currentWrite = Promise.resolve();
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       function pipeLoop() {
                         currentWrite = Promise.resolve();
                         if (shuttingDown === true) {
@@ -207540,7 +207540,7 @@ var require_pdf3 = __commonJS({
                         if (isError) {
                           reject(error62);
                         } else {
-                          resolve3(void 0);
+                          resolve4(void 0);
                         }
                       }
                     });
@@ -207610,8 +207610,8 @@ var require_pdf3 = __commonJS({
                   reason1: void 0,
                   reason2: void 0
                 };
-                teeState.promise = new Promise(function(resolve3) {
-                  teeState._resolve = resolve3;
+                teeState.promise = new Promise(function(resolve4) {
+                  teeState._resolve = resolve4;
                 });
                 var pull = create_ReadableStreamTeePullFunction();
                 pull._reader = reader;
@@ -207706,9 +207706,9 @@ var require_pdf3 = __commonJS({
               function ReadableStreamAddReadIntoRequest(stream4) {
                 assert2(IsReadableStreamBYOBReader(stream4._reader) === true);
                 assert2(stream4._state === "readable" || stream4._state === "closed");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readIntoRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readIntoRequests.push(readIntoRequest);
@@ -207718,9 +207718,9 @@ var require_pdf3 = __commonJS({
               function ReadableStreamAddReadRequest(stream4) {
                 assert2(IsReadableStreamDefaultReader(stream4._reader) === true);
                 assert2(stream4._state === "readable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readRequests.push(readRequest);
@@ -208790,8 +208790,8 @@ var require_pdf3 = __commonJS({
                 return new TypeError("ReadableStreamDefaultReader.prototype." + name + " can only be used on a ReadableStreamDefaultReader");
               }
               function defaultReaderClosedPromiseInitialize(reader) {
-                reader._closedPromise = new Promise(function(resolve3, reject) {
-                  reader._closedPromise_resolve = resolve3;
+                reader._closedPromise = new Promise(function(resolve4, reject) {
+                  reader._closedPromise_resolve = resolve4;
                   reader._closedPromise_reject = reject;
                 });
               }
@@ -208966,8 +208966,8 @@ var require_pdf3 = __commonJS({
                 if (transformStream._backpressureChangePromise !== void 0) {
                   transformStream._backpressureChangePromise_resolve(backpressure);
                 }
-                transformStream._backpressureChangePromise = new Promise(function(resolve3) {
-                  transformStream._backpressureChangePromise_resolve = resolve3;
+                transformStream._backpressureChangePromise = new Promise(function(resolve4) {
+                  transformStream._backpressureChangePromise_resolve = resolve4;
                 });
                 transformStream._backpressureChangePromise.then(function(resolution) {
                   assert2(resolution !== backpressure, "_backpressureChangePromise should be fulfilled only when backpressure is changed");
@@ -209170,8 +209170,8 @@ var require_pdf3 = __commonJS({
                   this._backpressureChangePromise_resolve = void 0;
                   this._transformStreamController = new TransformStreamDefaultController(this);
                   var startPromise_resolve = void 0;
-                  var startPromise = new Promise(function(resolve3) {
-                    startPromise_resolve = resolve3;
+                  var startPromise = new Promise(function(resolve4) {
+                    startPromise_resolve = resolve4;
                   });
                   var source = new TransformStreamSource(this, startPromise);
                   this._readable = new ReadableStream2(source, readableStrategy);
@@ -210176,10 +210176,10 @@ var require_pdf3 = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path9 = paths[i];
-                    ctx.setTransform.apply(ctx, path9.transform);
-                    ctx.translate(path9.x, path9.y);
-                    path9.addToPath(ctx, path9.fontSize);
+                    var path10 = paths[i];
+                    ctx.setTransform.apply(ctx, path10.transform);
+                    ctx.translate(path10.x, path10.y);
+                    path10.addToPath(ctx, path10.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -212520,9 +212520,9 @@ var require_pdf3 = __commonJS({
                 if (globalScope.Promise) {
                   if (typeof globalScope.Promise.all !== "function") {
                     globalScope.Promise.all = function(iterable) {
-                      var count = 0, results = [], resolve3, reject;
+                      var count = 0, results = [], resolve4, reject;
                       var promise2 = new globalScope.Promise(function(resolve_, reject_) {
-                        resolve3 = resolve_;
+                        resolve4 = resolve_;
                         reject = reject_;
                       });
                       iterable.forEach(function(p, i) {
@@ -212531,26 +212531,26 @@ var require_pdf3 = __commonJS({
                           results[i] = result;
                           count--;
                           if (count === 0) {
-                            resolve3(results);
+                            resolve4(results);
                           }
                         }, reject);
                       });
                       if (count === 0) {
-                        resolve3(results);
+                        resolve4(results);
                       }
                       return promise2;
                     };
                   }
                   if (typeof globalScope.Promise.resolve !== "function") {
                     globalScope.Promise.resolve = function(value) {
-                      return new globalScope.Promise(function(resolve3) {
-                        resolve3(value);
+                      return new globalScope.Promise(function(resolve4) {
+                        resolve4(value);
                       });
                     };
                   }
                   if (typeof globalScope.Promise.reject !== "function") {
                     globalScope.Promise.reject = function(reason) {
-                      return new globalScope.Promise(function(resolve3, reject) {
+                      return new globalScope.Promise(function(resolve4, reject) {
                         reject(reason);
                       });
                     };
@@ -212675,8 +212675,8 @@ var require_pdf3 = __commonJS({
                 };
                 Promise2.all = function Promise_all(promises4) {
                   var resolveAll, rejectAll;
-                  var deferred = new Promise2(function(resolve4, reject2) {
-                    resolveAll = resolve4;
+                  var deferred = new Promise2(function(resolve5, reject2) {
+                    resolveAll = resolve5;
                     rejectAll = reject2;
                   });
                   var unresolved = promises4.length;
@@ -212694,7 +212694,7 @@ var require_pdf3 = __commonJS({
                   }
                   for (var i = 0, ii = promises4.length; i < ii; ++i) {
                     var promise2 = promises4[i];
-                    var resolve3 = /* @__PURE__ */ (function(i2) {
+                    var resolve4 = /* @__PURE__ */ (function(i2) {
                       return function(value) {
                         if (deferred._status === STATUS_REJECTED) {
                           return;
@@ -212707,9 +212707,9 @@ var require_pdf3 = __commonJS({
                       };
                     })(i);
                     if (Promise2.isPromise(promise2)) {
-                      promise2.then(resolve3, reject);
+                      promise2.then(resolve4, reject);
                     } else {
-                      resolve3(promise2);
+                      resolve4(promise2);
                     }
                   }
                   return deferred;
@@ -212718,12 +212718,12 @@ var require_pdf3 = __commonJS({
                   return value && typeof value.then === "function";
                 };
                 Promise2.resolve = function Promise_resolve(value) {
-                  return new Promise2(function(resolve3) {
-                    resolve3(value);
+                  return new Promise2(function(resolve4) {
+                    resolve4(value);
                   });
                 };
                 Promise2.reject = function Promise_reject(reason) {
-                  return new Promise2(function(resolve3, reject) {
+                  return new Promise2(function(resolve4, reject) {
                     reject(reason);
                   });
                 };
@@ -212755,8 +212755,8 @@ var require_pdf3 = __commonJS({
                     this._updateStatus(STATUS_REJECTED, reason);
                   },
                   then: function Promise_then(onResolve, onReject) {
-                    var nextPromise = new Promise2(function(resolve3, reject) {
-                      this.resolve = resolve3;
+                    var nextPromise = new Promise2(function(resolve4, reject) {
+                      this.resolve = resolve4;
                       this.reject = reject;
                     });
                     this._handlers.push({
@@ -213801,7 +213801,7 @@ var require_pdf_worker4 = __commonJS({
                     }
                     cachedChunks = [];
                   };
-                  var readPromise = new Promise(function(resolve3, reject) {
+                  var readPromise = new Promise(function(resolve4, reject) {
                     var readChunk = function readChunk2(chunk) {
                       try {
                         ensureNotTerminated();
@@ -214820,8 +214820,8 @@ var require_pdf_worker4 = __commonJS({
             }
             function createPromiseCapability() {
               var capability = {};
-              capability.promise = new Promise(function(resolve3, reject) {
-                capability.resolve = resolve3;
+              capability.promise = new Promise(function(resolve4, reject) {
+                capability.resolve = resolve4;
                 capability.reject = reject;
               });
               return capability;
@@ -216650,7 +216650,7 @@ var require_pdf_worker4 = __commonJS({
                 var i = 0;
                 var run = function run2(reaction) {
                   var handler = ok ? reaction.ok : reaction.fail;
-                  var resolve3 = reaction.resolve;
+                  var resolve4 = reaction.resolve;
                   var reject = reaction.reject;
                   var domain2 = reaction.domain;
                   var result, then, exited;
@@ -216672,8 +216672,8 @@ var require_pdf_worker4 = __commonJS({
                       if (result === reaction.promise) {
                         reject(TypeError2("Promise-chain cycle"));
                       } else if (then = isThenable2(result)) {
-                        then.call(result, resolve3, reject);
-                      } else resolve3(result);
+                        then.call(result, resolve4, reject);
+                      } else resolve4(result);
                     } else reject(value);
                   } catch (e) {
                     if (domain2 && !exited) domain2.exit();
@@ -216828,7 +216828,7 @@ var require_pdf_worker4 = __commonJS({
               }
             });
             $export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
-              resolve: function resolve3(x) {
+              resolve: function resolve4(x) {
                 return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
               }
             });
@@ -216838,7 +216838,7 @@ var require_pdf_worker4 = __commonJS({
               all: function all3(iterable) {
                 var C = this;
                 var capability = newPromiseCapability(C);
-                var resolve3 = capability.resolve;
+                var resolve4 = capability.resolve;
                 var reject = capability.reject;
                 var result = perform(function() {
                   var values = [];
@@ -216853,10 +216853,10 @@ var require_pdf_worker4 = __commonJS({
                       if (alreadyCalled) return;
                       alreadyCalled = true;
                       values[$index] = value;
-                      --remaining || resolve3(values);
+                      --remaining || resolve4(values);
                     }, reject);
                   });
-                  --remaining || resolve3(values);
+                  --remaining || resolve4(values);
                 });
                 if (result.e) reject(result.v);
                 return capability.promise;
@@ -217140,13 +217140,13 @@ var require_pdf_worker4 = __commonJS({
             "use strict";
             var aFunction = __w_pdfjs_require__(25);
             function PromiseCapability(C) {
-              var resolve3, reject;
+              var resolve4, reject;
               this.promise = new C(function($$resolve, $$reject) {
-                if (resolve3 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
-                resolve3 = $$resolve;
+                if (resolve4 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
+                resolve4 = $$resolve;
                 reject = $$reject;
               });
-              this.resolve = aFunction(resolve3);
+              this.resolve = aFunction(resolve4);
               this.reject = aFunction(reject);
             }
             module3.exports.f = function(C) {
@@ -217190,8 +217190,8 @@ var require_pdf_worker4 = __commonJS({
               anObject(C);
               if (isObject4(x) && x.constructor === C) return x;
               var promiseCapability = newPromiseCapability.f(C);
-              var resolve3 = promiseCapability.resolve;
-              resolve3(x);
+              var resolve4 = promiseCapability.resolve;
+              resolve4(x);
               return promiseCapability.promise;
             };
           }),
@@ -218263,9 +218263,9 @@ var require_pdf_worker4 = __commonJS({
                   wasAlreadyErroring = true;
                   reason = void 0;
                 }
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   stream4._pendingAbortRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject,
                     _reason: reason,
                     _wasAlreadyErroring: wasAlreadyErroring
@@ -218279,9 +218279,9 @@ var require_pdf_worker4 = __commonJS({
               function WritableStreamAddWriteRequest(stream4) {
                 assert2(IsWritableStreamLocked(stream4) === true);
                 assert2(stream4._state === "writable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var writeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._writeRequests.push(writeRequest);
@@ -218579,9 +218579,9 @@ var require_pdf_worker4 = __commonJS({
                 }
                 assert2(state === "writable" || state === "erroring");
                 assert2(WritableStreamCloseQueuedOrInFlight(stream4) === false);
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var closeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._closeRequest = closeRequest;
@@ -218852,8 +218852,8 @@ var require_pdf_worker4 = __commonJS({
                 return new TypeError("Cannot " + name + " a stream using a released writer");
               }
               function defaultWriterClosedPromiseInitialize(writer) {
-                writer._closedPromise = new Promise(function(resolve3, reject) {
-                  writer._closedPromise_resolve = resolve3;
+                writer._closedPromise = new Promise(function(resolve4, reject) {
+                  writer._closedPromise_resolve = resolve4;
                   writer._closedPromise_reject = reject;
                   writer._closedPromiseState = "pending";
                 });
@@ -218896,8 +218896,8 @@ var require_pdf_worker4 = __commonJS({
                 writer._closedPromiseState = "resolved";
               }
               function defaultWriterReadyPromiseInitialize(writer) {
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -218925,8 +218925,8 @@ var require_pdf_worker4 = __commonJS({
               function defaultWriterReadyPromiseReset(writer) {
                 assert2(writer._readyPromise_resolve === void 0, "writer._readyPromise_resolve === undefined");
                 assert2(writer._readyPromise_reject === void 0, "writer._readyPromise_reject === undefined");
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -219095,7 +219095,7 @@ var require_pdf_worker4 = __commonJS({
                     var writer = AcquireWritableStreamDefaultWriter(dest);
                     var shuttingDown = false;
                     var currentWrite = Promise.resolve();
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       function pipeLoop() {
                         currentWrite = Promise.resolve();
                         if (shuttingDown === true) {
@@ -219210,7 +219210,7 @@ var require_pdf_worker4 = __commonJS({
                         if (isError) {
                           reject(error62);
                         } else {
-                          resolve3(void 0);
+                          resolve4(void 0);
                         }
                       }
                     });
@@ -219280,8 +219280,8 @@ var require_pdf_worker4 = __commonJS({
                   reason1: void 0,
                   reason2: void 0
                 };
-                teeState.promise = new Promise(function(resolve3) {
-                  teeState._resolve = resolve3;
+                teeState.promise = new Promise(function(resolve4) {
+                  teeState._resolve = resolve4;
                 });
                 var pull = create_ReadableStreamTeePullFunction();
                 pull._reader = reader;
@@ -219376,9 +219376,9 @@ var require_pdf_worker4 = __commonJS({
               function ReadableStreamAddReadIntoRequest(stream4) {
                 assert2(IsReadableStreamBYOBReader(stream4._reader) === true);
                 assert2(stream4._state === "readable" || stream4._state === "closed");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readIntoRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readIntoRequests.push(readIntoRequest);
@@ -219388,9 +219388,9 @@ var require_pdf_worker4 = __commonJS({
               function ReadableStreamAddReadRequest(stream4) {
                 assert2(IsReadableStreamDefaultReader(stream4._reader) === true);
                 assert2(stream4._state === "readable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readRequests.push(readRequest);
@@ -220460,8 +220460,8 @@ var require_pdf_worker4 = __commonJS({
                 return new TypeError("ReadableStreamDefaultReader.prototype." + name + " can only be used on a ReadableStreamDefaultReader");
               }
               function defaultReaderClosedPromiseInitialize(reader) {
-                reader._closedPromise = new Promise(function(resolve3, reject) {
-                  reader._closedPromise_resolve = resolve3;
+                reader._closedPromise = new Promise(function(resolve4, reject) {
+                  reader._closedPromise_resolve = resolve4;
                   reader._closedPromise_reject = reject;
                 });
               }
@@ -220636,8 +220636,8 @@ var require_pdf_worker4 = __commonJS({
                 if (transformStream._backpressureChangePromise !== void 0) {
                   transformStream._backpressureChangePromise_resolve(backpressure);
                 }
-                transformStream._backpressureChangePromise = new Promise(function(resolve3) {
-                  transformStream._backpressureChangePromise_resolve = resolve3;
+                transformStream._backpressureChangePromise = new Promise(function(resolve4) {
+                  transformStream._backpressureChangePromise_resolve = resolve4;
                 });
                 transformStream._backpressureChangePromise.then(function(resolution) {
                   assert2(resolution !== backpressure, "_backpressureChangePromise should be fulfilled only when backpressure is changed");
@@ -220840,8 +220840,8 @@ var require_pdf_worker4 = __commonJS({
                   this._backpressureChangePromise_resolve = void 0;
                   this._transformStreamController = new TransformStreamDefaultController(this);
                   var startPromise_resolve = void 0;
-                  var startPromise = new Promise(function(resolve3) {
-                    startPromise_resolve = resolve3;
+                  var startPromise = new Promise(function(resolve4) {
+                    startPromise_resolve = resolve4;
                   });
                   var source = new TransformStreamSource(this, startPromise);
                   this._readable = new ReadableStream2(source, readableStrategy);
@@ -220978,7 +220978,7 @@ var require_pdf_worker4 = __commonJS({
               }
               _util.Util.inherit(LocalPdfManager2, BasePdfManager, {
                 ensure: function LocalPdfManager_ensure(obj, prop2, args) {
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     try {
                       var value = obj[prop2];
                       var result;
@@ -220987,7 +220987,7 @@ var require_pdf_worker4 = __commonJS({
                       } else {
                         result = value;
                       }
-                      resolve3(result);
+                      resolve4(result);
                     } catch (e) {
                       reject(e);
                     }
@@ -221026,7 +221026,7 @@ var require_pdf_worker4 = __commonJS({
               _util.Util.inherit(NetworkPdfManager2, BasePdfManager, {
                 ensure: function NetworkPdfManager_ensure(obj, prop2, args) {
                   var pdfManager = this;
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     function ensureHelper() {
                       try {
                         var result;
@@ -221036,7 +221036,7 @@ var require_pdf_worker4 = __commonJS({
                         } else {
                           result = value;
                         }
-                        resolve3(result);
+                        resolve4(result);
                       } catch (e) {
                         if (!(e instanceof _util.MissingDataException)) {
                           reject(e);
@@ -221311,7 +221311,7 @@ var require_pdf_worker4 = __commonJS({
                   }
                   var chunks = [], loaded = 0;
                   var manager = this;
-                  var promise2 = new Promise(function(resolve3, reject) {
+                  var promise2 = new Promise(function(resolve4, reject) {
                     var readChunk = function readChunk2(chunk) {
                       try {
                         if (!chunk.done) {
@@ -221326,7 +221326,7 @@ var require_pdf_worker4 = __commonJS({
                         }
                         var chunkData = (0, _util.arraysToBytes)(chunks);
                         chunks = null;
-                        resolve3(chunkData);
+                        resolve4(chunkData);
                       } catch (e) {
                         reject(e);
                       }
@@ -222424,11 +222424,11 @@ var require_pdf_worker4 = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs10 = new FileSpec(names[name], xref);
+                      var fs11 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs10.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs11.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -223295,13 +223295,13 @@ var require_pdf_worker4 = __commonJS({
                 fetchAsync: function XRef_fetchAsync(ref, suppressEncryption) {
                   var streamManager = this.stream.manager;
                   var xref = this;
-                  return new Promise(function tryFetch(resolve3, reject) {
+                  return new Promise(function tryFetch(resolve4, reject) {
                     try {
-                      resolve3(xref.fetch(ref, suppressEncryption));
+                      resolve4(xref.fetch(ref, suppressEncryption));
                     } catch (e) {
                       if (e instanceof _util.MissingDataException) {
                         streamManager.requestRange(e.begin, e.end).then(function() {
-                          tryFetch(resolve3, reject);
+                          tryFetch(resolve4, reject);
                         }, reject);
                         return;
                       }
@@ -235574,8 +235574,8 @@ var require_pdf_worker4 = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace || state.fillColorSpace.name === "Pattern")) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path9 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path9]);
+                        var path10 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path10]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -235820,11 +235820,11 @@ var require_pdf_worker4 = __commonJS({
                       operatorList.addOp(_util.OPS.restore, []);
                     }
                   }
-                  return new Promise(function promiseBody(resolve3, reject) {
+                  return new Promise(function promiseBody(resolve4, reject) {
                     var next2 = function next3(promise2) {
                       promise2.then(function() {
                         try {
-                          promiseBody(resolve3, reject);
+                          promiseBody(resolve4, reject);
                         } catch (ex) {
                           reject(ex);
                         }
@@ -236080,7 +236080,7 @@ var require_pdf_worker4 = __commonJS({
                       return;
                     }
                     closePendingRestoreOPS();
-                    resolve3();
+                    resolve4();
                   }).catch(function(reason) {
                     if (_this8.options.ignoreErrors) {
                       _this8.handler.send("UnsupportedFeature", { featureId: _util.UNSUPPORTED_FEATURES.unknown });
@@ -236295,12 +236295,12 @@ var require_pdf_worker4 = __commonJS({
                     }
                   }
                   var timeSlotManager = new TimeSlotManager();
-                  return new Promise(function promiseBody(resolve3, reject) {
+                  return new Promise(function promiseBody(resolve4, reject) {
                     var next2 = function next3(promise2) {
                       enqueueChunk();
                       Promise.all([promise2, sink.ready]).then(function() {
                         try {
-                          promiseBody(resolve3, reject);
+                          promiseBody(resolve4, reject);
                         } catch (ex) {
                           reject(ex);
                         }
@@ -236548,7 +236548,7 @@ var require_pdf_worker4 = __commonJS({
                     }
                     flushTextContentItem();
                     enqueueChunk();
-                    resolve3();
+                    resolve4();
                   }).catch(function(reason) {
                     if (reason instanceof _util.AbortException) {
                       return;
@@ -238076,7 +238076,7 @@ var require_pdf_worker4 = __commonJS({
                 }
               };
               function processBinaryCMap(data2, cMap, extend3) {
-                return new Promise(function(resolve3, reject) {
+                return new Promise(function(resolve4, reject) {
                   var stream4 = new BinaryCMapStream(data2);
                   var header = stream4.readByte();
                   cMap.vertical = !!(header & 1);
@@ -238214,10 +238214,10 @@ var require_pdf_worker4 = __commonJS({
                     }
                   }
                   if (useCMap) {
-                    resolve3(extend3(useCMap));
+                    resolve4(extend3(useCMap));
                     return;
                   }
-                  resolve3(cMap);
+                  resolve4(cMap);
                 });
               }
               function BinaryCMapReader2() {
@@ -256931,8 +256931,8 @@ var require_pdf_worker4 = __commonJS({
               if (!fn) {
                 return Promise.resolve(void 0);
               }
-              return new Promise(function(resolve3, reject) {
-                resolve3(fn.apply(thisArg, args));
+              return new Promise(function(resolve4, reject) {
+                resolve4(fn.apply(thisArg, args));
               });
             }
             function wrapReason(reason) {
@@ -258202,8 +258202,8 @@ var require_pdf4 = __commonJS({
             }
             function createPromiseCapability() {
               var capability = {};
-              capability.promise = new Promise(function(resolve3, reject) {
-                capability.resolve = resolve3;
+              capability.promise = new Promise(function(resolve4, reject) {
+                capability.resolve = resolve4;
                 capability.reject = reject;
               });
               return capability;
@@ -260032,7 +260032,7 @@ var require_pdf4 = __commonJS({
                 var i = 0;
                 var run = function run2(reaction) {
                   var handler = ok ? reaction.ok : reaction.fail;
-                  var resolve3 = reaction.resolve;
+                  var resolve4 = reaction.resolve;
                   var reject = reaction.reject;
                   var domain2 = reaction.domain;
                   var result, then, exited;
@@ -260054,8 +260054,8 @@ var require_pdf4 = __commonJS({
                       if (result === reaction.promise) {
                         reject(TypeError2("Promise-chain cycle"));
                       } else if (then = isThenable2(result)) {
-                        then.call(result, resolve3, reject);
-                      } else resolve3(result);
+                        then.call(result, resolve4, reject);
+                      } else resolve4(result);
                     } else reject(value);
                   } catch (e) {
                     if (domain2 && !exited) domain2.exit();
@@ -260210,7 +260210,7 @@ var require_pdf4 = __commonJS({
               }
             });
             $export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
-              resolve: function resolve3(x) {
+              resolve: function resolve4(x) {
                 return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
               }
             });
@@ -260220,7 +260220,7 @@ var require_pdf4 = __commonJS({
               all: function all3(iterable) {
                 var C = this;
                 var capability = newPromiseCapability(C);
-                var resolve3 = capability.resolve;
+                var resolve4 = capability.resolve;
                 var reject = capability.reject;
                 var result = perform(function() {
                   var values = [];
@@ -260235,10 +260235,10 @@ var require_pdf4 = __commonJS({
                       if (alreadyCalled) return;
                       alreadyCalled = true;
                       values[$index] = value;
-                      --remaining || resolve3(values);
+                      --remaining || resolve4(values);
                     }, reject);
                   });
-                  --remaining || resolve3(values);
+                  --remaining || resolve4(values);
                 });
                 if (result.e) reject(result.v);
                 return capability.promise;
@@ -260522,13 +260522,13 @@ var require_pdf4 = __commonJS({
             "use strict";
             var aFunction = __w_pdfjs_require__(24);
             function PromiseCapability(C) {
-              var resolve3, reject;
+              var resolve4, reject;
               this.promise = new C(function($$resolve, $$reject) {
-                if (resolve3 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
-                resolve3 = $$resolve;
+                if (resolve4 !== void 0 || reject !== void 0) throw TypeError("Bad Promise constructor");
+                resolve4 = $$resolve;
                 reject = $$reject;
               });
-              this.resolve = aFunction(resolve3);
+              this.resolve = aFunction(resolve4);
               this.reject = aFunction(reject);
             }
             module3.exports.f = function(C) {
@@ -260572,8 +260572,8 @@ var require_pdf4 = __commonJS({
               anObject(C);
               if (isObject4(x) && x.constructor === C) return x;
               var promiseCapability = newPromiseCapability.f(C);
-              var resolve3 = promiseCapability.resolve;
-              resolve3(x);
+              var resolve4 = promiseCapability.resolve;
+              resolve4(x);
               return promiseCapability.promise;
             };
           }),
@@ -261645,9 +261645,9 @@ var require_pdf4 = __commonJS({
                   wasAlreadyErroring = true;
                   reason = void 0;
                 }
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   stream4._pendingAbortRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject,
                     _reason: reason,
                     _wasAlreadyErroring: wasAlreadyErroring
@@ -261661,9 +261661,9 @@ var require_pdf4 = __commonJS({
               function WritableStreamAddWriteRequest(stream4) {
                 assert2(IsWritableStreamLocked(stream4) === true);
                 assert2(stream4._state === "writable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var writeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._writeRequests.push(writeRequest);
@@ -261961,9 +261961,9 @@ var require_pdf4 = __commonJS({
                 }
                 assert2(state === "writable" || state === "erroring");
                 assert2(WritableStreamCloseQueuedOrInFlight(stream4) === false);
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var closeRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._closeRequest = closeRequest;
@@ -262234,8 +262234,8 @@ var require_pdf4 = __commonJS({
                 return new TypeError("Cannot " + name + " a stream using a released writer");
               }
               function defaultWriterClosedPromiseInitialize(writer) {
-                writer._closedPromise = new Promise(function(resolve3, reject) {
-                  writer._closedPromise_resolve = resolve3;
+                writer._closedPromise = new Promise(function(resolve4, reject) {
+                  writer._closedPromise_resolve = resolve4;
                   writer._closedPromise_reject = reject;
                   writer._closedPromiseState = "pending";
                 });
@@ -262278,8 +262278,8 @@ var require_pdf4 = __commonJS({
                 writer._closedPromiseState = "resolved";
               }
               function defaultWriterReadyPromiseInitialize(writer) {
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -262307,8 +262307,8 @@ var require_pdf4 = __commonJS({
               function defaultWriterReadyPromiseReset(writer) {
                 assert2(writer._readyPromise_resolve === void 0, "writer._readyPromise_resolve === undefined");
                 assert2(writer._readyPromise_reject === void 0, "writer._readyPromise_reject === undefined");
-                writer._readyPromise = new Promise(function(resolve3, reject) {
-                  writer._readyPromise_resolve = resolve3;
+                writer._readyPromise = new Promise(function(resolve4, reject) {
+                  writer._readyPromise_resolve = resolve4;
                   writer._readyPromise_reject = reject;
                 });
                 writer._readyPromiseState = "pending";
@@ -262477,7 +262477,7 @@ var require_pdf4 = __commonJS({
                     var writer = AcquireWritableStreamDefaultWriter(dest);
                     var shuttingDown = false;
                     var currentWrite = Promise.resolve();
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       function pipeLoop() {
                         currentWrite = Promise.resolve();
                         if (shuttingDown === true) {
@@ -262592,7 +262592,7 @@ var require_pdf4 = __commonJS({
                         if (isError) {
                           reject(error62);
                         } else {
-                          resolve3(void 0);
+                          resolve4(void 0);
                         }
                       }
                     });
@@ -262662,8 +262662,8 @@ var require_pdf4 = __commonJS({
                   reason1: void 0,
                   reason2: void 0
                 };
-                teeState.promise = new Promise(function(resolve3) {
-                  teeState._resolve = resolve3;
+                teeState.promise = new Promise(function(resolve4) {
+                  teeState._resolve = resolve4;
                 });
                 var pull = create_ReadableStreamTeePullFunction();
                 pull._reader = reader;
@@ -262758,9 +262758,9 @@ var require_pdf4 = __commonJS({
               function ReadableStreamAddReadIntoRequest(stream4) {
                 assert2(IsReadableStreamBYOBReader(stream4._reader) === true);
                 assert2(stream4._state === "readable" || stream4._state === "closed");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readIntoRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readIntoRequests.push(readIntoRequest);
@@ -262770,9 +262770,9 @@ var require_pdf4 = __commonJS({
               function ReadableStreamAddReadRequest(stream4) {
                 assert2(IsReadableStreamDefaultReader(stream4._reader) === true);
                 assert2(stream4._state === "readable");
-                var promise2 = new Promise(function(resolve3, reject) {
+                var promise2 = new Promise(function(resolve4, reject) {
                   var readRequest = {
-                    _resolve: resolve3,
+                    _resolve: resolve4,
                     _reject: reject
                   };
                   stream4._reader._readRequests.push(readRequest);
@@ -263842,8 +263842,8 @@ var require_pdf4 = __commonJS({
                 return new TypeError("ReadableStreamDefaultReader.prototype." + name + " can only be used on a ReadableStreamDefaultReader");
               }
               function defaultReaderClosedPromiseInitialize(reader) {
-                reader._closedPromise = new Promise(function(resolve3, reject) {
-                  reader._closedPromise_resolve = resolve3;
+                reader._closedPromise = new Promise(function(resolve4, reject) {
+                  reader._closedPromise_resolve = resolve4;
                   reader._closedPromise_reject = reject;
                 });
               }
@@ -264018,8 +264018,8 @@ var require_pdf4 = __commonJS({
                 if (transformStream._backpressureChangePromise !== void 0) {
                   transformStream._backpressureChangePromise_resolve(backpressure);
                 }
-                transformStream._backpressureChangePromise = new Promise(function(resolve3) {
-                  transformStream._backpressureChangePromise_resolve = resolve3;
+                transformStream._backpressureChangePromise = new Promise(function(resolve4) {
+                  transformStream._backpressureChangePromise_resolve = resolve4;
                 });
                 transformStream._backpressureChangePromise.then(function(resolution) {
                   assert2(resolution !== backpressure, "_backpressureChangePromise should be fulfilled only when backpressure is changed");
@@ -264222,8 +264222,8 @@ var require_pdf4 = __commonJS({
                   this._backpressureChangePromise_resolve = void 0;
                   this._transformStreamController = new TransformStreamDefaultController(this);
                   var startPromise_resolve = void 0;
-                  var startPromise = new Promise(function(resolve3) {
-                    startPromise_resolve = resolve3;
+                  var startPromise = new Promise(function(resolve4) {
+                    startPromise_resolve = resolve4;
                   });
                   var source = new TransformStreamSource(this, startPromise);
                   this._readable = new ReadableStream2(source, readableStrategy);
@@ -264837,12 +264837,12 @@ var require_pdf4 = __commonJS({
                 getTextContent: function PDFPageProxy_getTextContent(params) {
                   params = params || {};
                   var readableStream = this.streamTextContent(params);
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     function pump() {
                       reader.read().then(function(_ref) {
                         var value = _ref.value, done = _ref.done;
                         if (done) {
-                          resolve3(textContent2);
+                          resolve4(textContent2);
                           return;
                         }
                         _util.Util.extendObj(textContent2.styles, value.styles);
@@ -265472,10 +265472,10 @@ var require_pdf4 = __commonJS({
                     switch (type) {
                       case "JpegStream":
                         imageData = data2[3];
-                        return new Promise(function(resolve3, reject) {
+                        return new Promise(function(resolve4, reject) {
                           var img = new Image();
                           img.onload = function() {
-                            resolve3(img);
+                            resolve4(img);
                           };
                           img.onerror = function() {
                             reject(new Error("Error during JPEG image loading"));
@@ -265547,7 +265547,7 @@ var require_pdf4 = __commonJS({
                     if (components !== 3 && components !== 1) {
                       return Promise.reject(new Error("Only 3 components or 1 component can be returned"));
                     }
-                    return new Promise(function(resolve3, reject) {
+                    return new Promise(function(resolve4, reject) {
                       var img = new Image();
                       img.onload = function() {
                         var width = img.width;
@@ -265573,7 +265573,7 @@ var require_pdf4 = __commonJS({
                             buf[j] = data3[i];
                           }
                         }
-                        resolve3({
+                        resolve4({
                           data: buf,
                           width,
                           height
@@ -265988,7 +265988,7 @@ var require_pdf4 = __commonJS({
                   if (!name) {
                     return Promise.reject(new Error("CMap name must be specified."));
                   }
-                  return new Promise(function(resolve3, reject) {
+                  return new Promise(function(resolve4, reject) {
                     var url3 = _this.baseUrl + name + (_this.isCompressed ? ".bcmap" : "");
                     var request = new XMLHttpRequest();
                     request.open("GET", url3, true);
@@ -266007,7 +266007,7 @@ var require_pdf4 = __commonJS({
                           data2 = (0, _util.stringToBytes)(request.responseText);
                         }
                         if (data2) {
-                          resolve3({
+                          resolve4({
                             cMapData: data2,
                             compressionType: _this.isCompressed ? _util.CMapCompressionType.BINARY : _util.CMapCompressionType.NONE
                           });
@@ -267539,10 +267539,10 @@ var require_pdf4 = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path9 = paths[i];
-                    ctx.setTransform.apply(ctx, path9.transform);
-                    ctx.translate(path9.x, path9.y);
-                    path9.addToPath(ctx, path9.fontSize);
+                    var path10 = paths[i];
+                    ctx.setTransform.apply(ctx, path10.transform);
+                    ctx.translate(path10.x, path10.y);
+                    path10.addToPath(ctx, path10.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -268695,8 +268695,8 @@ var require_pdf4 = __commonJS({
               if (!fn) {
                 return Promise.resolve(void 0);
               }
-              return new Promise(function(resolve3, reject) {
-                resolve3(fn.apply(thisArg, args));
+              return new Promise(function(resolve4, reject) {
+                resolve4(fn.apply(thisArg, args));
               });
             }
             function wrapReason(reason) {
@@ -272070,12 +272070,12 @@ var require_pdf4 = __commonJS({
                           var common = obj.substring(0, 2) === "g_";
                           var promise2;
                           if (common) {
-                            promise2 = new Promise(function(resolve3) {
-                              _this.commonObjs.get(obj, resolve3);
+                            promise2 = new Promise(function(resolve4) {
+                              _this.commonObjs.get(obj, resolve4);
                             });
                           } else {
-                            promise2 = new Promise(function(resolve3) {
-                              _this.objs.get(obj, resolve3);
+                            promise2 = new Promise(function(resolve4) {
+                              _this.objs.get(obj, resolve4);
                             });
                           }
                           this.current.dependencies.push(promise2);
@@ -272811,7 +272811,7 @@ var require_pdf4 = __commonJS({
                 throw new TypeError("Cannot call a class as a function");
               }
             }
-            var fs10 = require("fs");
+            var fs11 = require("fs");
             var http3 = require("http");
             var https2 = require("https");
             var url3 = require("url");
@@ -273165,11 +273165,11 @@ var require_pdf4 = __commonJS({
               function PDFNodeStreamFsFullReader2(stream4) {
                 _classCallCheck(this, PDFNodeStreamFsFullReader2);
                 var _this7 = _possibleConstructorReturn(this, (PDFNodeStreamFsFullReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsFullReader2)).call(this, stream4));
-                var path9 = decodeURIComponent(_this7._url.path);
+                var path10 = decodeURIComponent(_this7._url.path);
                 if (fileUriRegex.test(_this7._url.href)) {
-                  path9 = path9.replace(/^\//, "");
+                  path10 = path10.replace(/^\//, "");
                 }
-                fs10.lstat(path9, function(error62, stat) {
+                fs11.lstat(path10, function(error62, stat) {
                   if (error62) {
                     _this7._errored = true;
                     _this7._reason = error62;
@@ -273177,7 +273177,7 @@ var require_pdf4 = __commonJS({
                     return;
                   }
                   _this7._contentLength = stat.size;
-                  _this7._setReadableStream(fs10.createReadStream(path9));
+                  _this7._setReadableStream(fs11.createReadStream(path10));
                   _this7._headersCapability.resolve();
                 });
                 return _this7;
@@ -273189,11 +273189,11 @@ var require_pdf4 = __commonJS({
               function PDFNodeStreamFsRangeReader2(stream4, start, end2) {
                 _classCallCheck(this, PDFNodeStreamFsRangeReader2);
                 var _this8 = _possibleConstructorReturn(this, (PDFNodeStreamFsRangeReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsRangeReader2)).call(this, stream4));
-                var path9 = decodeURIComponent(_this8._url.path);
+                var path10 = decodeURIComponent(_this8._url.path);
                 if (fileUriRegex.test(_this8._url.href)) {
-                  path9 = path9.replace(/^\//, "");
+                  path10 = path10.replace(/^\//, "");
                 }
-                _this8._setReadableStream(fs10.createReadStream(path9, {
+                _this8._setReadableStream(fs11.createReadStream(path10, {
                   start,
                   end: end2 - 1
                 }));
@@ -279930,14 +279930,14 @@ var require_util2 = __commonJS({
         }
         const port = url3.port != null ? url3.port : url3.protocol === "https:" ? 443 : 80;
         let origin2 = url3.origin != null ? url3.origin : `${url3.protocol || ""}//${url3.hostname || ""}:${port}`;
-        let path9 = url3.path != null ? url3.path : `${url3.pathname || ""}${url3.search || ""}`;
+        let path10 = url3.path != null ? url3.path : `${url3.pathname || ""}${url3.search || ""}`;
         if (origin2[origin2.length - 1] === "/") {
           origin2 = origin2.slice(0, origin2.length - 1);
         }
-        if (path9 && path9[0] !== "/") {
-          path9 = `/${path9}`;
+        if (path10 && path10[0] !== "/") {
+          path10 = `/${path10}`;
         }
-        return new URL(`${origin2}${path9}`);
+        return new URL(`${origin2}${path10}`);
       }
       if (!isHttpOrHttpsPrefixed(url3.origin || url3.protocol)) {
         throw new InvalidArgumentError("Invalid URL protocol: the URL must start with `http:` or `https:`.");
@@ -280758,9 +280758,9 @@ var require_diagnostics = __commonJS({
         "undici:client:sendHeaders",
         (evt) => {
           const {
-            request: { method, path: path9, origin: origin2 }
+            request: { method, path: path10, origin: origin2 }
           } = evt;
-          debugLog("sending request to %s %s%s", method, origin2, path9);
+          debugLog("sending request to %s %s%s", method, origin2, path10);
         }
       );
     }
@@ -280778,14 +280778,14 @@ var require_diagnostics = __commonJS({
         "undici:request:headers",
         (evt) => {
           const {
-            request: { method, path: path9, origin: origin2 },
+            request: { method, path: path10, origin: origin2 },
             response: { statusCode }
           } = evt;
           debugLog(
             "received response to %s %s%s - HTTP %d",
             method,
             origin2,
-            path9,
+            path10,
             statusCode
           );
         }
@@ -280794,23 +280794,23 @@ var require_diagnostics = __commonJS({
         "undici:request:trailers",
         (evt) => {
           const {
-            request: { method, path: path9, origin: origin2 }
+            request: { method, path: path10, origin: origin2 }
           } = evt;
-          debugLog("trailers received from %s %s%s", method, origin2, path9);
+          debugLog("trailers received from %s %s%s", method, origin2, path10);
         }
       );
       diagnosticsChannel.subscribe(
         "undici:request:error",
         (evt) => {
           const {
-            request: { method, path: path9, origin: origin2 },
+            request: { method, path: path10, origin: origin2 },
             error: error62
           } = evt;
           debugLog(
             "request to %s %s%s errored - %s",
             method,
             origin2,
-            path9,
+            path10,
             error62.message
           );
         }
@@ -280925,7 +280925,7 @@ var require_request = __commonJS({
     var kHandler = /* @__PURE__ */ Symbol("handler");
     var Request = class {
       constructor(origin2, {
-        path: path9,
+        path: path10,
         method,
         body,
         headers,
@@ -280942,11 +280942,11 @@ var require_request = __commonJS({
         maxRedirections,
         typeOfService
       }, handler) {
-        if (typeof path9 !== "string") {
+        if (typeof path10 !== "string") {
           throw new InvalidArgumentError("path must be a string");
-        } else if (path9[0] !== "/" && !(path9.startsWith("http://") || path9.startsWith("https://")) && method !== "CONNECT") {
+        } else if (path10[0] !== "/" && !(path10.startsWith("http://") || path10.startsWith("https://")) && method !== "CONNECT") {
           throw new InvalidArgumentError("path must be an absolute URL or start with a slash");
-        } else if (invalidPathRegex.test(path9)) {
+        } else if (invalidPathRegex.test(path10)) {
           throw new InvalidArgumentError("invalid request path");
         }
         if (typeof method !== "string") {
@@ -281021,7 +281021,7 @@ var require_request = __commonJS({
         this.completed = false;
         this.aborted = false;
         this.upgrade = upgrade || null;
-        this.path = query ? serializePathWithQuery(path9, query) : path9;
+        this.path = query ? serializePathWithQuery(path10, query) : path10;
         this.origin = origin2;
         this.protocol = getProtocolFromUrlString(origin2);
         this.idempotent = idempotent == null ? method === "HEAD" || method === "GET" : idempotent;
@@ -281553,9 +281553,9 @@ var require_dispatcher_base = __commonJS({
       }
       close(callback) {
         if (callback === void 0) {
-          return new Promise((resolve3, reject) => {
+          return new Promise((resolve4, reject) => {
             this.close((err, data2) => {
-              return err ? reject(err) : resolve3(data2);
+              return err ? reject(err) : resolve4(data2);
             });
           });
         }
@@ -281593,9 +281593,9 @@ var require_dispatcher_base = __commonJS({
           err = null;
         }
         if (callback === void 0) {
-          return new Promise((resolve3, reject) => {
+          return new Promise((resolve4, reject) => {
             this.destroy(err, (err2, data2) => {
-              return err2 ? reject(err2) : resolve3(data2);
+              return err2 ? reject(err2) : resolve4(data2);
             });
           });
         }
@@ -285101,8 +285101,8 @@ var require_promise = __commonJS({
     function createDeferredPromise() {
       let res;
       let rej;
-      const promise2 = new Promise((resolve3, reject) => {
-        res = resolve3;
+      const promise2 = new Promise((resolve4, reject) => {
+        res = resolve4;
         rej = reject;
       });
       return { promise: promise2, resolve: res, reject: rej };
@@ -286246,7 +286246,7 @@ var require_client_h1 = __commonJS({
       return method !== "GET" && method !== "HEAD" && method !== "OPTIONS" && method !== "TRACE" && method !== "CONNECT";
     }
     function writeH1(client, request) {
-      const { method, path: path9, host, upgrade, blocking, reset } = request;
+      const { method, path: path10, host, upgrade, blocking, reset } = request;
       let { body, headers, contentLength } = request;
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH" || method === "QUERY" || method === "PROPFIND" || method === "PROPPATCH";
       if (util4.isFormDataLike(body)) {
@@ -286324,7 +286324,7 @@ var require_client_h1 = __commonJS({
       if (socket.setTypeOfService) {
         socket.setTypeOfService(request.typeOfService);
       }
-      let header = `${method} ${path9} HTTP/1.1\r
+      let header = `${method} ${path10} HTTP/1.1\r
 `;
       if (typeof host === "string") {
         header += `host: ${host}\r
@@ -286511,12 +286511,12 @@ upgrade: ${upgrade}\r
           cb();
         }
       }
-      const waitForDrain = () => new Promise((resolve3, reject) => {
+      const waitForDrain = () => new Promise((resolve4, reject) => {
         assert2(callback === null);
         if (socket[kError]) {
           reject(socket[kError]);
         } else {
-          callback = resolve3;
+          callback = resolve4;
         }
       });
       socket.on("close", onDrain).on("drain", onDrain);
@@ -287001,7 +287001,7 @@ var require_client_h2 = __commonJS({
       const headersTimeout = request.headersTimeout ?? client[kHeadersTimeout];
       const bodyTimeout = request.bodyTimeout ?? client[kBodyTimeout];
       const session = client[kHTTP2Session];
-      const { method, path: path9, host, upgrade, expectContinue, signal, protocol, headers: reqHeaders } = request;
+      const { method, path: path10, host, upgrade, expectContinue, signal, protocol, headers: reqHeaders } = request;
       let { body } = request;
       if (upgrade != null && upgrade !== "websocket") {
         util4.errorRequest(client, request, new InvalidArgumentError(`Custom upgrade "${upgrade}" not supported over HTTP/2`));
@@ -287070,7 +287070,7 @@ var require_client_h2 = __commonJS({
           }
           headers[HTTP2_HEADER_METHOD] = "CONNECT";
           headers[HTTP2_HEADER_PROTOCOL] = "websocket";
-          headers[HTTP2_HEADER_PATH] = path9;
+          headers[HTTP2_HEADER_PATH] = path10;
           if (protocol === "ws:" || protocol === "wss:") {
             headers[HTTP2_HEADER_SCHEME] = protocol === "ws:" ? "http" : "https";
           } else {
@@ -287122,7 +287122,7 @@ var require_client_h2 = __commonJS({
         stream4.setTimeout(headersTimeout);
         return true;
       }
-      headers[HTTP2_HEADER_PATH] = path9;
+      headers[HTTP2_HEADER_PATH] = path10;
       headers[HTTP2_HEADER_SCHEME] = protocol === "http:" ? "http" : "https";
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH";
       if (body && typeof body.read === "function") {
@@ -287400,12 +287400,12 @@ var require_client_h2 = __commonJS({
           cb();
         }
       }
-      const waitForDrain = () => new Promise((resolve3, reject) => {
+      const waitForDrain = () => new Promise((resolve4, reject) => {
         assert2(callback === null);
         if (socket[kError]) {
           reject(socket[kError]);
         } else {
-          callback = resolve3;
+          callback = resolve4;
         }
       });
       h2stream.on("close", onDrain).on("drain", onDrain);
@@ -287722,16 +287722,16 @@ var require_client = __commonJS({
         return this[kNeedDrain] < 2;
       }
       [kClose]() {
-        return new Promise((resolve3) => {
+        return new Promise((resolve4) => {
           if (this[kSize]) {
-            this[kClosedResolve] = resolve3;
+            this[kClosedResolve] = resolve4;
           } else {
-            resolve3(null);
+            resolve4(null);
           }
         });
       }
       [kDestroy](err) {
-        return new Promise((resolve3) => {
+        return new Promise((resolve4) => {
           const requests = this[kQueue].splice(this[kPendingIdx]);
           for (let i = 0; i < requests.length; i++) {
             const request = requests[i];
@@ -287744,7 +287744,7 @@ var require_client = __commonJS({
               this[kClosedResolve]();
               this[kClosedResolve] = null;
             }
-            resolve3(null);
+            resolve4(null);
           };
           if (this[kHTTPContext]) {
             this[kHTTPContext].destroy(err, callback);
@@ -288151,8 +288151,8 @@ var require_pool_base = __commonJS({
           }
           return Promise.all(closeAll);
         } else {
-          return new Promise((resolve3) => {
-            this[kClosedResolve] = resolve3;
+          return new Promise((resolve4) => {
+            this[kClosedResolve] = resolve4;
           });
         }
       }
@@ -289274,7 +289274,7 @@ var require_socks5_proxy_agent = __commonJS({
         const proxyHost = this[kProxyUrl].hostname;
         const proxyPort = parseInt(this[kProxyUrl].port) || 1080;
         debug("creating SOCKS5 connection to", proxyHost, proxyPort);
-        const socket = await new Promise((resolve3, reject) => {
+        const socket = await new Promise((resolve4, reject) => {
           this[kConnector]({
             hostname: proxyHost,
             host: proxyHost,
@@ -289284,7 +289284,7 @@ var require_socks5_proxy_agent = __commonJS({
             if (err) {
               reject(err);
             } else {
-              resolve3(socket2);
+              resolve4(socket2);
             }
           });
         });
@@ -289294,14 +289294,14 @@ var require_socks5_proxy_agent = __commonJS({
           socket.destroy();
         });
         await socks5Client.handshake();
-        await new Promise((resolve3, reject) => {
+        await new Promise((resolve4, reject) => {
           const timeout = setTimeout(() => {
             reject(new Error("SOCKS5 authentication timeout"));
           }, 5e3);
           const onAuthenticated = () => {
             clearTimeout(timeout);
             socks5Client.removeListener("error", onError);
-            resolve3();
+            resolve4();
           };
           const onError = (err) => {
             clearTimeout(timeout);
@@ -289310,14 +289310,14 @@ var require_socks5_proxy_agent = __commonJS({
           };
           if (socks5Client.state === STATES.AUTHENTICATED) {
             clearTimeout(timeout);
-            resolve3();
+            resolve4();
           } else {
             socks5Client.once("authenticated", onAuthenticated);
             socks5Client.once("error", onError);
           }
         });
         await socks5Client.connect(targetHost, targetPort);
-        await new Promise((resolve3, reject) => {
+        await new Promise((resolve4, reject) => {
           const timeout = setTimeout(() => {
             reject(new Error("SOCKS5 connection timeout"));
           }, 5e3);
@@ -289325,7 +289325,7 @@ var require_socks5_proxy_agent = __commonJS({
             debug("SOCKS5 tunnel established to", targetHost, targetPort, "via", info);
             clearTimeout(timeout);
             socks5Client.removeListener("error", onError);
-            resolve3();
+            resolve4();
           };
           const onError = (err) => {
             clearTimeout(timeout);
@@ -289368,8 +289368,8 @@ var require_socks5_proxy_agent = __commonJS({
                       socket,
                       servername: this[kRequestTls]?.servername || targetHost
                     });
-                    await new Promise((resolve3, reject) => {
-                      finalSocket.once("secureConnect", resolve3);
+                    await new Promise((resolve4, reject) => {
+                      finalSocket.once("secureConnect", resolve4);
                       finalSocket.once("error", reject);
                     });
                   }
@@ -289478,10 +289478,10 @@ var require_proxy_agent = __commonJS({
         };
         const {
           origin: origin2,
-          path: path9 = "/",
+          path: path10 = "/",
           headers = {}
         } = opts;
-        opts.path = origin2 + path9;
+        opts.path = origin2 + path10;
         if (!("host" in headers) && !("Host" in headers)) {
           const { host } = new URL(origin2);
           headers.host = host;
@@ -290502,7 +290502,7 @@ var require_readable = __commonJS({
         if (this._readableState.closeEmitted) {
           return Promise.resolve(null);
         }
-        return new Promise((resolve3, reject) => {
+        return new Promise((resolve4, reject) => {
           if (this[kContentLength] && this[kContentLength] > limit || this[kBytesRead] > limit) {
             this.destroy(new AbortError());
           }
@@ -290516,11 +290516,11 @@ var require_readable = __commonJS({
               if (signal.aborted) {
                 reject(signal.reason ?? new AbortError());
               } else {
-                resolve3(null);
+                resolve4(null);
               }
             });
           } else {
-            this.on("close", resolve3);
+            this.on("close", resolve4);
           }
           this.on("error", noop2).on("data", () => {
             if (this[kBytesRead] > limit) {
@@ -290548,7 +290548,7 @@ var require_readable = __commonJS({
     }
     function consume(stream4, type) {
       assert2(!stream4[kConsume]);
-      return new Promise((resolve3, reject) => {
+      return new Promise((resolve4, reject) => {
         if (isUnusable(stream4)) {
           const rState = stream4._readableState;
           if (rState.destroyed && rState.closeEmitted === false) {
@@ -290563,7 +290563,7 @@ var require_readable = __commonJS({
             stream4[kConsume] = {
               type,
               stream: stream4,
-              resolve: resolve3,
+              resolve: resolve4,
               reject,
               length: 0,
               body: []
@@ -290637,18 +290637,18 @@ var require_readable = __commonJS({
       return buffer;
     }
     function consumeEnd(consume2, encoding) {
-      const { type, body, resolve: resolve3, stream: stream4, length } = consume2;
+      const { type, body, resolve: resolve4, stream: stream4, length } = consume2;
       try {
         if (type === "text") {
-          resolve3(chunksDecode(body, length, encoding));
+          resolve4(chunksDecode(body, length, encoding));
         } else if (type === "json") {
-          resolve3(JSON.parse(chunksDecode(body, length, encoding)));
+          resolve4(JSON.parse(chunksDecode(body, length, encoding)));
         } else if (type === "arrayBuffer") {
-          resolve3(chunksConcat(body, length).buffer);
+          resolve4(chunksConcat(body, length).buffer);
         } else if (type === "blob") {
-          resolve3(new Blob(body, { type: stream4[kContentType] }));
+          resolve4(new Blob(body, { type: stream4[kContentType] }));
         } else if (type === "bytes") {
-          resolve3(chunksConcat(body, length));
+          resolve4(chunksConcat(body, length));
         }
         consumeFinish(consume2);
       } catch (err) {
@@ -290838,9 +290838,9 @@ var require_api_request = __commonJS({
     };
     function request(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve3, reject) => {
+        return new Promise((resolve4, reject) => {
           request.call(this, opts, (err, data2) => {
-            return err ? reject(err) : resolve3(data2);
+            return err ? reject(err) : resolve4(data2);
           });
         });
       }
@@ -291052,9 +291052,9 @@ var require_api_stream = __commonJS({
     };
     function stream4(opts, factory2, callback) {
       if (callback === void 0) {
-        return new Promise((resolve3, reject) => {
+        return new Promise((resolve4, reject) => {
           stream4.call(this, opts, factory2, (err, data2) => {
-            return err ? reject(err) : resolve3(data2);
+            return err ? reject(err) : resolve4(data2);
           });
         });
       }
@@ -291342,9 +291342,9 @@ var require_api_upgrade = __commonJS({
     };
     function upgrade(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve3, reject) => {
+        return new Promise((resolve4, reject) => {
           upgrade.call(this, opts, (err, data2) => {
-            return err ? reject(err) : resolve3(data2);
+            return err ? reject(err) : resolve4(data2);
           });
         });
       }
@@ -291437,9 +291437,9 @@ var require_api_connect = __commonJS({
     };
     function connect(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve3, reject) => {
+        return new Promise((resolve4, reject) => {
           connect.call(this, opts, (err, data2) => {
-            return err ? reject(err) : resolve3(data2);
+            return err ? reject(err) : resolve4(data2);
           });
         });
       }
@@ -291641,20 +291641,20 @@ var require_mock_utils = __commonJS({
       }
       return normalizedQp;
     }
-    function safeUrl(path9) {
-      if (typeof path9 !== "string") {
-        return path9;
+    function safeUrl(path10) {
+      if (typeof path10 !== "string") {
+        return path10;
       }
-      const pathSegments = path9.split("?", 3);
+      const pathSegments = path10.split("?", 3);
       if (pathSegments.length !== 2) {
-        return path9;
+        return path10;
       }
       const qp = new URLSearchParams(pathSegments.pop());
       qp.sort();
       return [...pathSegments, qp.toString()].join("?");
     }
-    function matchKey(mockDispatch2, { path: path9, method, body, headers }) {
-      const pathMatch = matchValue(mockDispatch2.path, path9);
+    function matchKey(mockDispatch2, { path: path10, method, body, headers }) {
+      const pathMatch = matchValue(mockDispatch2.path, path10);
       const methodMatch = matchValue(mockDispatch2.method, method);
       const bodyMatch = typeof mockDispatch2.body !== "undefined" ? matchValue(mockDispatch2.body, body) : true;
       const headersMatch = matchHeaders(mockDispatch2, headers);
@@ -291679,8 +291679,8 @@ var require_mock_utils = __commonJS({
       const basePath = key.query ? serializePathWithQuery(key.path, key.query) : key.path;
       const resolvedPath = typeof basePath === "string" ? safeUrl(basePath) : basePath;
       const resolvedPathWithoutTrailingSlash = removeTrailingSlash(resolvedPath);
-      let matchedMockDispatches = mockDispatches.filter(({ consumed }) => !consumed).filter(({ path: path9, ignoreTrailingSlash }) => {
-        return ignoreTrailingSlash ? matchValue(removeTrailingSlash(safeUrl(path9)), resolvedPathWithoutTrailingSlash) : matchValue(safeUrl(path9), resolvedPath);
+      let matchedMockDispatches = mockDispatches.filter(({ consumed }) => !consumed).filter(({ path: path10, ignoreTrailingSlash }) => {
+        return ignoreTrailingSlash ? matchValue(removeTrailingSlash(safeUrl(path10)), resolvedPathWithoutTrailingSlash) : matchValue(safeUrl(path10), resolvedPath);
       });
       if (matchedMockDispatches.length === 0) {
         throw new MockNotMatchedError(`Mock dispatch not matched for path '${resolvedPath}'`);
@@ -291719,19 +291719,19 @@ var require_mock_utils = __commonJS({
         mockDispatches.splice(index2, 1);
       }
     }
-    function removeTrailingSlash(path9) {
-      while (path9.endsWith("/")) {
-        path9 = path9.slice(0, -1);
+    function removeTrailingSlash(path10) {
+      while (path10.endsWith("/")) {
+        path10 = path10.slice(0, -1);
       }
-      if (path9.length === 0) {
-        path9 = "/";
+      if (path10.length === 0) {
+        path10 = "/";
       }
-      return path9;
+      return path10;
     }
     function buildKey(opts) {
-      const { path: path9, method, body, headers, query } = opts;
+      const { path: path10, method, body, headers, query } = opts;
       return {
-        path: path9,
+        path: path10,
         method,
         body,
         headers,
@@ -292421,10 +292421,10 @@ var require_pending_interceptors_formatter = __commonJS({
       }
       format(pendingInterceptors) {
         const withPrettyHeaders = pendingInterceptors.map(
-          ({ method, path: path9, data: { statusCode }, persist, times, timesInvoked, origin: origin2 }) => ({
+          ({ method, path: path10, data: { statusCode }, persist, times, timesInvoked, origin: origin2 }) => ({
             Method: method,
             Origin: origin2,
-            Path: path9,
+            Path: path10,
             "Status code": statusCode,
             Persistent: persist ? PERSISTENT : NOT_PERSISTENT,
             Invocations: timesInvoked,
@@ -292506,9 +292506,9 @@ var require_mock_agent = __commonJS({
         const acceptNonStandardSearchParameters = this[kMockAgentAcceptsNonStandardSearchParameters];
         const dispatchOpts = { ...opts };
         if (acceptNonStandardSearchParameters && dispatchOpts.path) {
-          const [path9, searchParams] = dispatchOpts.path.split("?");
+          const [path10, searchParams] = dispatchOpts.path.split("?");
           const normalizedSearchParams = normalizeSearchParams(searchParams, acceptNonStandardSearchParameters);
-          dispatchOpts.path = `${path9}?${normalizedSearchParams}`;
+          dispatchOpts.path = `${path10}?${normalizedSearchParams}`;
         }
         return this[kAgent].dispatch(dispatchOpts, handler);
       }
@@ -292713,7 +292713,7 @@ var require_snapshot_recorder = __commonJS({
   "node_modules/undici/lib/mock/snapshot-recorder.js"(exports2, module2) {
     "use strict";
     var { writeFile, readFile, mkdir } = require("node:fs/promises");
-    var { dirname: dirname4, resolve: resolve3 } = require("node:path");
+    var { dirname: dirname5, resolve: resolve4 } = require("node:path");
     var { setTimeout: setTimeout2, clearTimeout: clearTimeout2 } = require("node:timers");
     var { InvalidArgumentError, UndiciError } = require_errors2();
     var { hashId, isUrlExcludedFactory, normalizeHeaders, createHeaderFilters } = require_snapshot_utils();
@@ -292909,12 +292909,12 @@ var require_snapshot_recorder = __commonJS({
        * @return {Promise<void>} - Resolves when snapshots are loaded
        */
       async loadSnapshots(filePath) {
-        const path9 = filePath || this.#snapshotPath;
-        if (!path9) {
+        const path10 = filePath || this.#snapshotPath;
+        if (!path10) {
           throw new InvalidArgumentError("Snapshot path is required");
         }
         try {
-          const data2 = await readFile(resolve3(path9), "utf8");
+          const data2 = await readFile(resolve4(path10), "utf8");
           const parsed = JSON.parse(data2);
           if (Array.isArray(parsed)) {
             this.#snapshots.clear();
@@ -292928,7 +292928,7 @@ var require_snapshot_recorder = __commonJS({
           if (error62.code === "ENOENT") {
             this.#snapshots.clear();
           } else {
-            throw new UndiciError(`Failed to load snapshots from ${path9}`, { cause: error62 });
+            throw new UndiciError(`Failed to load snapshots from ${path10}`, { cause: error62 });
           }
         }
       }
@@ -292939,12 +292939,12 @@ var require_snapshot_recorder = __commonJS({
        * @returns {Promise<void>} - Resolves when snapshots are saved
        */
       async saveSnapshots(filePath) {
-        const path9 = filePath || this.#snapshotPath;
-        if (!path9) {
+        const path10 = filePath || this.#snapshotPath;
+        if (!path10) {
           throw new InvalidArgumentError("Snapshot path is required");
         }
-        const resolvedPath = resolve3(path9);
-        await mkdir(dirname4(resolvedPath), { recursive: true });
+        const resolvedPath = resolve4(path10);
+        await mkdir(dirname5(resolvedPath), { recursive: true });
         const data2 = Array.from(this.#snapshots.entries()).map(([hash2, snapshot]) => ({
           hash: hash2,
           snapshot
@@ -293580,15 +293580,15 @@ var require_redirect_handler = __commonJS({
         }
         this.history[kRedirectCacheControl].push(headers["cache-control"]);
         const { origin: origin2, pathname, search } = util4.parseURL(new URL(this.location, this.opts.origin && new URL(this.opts.path, this.opts.origin)));
-        const path9 = search ? `${pathname}${search}` : pathname;
-        const redirectUrlString = `${origin2}${path9}`;
+        const path10 = search ? `${pathname}${search}` : pathname;
+        const redirectUrlString = `${origin2}${path10}`;
         for (const historyUrl of this.history) {
           if (historyUrl.toString() === redirectUrlString) {
             throw new InvalidArgumentError(`Redirect loop detected. Cannot redirect to ${origin2}. This typically happens when using a Client or Pool with cross-origin redirects. Use an Agent for cross-origin redirects.`);
           }
         }
         this.opts.headers = cleanRequestHeaders(this.opts.headers, statusCode === 303, this.opts.origin !== origin2);
-        this.opts.path = path9;
+        this.opts.path = path10;
         this.opts.origin = origin2;
         this.opts.query = null;
       }
@@ -295356,10 +295356,10 @@ var require_cache_handler = __commonJS({
       }
       return locationUrl.pathname + locationUrl.search;
     }
-    function deleteCachedUri(store, cacheKey2, path9) {
+    function deleteCachedUri(store, cacheKey2, path10) {
       deleteCachedValue(store, {
         ...cacheKey2,
-        path: path9
+        path: path10
       });
       for (let i = 0; i < util4.safeHTTPMethods.length; i++) {
         const method = util4.safeHTTPMethods[i];
@@ -295367,7 +295367,7 @@ var require_cache_handler = __commonJS({
           deleteCachedValue(store, {
             ...cacheKey2,
             method,
-            path: path9
+            path: path10
           });
         }
       }
@@ -295378,9 +295378,9 @@ var require_cache_handler = __commonJS({
       }
       const values = Array.isArray(headerValue) ? headerValue : [headerValue];
       for (let i = 0; i < values.length; i++) {
-        const path9 = getSameOriginPath(cacheKey2, values[i]);
-        if (path9 !== void 0) {
-          deleteCachedUri(store, cacheKey2, path9);
+        const path10 = getSameOriginPath(cacheKey2, values[i]);
+        if (path10 !== void 0) {
+          deleteCachedUri(store, cacheKey2, path10);
         }
       }
     }
@@ -300591,11 +300591,11 @@ var require_fetch = __commonJS({
       function dispatch({ body }) {
         const url3 = requestCurrentURL(request);
         const agent = fetchParams.controller.dispatcher;
-        const path9 = url3.pathname + url3.search;
+        const path10 = url3.pathname + url3.search;
         const hasTrailingQuestionMark = url3.search.length === 0 && url3.href[url3.href.length - url3.hash.length - 1] === "?";
-        return new Promise((resolve3, reject) => agent.dispatch(
+        return new Promise((resolve4, reject) => agent.dispatch(
           {
-            path: hasTrailingQuestionMark ? `${path9}?` : path9,
+            path: hasTrailingQuestionMark ? `${path10}?` : path10,
             origin: url3.origin,
             method: request.method,
             body: agent.isMockActive ? request.body && (request.body.source || request.body.stream) : body,
@@ -300681,7 +300681,7 @@ var require_fetch = __commonJS({
               }
               this.body = new Readable4({ read: resume });
               const onError = this.onError.bind(this);
-              resolve3({
+              resolve4({
                 status,
                 statusText,
                 headersList,
@@ -300734,7 +300734,7 @@ var require_fetch = __commonJS({
                   headersList.append(headerName, String(value), true);
                 }
               }
-              resolve3({
+              resolve4({
                 status,
                 statusText: STATUS_CODES[status],
                 headersList,
@@ -300758,7 +300758,7 @@ var require_fetch = __commonJS({
                   headersList.append(nameStr, value.toString("latin1"), true);
                 }
               }
-              resolve3({
+              resolve4({
                 status,
                 statusText: STATUS_CODES[status],
                 headersList,
@@ -301542,9 +301542,9 @@ var require_util5 = __commonJS({
         }
       }
     }
-    function validateCookiePath(path9) {
-      for (let i = 0; i < path9.length; ++i) {
-        const code = path9.charCodeAt(i);
+    function validateCookiePath(path10) {
+      for (let i = 0; i < path10.length; ++i) {
+        const code = path10.charCodeAt(i);
         if (code < 32 || // exclude CTLs (0-31)
         code > 126 || // exclude DEL and non-ascii
         code === 59) {
@@ -304980,11 +304980,11 @@ var require_undici = __commonJS({
           if (typeof opts.path !== "string") {
             throw new InvalidArgumentError("invalid opts.path");
           }
-          let path9 = opts.path;
+          let path10 = opts.path;
           if (!opts.path.startsWith("/")) {
-            path9 = `/${path9}`;
+            path10 = `/${path10}`;
           }
-          url3 = new URL(util4.parseOrigin(url3).origin + path9);
+          url3 = new URL(util4.parseOrigin(url3).origin + path10);
         } else {
           if (!opts) {
             opts = typeof url3 === "object" ? url3 : {};
@@ -305521,25 +305521,25 @@ function pLimit(concurrency) {
     activeCount--;
     resumeNext();
   };
-  const run = async (function_, resolve3, arguments_) => {
+  const run = async (function_, resolve4, arguments_) => {
     const result = (async () => function_(...arguments_))();
-    resolve3(result);
+    resolve4(result);
     try {
       await result;
     } catch {
     }
     next2();
   };
-  const enqueue = (function_, resolve3, arguments_) => {
+  const enqueue = (function_, resolve4, arguments_) => {
     new Promise((internalResolve) => {
       queue.enqueue(internalResolve);
-    }).then(run.bind(void 0, function_, resolve3, arguments_));
+    }).then(run.bind(void 0, function_, resolve4, arguments_));
     if (activeCount < concurrency) {
       resumeNext();
     }
   };
-  const generator = (function_, ...arguments_) => new Promise((resolve3) => {
-    enqueue(function_, resolve3, arguments_);
+  const generator = (function_, ...arguments_) => new Promise((resolve4) => {
+    enqueue(function_, resolve4, arguments_);
   });
   Object.defineProperties(generator, {
     activeCount: {
@@ -305650,8 +305650,8 @@ var require_helpers = __commonJS({
     function req(url3, opts = {}) {
       const href = typeof url3 === "string" ? url3 : url3.href;
       const req2 = (href.startsWith("https:") ? https2 : http3).request(url3, opts);
-      const promise2 = new Promise((resolve3, reject) => {
-        req2.once("response", resolve3).once("error", reject).end();
+      const promise2 = new Promise((resolve4, reject) => {
+        req2.once("response", resolve4).once("error", reject).end();
       });
       req2.then = promise2.then.bind(promise2);
       return req2;
@@ -305828,7 +305828,7 @@ var require_parse_proxy_response2 = __commonJS({
     var debug_1 = __importDefault(require_src());
     var debug = (0, debug_1.default)("https-proxy-agent:parse-proxy-response");
     function parseProxyResponse(socket) {
-      return new Promise((resolve3, reject) => {
+      return new Promise((resolve4, reject) => {
         let buffersLength = 0;
         const buffers = [];
         function read() {
@@ -305894,7 +305894,7 @@ var require_parse_proxy_response2 = __commonJS({
           }
           debug("got proxy server response: %o %o", firstLine, headers);
           cleanup();
-          resolve3({
+          resolve4({
             connect: {
               statusCode,
               statusText,
@@ -309923,11 +309923,11 @@ var require_socksclient = __commonJS({
     "use strict";
     var __awaiter = exports2 && exports2.__awaiter || function(thisArg, _arguments, P, generator) {
       function adopt(value) {
-        return value instanceof P ? value : new P(function(resolve3) {
-          resolve3(value);
+        return value instanceof P ? value : new P(function(resolve4) {
+          resolve4(value);
         });
       }
-      return new (P || (P = Promise))(function(resolve3, reject) {
+      return new (P || (P = Promise))(function(resolve4, reject) {
         function fulfilled(value) {
           try {
             step(generator.next(value));
@@ -309943,7 +309943,7 @@ var require_socksclient = __commonJS({
           }
         }
         function step(result) {
-          result.done ? resolve3(result.value) : adopt(result.value).then(fulfilled, rejected);
+          result.done ? resolve4(result.value) : adopt(result.value).then(fulfilled, rejected);
         }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
@@ -309977,13 +309977,13 @@ var require_socksclient = __commonJS({
        * @returns { Promise }
        */
       static createConnection(options, callback) {
-        return new Promise((resolve3, reject) => {
+        return new Promise((resolve4, reject) => {
           try {
             (0, helpers_1.validateSocksClientOptions)(options, ["connect"]);
           } catch (err) {
             if (typeof callback === "function") {
               callback(err);
-              return resolve3(err);
+              return resolve4(err);
             } else {
               return reject(err);
             }
@@ -309994,16 +309994,16 @@ var require_socksclient = __commonJS({
             client.removeAllListeners();
             if (typeof callback === "function") {
               callback(null, info);
-              resolve3(info);
+              resolve4(info);
             } else {
-              resolve3(info);
+              resolve4(info);
             }
           });
           client.once("error", (err) => {
             client.removeAllListeners();
             if (typeof callback === "function") {
               callback(err);
-              resolve3(err);
+              resolve4(err);
             } else {
               reject(err);
             }
@@ -310020,13 +310020,13 @@ var require_socksclient = __commonJS({
        * @returns { Promise }
        */
       static createConnectionChain(options, callback) {
-        return new Promise((resolve3, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve4, reject) => __awaiter(this, void 0, void 0, function* () {
           try {
             (0, helpers_1.validateSocksClientChainOptions)(options);
           } catch (err) {
             if (typeof callback === "function") {
               callback(err);
-              return resolve3(err);
+              return resolve4(err);
             } else {
               return reject(err);
             }
@@ -310052,14 +310052,14 @@ var require_socksclient = __commonJS({
             }
             if (typeof callback === "function") {
               callback(null, { socket: sock });
-              resolve3({ socket: sock });
+              resolve4({ socket: sock });
             } else {
-              resolve3({ socket: sock });
+              resolve4({ socket: sock });
             }
           } catch (err) {
             if (typeof callback === "function") {
               callback(err);
-              resolve3(err);
+              resolve4(err);
             } else {
               reject(err);
             }
@@ -310743,12 +310743,12 @@ var require_dist5 = __commonJS({
         let { host } = opts;
         const { port, lookup: lookupFn = dns2.lookup } = opts;
         if (shouldLookup) {
-          host = await new Promise((resolve3, reject) => {
+          host = await new Promise((resolve4, reject) => {
             lookupFn(host, {}, (err, res) => {
               if (err) {
                 reject(err);
               } else {
-                resolve3(res);
+                resolve4(res);
               }
             });
           });
@@ -311692,10 +311692,10 @@ function mergeDefs(...defs) {
 function cloneDef(schema) {
   return mergeDefs(schema._zod.def);
 }
-function getElementAtPath(obj, path9) {
-  if (!path9)
+function getElementAtPath(obj, path10) {
+  if (!path10)
     return obj;
-  return path9.reduce((acc, key) => acc?.[key], obj);
+  return path10.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys = Object.keys(promisesObj);
@@ -312035,11 +312035,11 @@ function explicitlyAborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path9, issues) {
+function prefixIssues(path10, issues) {
   return issues.map((iss) => {
     var _a5;
     (_a5 = iss).path ?? (_a5.path = []);
-    iss.path.unshift(path9);
+    iss.path.unshift(path10);
     return iss;
   });
 }
@@ -312501,16 +312501,16 @@ function flattenError(error62, mapper = (issue2) => issue2.message) {
 }
 function formatError(error62, mapper = (issue2) => issue2.message) {
   const fieldErrors = { _errors: [] };
-  const processError = (error63, path9 = []) => {
+  const processError = (error63, path10 = []) => {
     for (const issue2 of error63.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path9, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path10, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path9, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path10, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path9, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path10, ...issue2.path]);
       } else {
-        const fullpath = [...path9, ...issue2.path];
+        const fullpath = [...path10, ...issue2.path];
         if (fullpath.length === 0) {
           fieldErrors._errors.push(mapper(issue2));
         } else {
@@ -312549,17 +312549,17 @@ function formatError(error62, mapper = (issue2) => issue2.message) {
 }
 function treeifyError(error62, mapper = (issue2) => issue2.message) {
   const result = { errors: [] };
-  const processError = (error63, path9 = []) => {
+  const processError = (error63, path10 = []) => {
     var _a5;
     for (const issue2 of error63.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path9, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path10, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path9, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path10, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path9, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path10, ...issue2.path]);
       } else {
-        const fullpath = [...path9, ...issue2.path];
+        const fullpath = [...path10, ...issue2.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue2));
           continue;
@@ -312598,8 +312598,8 @@ function treeifyError(error62, mapper = (issue2) => issue2.message) {
 }
 function toDotPath(_path) {
   const segs = [];
-  const path9 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path9) {
+  const path10 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path10) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -315942,7 +315942,7 @@ var recursive = /* @__PURE__ */ new WeakMap();
 var NONE = 0;
 var ASSUMED = 1;
 var PROVEN = 2;
-function isRecursive(inst, stack, resolve3) {
+function isRecursive(inst, stack, resolve4) {
   const cached2 = recursive.get(inst);
   if (cached2 !== void 0)
     return cached2 ? PROVEN : NONE;
@@ -315952,7 +315952,7 @@ function isRecursive(inst, stack, resolve3) {
   let result = NONE;
   const check2 = (child) => {
     if (result !== PROVEN && child?._zod) {
-      const answer = isRecursive(child, stack, resolve3);
+      const answer = isRecursive(child, stack, resolve4);
       if (answer > result)
         result = answer;
     }
@@ -315963,7 +315963,7 @@ function isRecursive(inst, stack, resolve3) {
       const desc = Object.getOwnPropertyDescriptor(sh, key);
       if (spread3 && !desc.enumerable)
         continue;
-      const child = desc.get ? ASSUMED : desc.value?._zod ? isRecursive(desc.value, stack, resolve3) : NONE;
+      const child = desc.get ? ASSUMED : desc.value?._zod ? isRecursive(desc.value, stack, resolve4) : NONE;
       if (child > answer)
         answer = child;
     }
@@ -316027,7 +316027,7 @@ function isRecursive(inst, stack, resolve3) {
       break;
     // `$ZodLazy` caches its inner on the def, so a resolved edge is followed exactly
     case "lazy": {
-      const inner = def._cachedInner ?? (resolve3 ? inst._zod.innerType : void 0);
+      const inner = def._cachedInner ?? (resolve4 ? inst._zod.innerType : void 0);
       merge4(inner ? isRecursive(inner, stack, false) : ASSUMED);
       break;
     }
@@ -330218,13 +330218,13 @@ function resolveRef(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path9 = ref.slice(1).split("/").filter(Boolean);
-  if (path9.length === 0) {
+  const path10 = ref.slice(1).split("/").filter(Boolean);
+  if (path10.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path9[0] === defsKey) {
-    const key = path9[1] === void 0 ? void 0 : decodeJSONPointerSegment(path9[1]);
+  if (path10[0] === defsKey) {
+    const key = path10[1] === void 0 ? void 0 : decodeJSONPointerSegment(path10[1]);
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -332988,7 +332988,7 @@ var Protocol = class {
           return;
         }
         const pollInterval = task2.pollInterval ?? this._options?.defaultTaskPollInterval ?? 1e3;
-        await new Promise((resolve3) => setTimeout(resolve3, pollInterval));
+        await new Promise((resolve4) => setTimeout(resolve4, pollInterval));
         options?.signal?.throwIfAborted();
       }
     } catch (error62) {
@@ -333005,7 +333005,7 @@ var Protocol = class {
    */
   request(request, resultSchema, options) {
     const { relatedRequestId, resumptionToken, onresumptiontoken, task, relatedTask } = options ?? {};
-    return new Promise((resolve3, reject) => {
+    return new Promise((resolve4, reject) => {
       const earlyReject = (error62) => {
         reject(error62);
       };
@@ -333083,7 +333083,7 @@ var Protocol = class {
           if (!parseResult.success) {
             reject(parseResult.error);
           } else {
-            resolve3(parseResult.data);
+            resolve4(parseResult.data);
           }
         } catch (error62) {
           reject(error62);
@@ -333345,12 +333345,12 @@ var Protocol = class {
       }
     } catch {
     }
-    return new Promise((resolve3, reject) => {
+    return new Promise((resolve4, reject) => {
       if (signal.aborted) {
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
         return;
       }
-      const timeoutId = setTimeout(resolve3, interval);
+      const timeoutId = setTimeout(resolve4, interval);
       signal.addEventListener("abort", () => {
         clearTimeout(timeoutId);
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
@@ -334226,12 +334226,12 @@ var StdioServerTransport = class {
     this.onclose?.();
   }
   send(message) {
-    return new Promise((resolve3) => {
+    return new Promise((resolve4) => {
       const json2 = serializeMessage(message);
       if (this._stdout.write(json2)) {
-        resolve3();
+        resolve4();
       } else {
-        this._stdout.once("drain", resolve3);
+        this._stdout.once("drain", resolve4);
       }
     });
   }
@@ -334239,6 +334239,9 @@ var StdioServerTransport = class {
 
 // src/server.ts
 var dotenv = __toESM(require_main(), 1);
+var path9 = __toESM(require("node:path"), 1);
+var fs10 = __toESM(require("node:fs"), 1);
+var import_node_url = require("node:url");
 
 // src/mcp/tools.ts
 var TOOLS = [
@@ -335059,6 +335062,44 @@ var TOOLS = [
     }
   },
   {
+    name: "resolve_fulltext_access",
+    description: "Resolve optimal full-text PDF acquisition routes for screened literature (scansci-inspired tiered routing: direct OA/CDN, Elsevier API fast lane, IEEE Xplore, Springer TDM, or institutional WebVPN). Defaults to verdict=include.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        searchId: { type: "string", description: "Search session ID" },
+        briefId: { type: "string", description: "Brief ID" },
+        recordIds: { type: "array", items: { type: "string" }, maxItems: 200 },
+        verdict: {
+          type: "string",
+          enum: ["include", "exclude", "maybe", "all"],
+          default: "include",
+          description: "Filter by screening verdict; defaults to include to target core screened papers"
+        }
+      }
+    }
+  },
+  {
+    name: "generate_reading_cards",
+    description: "Generate structured deep-reading evidence cards and extraction prompts tailored for MinerU PDF-to-Markdown full-text outputs. Extracts problem statement, algorithmic formulation, quantitative benchmark metrics, experimental setup, and limitations.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        searchId: { type: "string", description: "Search session ID" },
+        briefId: { type: "string", description: "Brief ID" },
+        recordIds: { type: "array", items: { type: "string" }, maxItems: 100 },
+        verdict: {
+          type: "string",
+          enum: ["include", "exclude", "maybe", "all"],
+          default: "include",
+          description: "Filter by screening verdict; defaults to include"
+        }
+      }
+    }
+  },
+  {
     name: "get_source_status",
     description: "Report configured sources, WoS default product, quota/rate status, OpenAlex/Crossref cache state, IEEE rate status, and in-memory brief/search session counts. Set validate=true only when an actual key validation request is acceptable.",
     inputSchema: {
@@ -335200,10 +335241,10 @@ var PDFExtractor = class {
       });
       const writer = fs2.createWriteStream(savePath);
       response.data.pipe(writer);
-      return new Promise((resolve3, reject) => {
+      return new Promise((resolve4, reject) => {
         writer.on("finish", () => {
           logDebug(`PDF saved to: ${savePath}`);
-          resolve3(savePath);
+          resolve4(savePath);
         });
         writer.on("error", reject);
       });
@@ -335317,8 +335358,8 @@ var ArxivSearcher = class extends PaperSource {
       );
       const writer = fs3.createWriteStream(filePath);
       response.data.pipe(writer);
-      return new Promise((resolve3, reject) => {
-        writer.on("finish", () => resolve3(filePath));
+      return new Promise((resolve4, reject) => {
+        writer.on("finish", () => resolve4(filePath));
         writer.on("error", reject);
       });
     } catch (error62) {
@@ -349528,7 +349569,7 @@ function getHeader(headers, name) {
 async function waitForSourceChange(state, signal, deadlineAt, now) {
   throwIfAborted2(signal);
   if (deadlineAt !== void 0 && now() >= deadlineAt) throw new SourceDispatchDeadlineError();
-  await new Promise((resolve3, reject) => {
+  await new Promise((resolve4, reject) => {
     let settled = false;
     let timer;
     const cleanup = () => {
@@ -349542,7 +349583,7 @@ async function waitForSourceChange(state, signal, deadlineAt, now) {
       cleanup();
       callback();
     };
-    const wake = () => finish(resolve3);
+    const wake = () => finish(resolve4);
     const onAbort = () => finish(() => reject(createAbortError2()));
     state.wakeWaiters.add(wake);
     signal?.addEventListener("abort", onAbort, { once: true });
@@ -349558,13 +349599,13 @@ async function delayUntil(milliseconds, signal) {
   while (remaining > 0) {
     throwIfAborted2(signal);
     const chunk = Math.min(remaining, 2147e6);
-    await new Promise((resolve3, reject) => {
+    await new Promise((resolve4, reject) => {
       let settled = false;
       const timer = setTimeout(() => {
         if (settled) return;
         settled = true;
         signal?.removeEventListener("abort", onAbort);
-        resolve3();
+        resolve4();
       }, chunk);
       const onAbort = () => {
         if (settled) return;
@@ -349986,7 +350027,7 @@ function throwIfAborted3(signal) {
 }
 function awaitWithAbort(promise2, signal, onLateValue) {
   if (!signal) return promise2;
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     let settled = false;
     const cleanup = () => signal.removeEventListener?.("abort", onAbort);
     const onAbort = () => {
@@ -350004,7 +350045,7 @@ function awaitWithAbort(promise2, signal, onLateValue) {
         }
         settled = true;
         cleanup();
-        resolve3(value);
+        resolve4(value);
       },
       (error62) => {
         if (settled) return;
@@ -350199,7 +350240,7 @@ function isObject3(value) {
 }
 function waitForAbort(promise2, signal, onLateValue) {
   if (signal.aborted) return Promise.reject(new Error("PDF probe aborted"));
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     let settled = false;
     let abandoned = false;
     const onAbort = () => {
@@ -350217,7 +350258,7 @@ function waitForAbort(promise2, signal, onLateValue) {
       }
       settled = true;
       signal.removeEventListener("abort", onAbort);
-      resolve3(value);
+      resolve4(value);
     }, (error62) => {
       if (settled) return;
       settled = true;
@@ -350647,7 +350688,7 @@ function waitForAbort2(promise2, signal, onLateValue, failureKind) {
     provider: "direct",
     failureKind: failureKind?.() || "cancelled"
   }));
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     let settled = false;
     let abandoned = false;
     const onAbort = () => {
@@ -350670,7 +350711,7 @@ function waitForAbort2(promise2, signal, onLateValue, failureKind) {
       }
       settled = true;
       signal.removeEventListener("abort", onAbort);
-      resolve3(value);
+      resolve4(value);
     }, (error62) => {
       if (settled) return;
       settled = true;
@@ -351017,10 +351058,10 @@ function createConcurrencyLimiter(concurrency) {
       });
     }
   };
-  return (task, signal) => new Promise((resolve3, reject) => {
+  return (task, signal) => new Promise((resolve4, reject) => {
     const entry = {
       task,
-      resolve: resolve3,
+      resolve: resolve4,
       reject,
       signal,
       started: false,
@@ -352054,7 +352095,7 @@ async function waitForStrategyFlight(promise2, signal, context, providerName, pa
       cost: paid ? { known: false, credits: null, reason: "cancelled_before_provider_completion" } : { known: true, credits: 0 }
     });
   }
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     let settled = false;
     const cleanup = () => signal.removeEventListener("abort", onAbort);
     const onAbort = () => {
@@ -352076,7 +352117,7 @@ async function waitForStrategyFlight(promise2, signal, context, providerName, pa
         if (settled) return;
         settled = true;
         cleanup();
-        resolve3(value);
+        resolve4(value);
       },
       (error62) => {
         if (settled) return;
@@ -352584,7 +352625,7 @@ function waitForAbort3(promise2, signal, onLateValue, failureKind) {
     provider: "scrapingant",
     failureKind: failureKind?.() || "cancelled"
   }));
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     let settled = false;
     let abandoned = false;
     const onAbort = () => {
@@ -352607,7 +352648,7 @@ function waitForAbort3(promise2, signal, onLateValue, failureKind) {
       }
       settled = true;
       signal.removeEventListener("abort", onAbort);
-      resolve3(value);
+      resolve4(value);
     }, (error62) => {
       if (settled) return;
       settled = true;
@@ -352948,8 +352989,8 @@ var PublicAccessDiscovery = class {
       else operation.signal.addEventListener("abort", relayAbort, { once: true });
       const deadlineAt = effectiveDeadlineAt;
       let cancel;
-      const cancelled = new Promise((resolve3) => {
-        cancel = () => resolve3({ status: "inconclusive", reason: "aborted_or_timeout" });
+      const cancelled = new Promise((resolve4) => {
+        cancel = () => resolve4({ status: "inconclusive", reason: "aborted_or_timeout" });
       });
       const underlying = (async () => {
         try {
@@ -353704,7 +353745,7 @@ function resolveDynamicDataSrc(value, source) {
 }
 function waitForDiscoveryFlight(promise2, signal) {
   if (signal.aborted) return Promise.reject(createAbortError5());
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     const onAbort = () => {
       cleanup();
       reject(createAbortError5());
@@ -353714,7 +353755,7 @@ function waitForDiscoveryFlight(promise2, signal) {
     promise2.then(
       (value) => {
         cleanup();
-        resolve3(value);
+        resolve4(value);
       },
       (error62) => {
         cleanup();
@@ -353725,7 +353766,7 @@ function waitForDiscoveryFlight(promise2, signal) {
 }
 function waitForVerificationFlight(promise2, signal) {
   if (signal.aborted) return Promise.reject(createAbortError5());
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     const onAbort = () => {
       cleanup();
       reject(createAbortError5());
@@ -353735,7 +353776,7 @@ function waitForVerificationFlight(promise2, signal) {
     promise2.then(
       (value) => {
         cleanup();
-        resolve3(value);
+        resolve4(value);
       },
       (error62) => {
         cleanup();
@@ -353833,7 +353874,7 @@ function isIPLiteral(hostname3) {
 }
 async function awaitWithAbort2(promise2, signal) {
   if (signal.aborted) throw createAbortError5();
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     let settled = false;
     const cleanup = () => signal.removeEventListener("abort", onAbort);
     const onAbort = () => {
@@ -353848,7 +353889,7 @@ async function awaitWithAbort2(promise2, signal) {
         if (settled) return;
         settled = true;
         cleanup();
-        resolve3(value);
+        resolve4(value);
       },
       (error62) => {
         if (settled) return;
@@ -354004,7 +354045,7 @@ var WebOfScienceRequestService = class {
     this.quotaManager = options.quotaManager || QuotaManager.getInstance();
     this.quotaPlatform = options.quotaPlatform;
     this.quotaManager.registerPlatform(this.quotaPlatform, options.quotaConfig);
-    this.sleep = options.sleep || ((milliseconds) => new Promise((resolve3) => setTimeout(resolve3, milliseconds)));
+    this.sleep = options.sleep || ((milliseconds) => new Promise((resolve4) => setTimeout(resolve4, milliseconds)));
     this.random = options.random || Math.random;
     this.maxRetries = options.maxRetries ?? 3;
   }
@@ -355188,19 +355229,30 @@ var PubMedSearcher = class extends PaperSource {
     }).filter((name) => name && name !== "Unknown Author");
   }
   /**
-   * 提取摘要
+   * 提取摘要，支持纯文本与包含 Label (如 BACKGROUND, METHODS) 的结构化摘要
    */
   extractAbstract(abstractData) {
-    if (!abstractData) {
+    if (!abstractData || !abstractData.AbstractText) {
       return "";
     }
-    if (typeof abstractData.AbstractText === "string") {
-      return abstractData.AbstractText;
+    const text3 = abstractData.AbstractText;
+    if (typeof text3 === "string") {
+      return text3;
     }
-    if (Array.isArray(abstractData.AbstractText)) {
-      return abstractData.AbstractText.join(" ");
+    if (Array.isArray(text3)) {
+      return text3.map((item) => this.parseAbstractPart(item)).filter(Boolean).join(" ");
     }
-    return "";
+    return this.parseAbstractPart(text3);
+  }
+  parseAbstractPart(item) {
+    if (!item) return "";
+    if (typeof item === "string") return item;
+    const body = typeof item._ === "string" ? item._ : typeof item === "string" ? item : "";
+    const label = item.$?.Label || item.$?.label;
+    if (label && body) {
+      return `${label}: ${body}`;
+    }
+    return body || (item._ ? String(item._) : "");
   }
   /**
    * 提取发布日期
@@ -355434,8 +355486,8 @@ var BioRxivSearcher = class extends PaperSource {
       );
       const writer = fs4.createWriteStream(filePath);
       response.data.pipe(writer);
-      return new Promise((resolve3, reject) => {
-        writer.on("finish", () => resolve3(filePath));
+      return new Promise((resolve4, reject) => {
+        writer.on("finish", () => resolve4(filePath));
         writer.on("error", reject);
       });
     } catch (error62) {
@@ -355736,8 +355788,8 @@ var SemanticScholarSearcher = class extends PaperSource {
       );
       const writer = fs5.createWriteStream(filePath);
       response.data.pipe(writer);
-      return new Promise((resolve3, reject) => {
-        writer.on("finish", () => resolve3(filePath));
+      return new Promise((resolve4, reject) => {
+        writer.on("finish", () => resolve4(filePath));
         writer.on("error", reject);
       });
     } catch (error62) {
@@ -355989,8 +356041,8 @@ var IACRSearcher = class extends PaperSource {
       );
       const writer = fs6.createWriteStream(filePath);
       response.data.pipe(writer);
-      return new Promise((resolve3, reject) => {
-        writer.on("finish", () => resolve3(filePath));
+      return new Promise((resolve4, reject) => {
+        writer.on("finish", () => resolve4(filePath));
         writer.on("error", reject);
       });
     } catch (error62) {
@@ -356170,7 +356222,7 @@ var IACRSearcher = class extends PaperSource {
    * 延迟函数
    */
   delay(ms) {
-    return new Promise((resolve3) => setTimeout(resolve3, ms));
+    return new Promise((resolve4) => setTimeout(resolve4, ms));
   }
 };
 
@@ -357035,7 +357087,7 @@ function isScholarAsyncIterable(value) {
 }
 function awaitScholarAbort(promise2, signal) {
   if (signal.aborted) return Promise.reject(createScholarAbortError());
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     let settled = false;
     const cleanup = () => signal.removeEventListener("abort", onAbort);
     const onAbort = () => {
@@ -357049,7 +357101,7 @@ function awaitScholarAbort(promise2, signal) {
       if (settled) return;
       settled = true;
       cleanup();
-      resolve3(value);
+      resolve4(value);
     }, (error62) => {
       if (settled) return;
       settled = true;
@@ -357065,10 +357117,10 @@ function createScholarAbortError() {
 }
 async function delayWithSignal(milliseconds, signal) {
   if (signal?.aborted) throw new Error("Operation aborted");
-  await new Promise((resolve3, reject) => {
+  await new Promise((resolve4, reject) => {
     const timer = setTimeout(() => {
       signal?.removeEventListener("abort", onAbort);
-      resolve3();
+      resolve4();
     }, milliseconds);
     const onAbort = () => {
       clearTimeout(timer);
@@ -357985,7 +358037,7 @@ function buildMirrorLandingUrl(mirror, doi) {
 async function waitForHealthFlight(flight, signal) {
   if (!signal) return flight;
   if (signal.aborted) throw createAbortError6();
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     const onAbort = () => {
       signal.removeEventListener("abort", onAbort);
       reject(createAbortError6());
@@ -357994,7 +358046,7 @@ async function waitForHealthFlight(flight, signal) {
     flight.then(
       (value) => {
         signal.removeEventListener("abort", onAbort);
-        resolve3(value);
+        resolve4(value);
       },
       (error62) => {
         signal.removeEventListener("abort", onAbort);
@@ -358123,7 +358175,7 @@ function resolveDynamicDataSrc2(value, source) {
   }
 }
 async function awaitWithAbort3(promise2, signal, onLateValue) {
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     let settled = false;
     const cleanup = () => signal.removeEventListener("abort", onAbort);
     const onAbort = () => {
@@ -358144,7 +358196,7 @@ async function awaitWithAbort3(promise2, signal, onLateValue) {
         }
         settled = true;
         cleanup();
-        resolve3(value);
+        resolve4(value);
       },
       (error62) => {
         if (settled) return;
@@ -358722,23 +358774,23 @@ var SpringerSearcher = class extends PaperSource {
     if (!paper.pdfUrl) {
       throw new Error("PDF URL not available for this paper");
     }
-    const fs10 = await import("fs");
-    const path9 = await import("path");
+    const fs11 = await import("fs");
+    const path10 = await import("path");
     const savePath = options.savePath || "./downloads";
-    if (!fs10.existsSync(savePath)) {
-      fs10.mkdirSync(savePath, { recursive: true });
+    if (!fs11.existsSync(savePath)) {
+      fs11.mkdirSync(savePath, { recursive: true });
     }
     const fileName = `${doi.replace(/[\/\\:*?"<>|]/g, "_")}.pdf`;
-    const filePath = path9.join(savePath, fileName);
+    const filePath = path10.join(savePath, fileName);
     try {
       const response = await ErrorHandler.retryWithBackoff(
         () => axios_default.get(paper.pdfUrl, { responseType: "stream" }),
         { context: "Springer download" }
       );
-      const writer = fs10.createWriteStream(filePath);
+      const writer = fs11.createWriteStream(filePath);
       response.data.pipe(writer);
-      return new Promise((resolve3, reject) => {
-        writer.on("finish", () => resolve3(filePath));
+      return new Promise((resolve4, reject) => {
+        writer.on("finish", () => resolve4(filePath));
         writer.on("error", reject);
       });
     } catch (error62) {
@@ -358912,11 +358964,11 @@ var WileySearcher = class extends PaperSource {
       throw new Error(`Invalid DOI format: ${doi}. ${doiResult.error || ""}`);
     }
     const cleanDoi = doiResult.sanitized;
-    const fs10 = await import("fs");
-    const path9 = await import("path");
+    const fs11 = await import("fs");
+    const path10 = await import("path");
     const savePath = options.savePath || "./downloads";
-    if (!fs10.existsSync(savePath)) {
-      fs10.mkdirSync(savePath, { recursive: true });
+    if (!fs11.existsSync(savePath)) {
+      fs11.mkdirSync(savePath, { recursive: true });
     }
     const encodedDoi = encodeURIComponent(cleanDoi);
     const url3 = `/articles/${encodedDoi}`;
@@ -358933,11 +358985,11 @@ var WileySearcher = class extends PaperSource {
         { context: "Wiley download" }
       );
       const fileName = `${sanitizeFilename(cleanDoi)}.pdf`;
-      const filePath = path9.join(savePath, fileName);
-      const writer = fs10.createWriteStream(filePath);
+      const filePath = path10.join(savePath, fileName);
+      const writer = fs11.createWriteStream(filePath);
       response.data.pipe(writer);
-      return new Promise((resolve3, reject) => {
-        writer.on("finish", () => resolve3(filePath));
+      return new Promise((resolve4, reject) => {
+        writer.on("finish", () => resolve4(filePath));
         writer.on("error", reject);
       });
     } catch (error62) {
@@ -358992,13 +359044,13 @@ var WileySearcher = class extends PaperSource {
   async readPaper(paperId, options = {}) {
     try {
       const savePath = options.savePath || "./downloads";
-      const fs10 = await import("fs");
-      const path9 = await import("path");
+      const fs11 = await import("fs");
+      const path10 = await import("path");
       const doiResult = sanitizeDoi(paperId);
       const cleanDoi = doiResult.valid ? doiResult.sanitized : paperId;
       const fileName = `${sanitizeFilename(cleanDoi)}.pdf`;
-      const filePath = path9.join(savePath, fileName);
-      if (!fs10.existsSync(filePath)) {
+      const filePath = path10.join(savePath, fileName);
+      if (!fs11.existsSync(filePath)) {
         await this.downloadPdf(paperId, options);
       }
       const extractor = new PDFExtractor();
@@ -359653,12 +359705,12 @@ var OpenAlexSearcher = class extends PaperSource {
     });
     return asArray2(response?.results).map(parseWork).filter((paper) => Boolean(paper));
   }
-  async getRawWork(path9, params) {
+  async getRawWork(path10, params) {
     try {
       const response = await ErrorHandler.retryWithBackoff(
         async () => {
           await this.rateLimiter.waitForPermission();
-          return this.client.get(path9, { params });
+          return this.client.get(path10, { params });
         },
         { context: "OpenAlex relation lookup" }
       );
@@ -361088,6 +361140,367 @@ function escapeBibtex(value) {
   return value.replace(/[{}]/g, "").replace(/\s+/g, " ").trim();
 }
 
+// src/literature/FullTextRouter.ts
+var DOI_CHANNEL_MAP = {
+  "10.1016": { channel: "elsevier_api", publisher: "Elsevier / ScienceDirect" },
+  "10.3390": { channel: "mdpi_cdn", publisher: "MDPI" },
+  "10.1109": { channel: "ieee_xplore", publisher: "IEEE" },
+  "10.1007": { channel: "springer_nature", publisher: "Springer" },
+  "10.1038": { channel: "springer_nature", publisher: "Nature Portfolio" },
+  "10.1002": { channel: "wiley_tdm", publisher: "Wiley" },
+  "10.1371": { channel: "plos_oa", publisher: "PLOS" },
+  "10.5194": { channel: "oa_direct", publisher: "Copernicus" },
+  "10.1021": { channel: "institution_or_vpn", publisher: "ACS Publications" },
+  "10.1364": { channel: "optica_open", publisher: "Optica Publishing Group (OSA)" },
+  "10.1088": { channel: "institution_or_vpn", publisher: "IOP Publishing" },
+  "10.1098": { channel: "institution_or_vpn", publisher: "Royal Society" },
+  "10.1063": { channel: "institution_or_vpn", publisher: "AIP Publishing" }
+};
+var FullTextRouter = class {
+  /**
+   * Resolve the full-text route for a list of literature records.
+   */
+  static resolveBatch(records) {
+    const routes = records.map((record2) => this.resolveRoute(record2));
+    let directPdfCount = 0;
+    let publisherApiCount = 0;
+    let institutionalCount = 0;
+    for (const r of routes) {
+      if (r.isDirectDownloadable) {
+        directPdfCount++;
+      } else if (r.accessStatus === "publisher_api_ready") {
+        publisherApiCount++;
+      } else {
+        institutionalCount++;
+      }
+    }
+    return {
+      totalRecords: records.length,
+      directPdfCount,
+      publisherApiCount,
+      institutionalCount,
+      routes
+    };
+  }
+  /**
+   * Resolve the full-text route for a single literature record.
+   */
+  static resolveRoute(record2) {
+    const cleanDoi = normalizeDoi3(record2.doi);
+    const doiPrefix = extractDoiPrefix(cleanDoi);
+    const channelInfo = doiPrefix ? DOI_CHANNEL_MAP[doiPrefix] : void 0;
+    const arxivId = record2.identifiers?.arxiv || extractArxivId(record2.url) || extractArxivId(record2.pdfUrl);
+    if (arxivId) {
+      const pdfUrl = `https://arxiv.org/pdf/${arxivId}.pdf`;
+      return {
+        recordId: record2.recordId,
+        title: record2.title,
+        doi: cleanDoi,
+        channel: "arxiv",
+        publisher: "arXiv",
+        accessStatus: "direct_pdf_ready",
+        isDirectDownloadable: true,
+        bestPdfUrl: pdfUrl,
+        landingUrl: `https://arxiv.org/abs/${arxivId}`,
+        channelDetails: {
+          doiPrefix,
+          hasConfiguredKey: true,
+          recommendedMethod: "arXiv \u5F00\u653E\u83B7\u53D6\u76F4\u63A5\u4E0B\u8F7D",
+          scansciCommand: `scansci-pdf get ${arxivId}`
+        }
+      };
+    }
+    if (doiPrefix === "10.3390" && cleanDoi) {
+      const mdpiPdfUrl = `https://www.mdpi.com/${cleanDoi}/pdf`;
+      return {
+        recordId: record2.recordId,
+        title: record2.title,
+        doi: cleanDoi,
+        channel: "mdpi_cdn",
+        publisher: "MDPI",
+        accessStatus: "direct_pdf_ready",
+        isDirectDownloadable: true,
+        bestPdfUrl: record2.pdfUrl || mdpiPdfUrl,
+        landingUrl: record2.url || `https://doi.org/${cleanDoi}`,
+        channelDetails: {
+          doiPrefix,
+          hasConfiguredKey: true,
+          recommendedMethod: "MDPI CDN \u5F00\u653E\u83B7\u53D6\u76F4\u8FBE",
+          scansciCommand: `scansci-pdf get ${cleanDoi}`
+        }
+      };
+    }
+    if (doiPrefix === "10.1371" && cleanDoi) {
+      const plosPdfUrl = `https://journals.plos.org/plosone/article/file?id=${encodeURIComponent(cleanDoi)}&type=printable`;
+      return {
+        recordId: record2.recordId,
+        title: record2.title,
+        doi: cleanDoi,
+        channel: "plos_oa",
+        publisher: "PLOS",
+        accessStatus: "direct_pdf_ready",
+        isDirectDownloadable: true,
+        bestPdfUrl: record2.pdfUrl || plosPdfUrl,
+        landingUrl: record2.url || `https://doi.org/${cleanDoi}`,
+        channelDetails: {
+          doiPrefix,
+          hasConfiguredKey: true,
+          recommendedMethod: "PLOS \u5B98\u65B9\u5F00\u653E\u83B7\u53D6\u76F4\u53D6",
+          scansciCommand: `scansci-pdf get ${cleanDoi}`
+        }
+      };
+    }
+    if (record2.pdfUrl && record2.openAccess) {
+      return {
+        recordId: record2.recordId,
+        title: record2.title,
+        doi: cleanDoi,
+        channel: "oa_direct",
+        publisher: channelInfo?.publisher || "Open Access Repository",
+        accessStatus: "direct_pdf_ready",
+        isDirectDownloadable: true,
+        bestPdfUrl: record2.pdfUrl,
+        landingUrl: record2.url || (cleanDoi ? `https://doi.org/${cleanDoi}` : void 0),
+        channelDetails: {
+          doiPrefix,
+          hasConfiguredKey: true,
+          recommendedMethod: "\u5DF2\u9A8C\u8BC1\u5F00\u653E\u83B7\u53D6 (Gold/Green OA) PDF \u76F4\u94FE",
+          scansciCommand: cleanDoi ? `scansci-pdf get ${cleanDoi}` : void 0
+        }
+      };
+    }
+    if (doiPrefix === "10.1016" && cleanDoi) {
+      const hasKey = Boolean(process.env.ELSEVIER_API_KEY);
+      const apiUrl = `https://api.elsevier.com/content/article/doi/${encodeURIComponent(cleanDoi)}?httpAccept=application/pdf`;
+      return {
+        recordId: record2.recordId,
+        title: record2.title,
+        doi: cleanDoi,
+        channel: "elsevier_api",
+        publisher: "Elsevier / ScienceDirect",
+        accessStatus: hasKey ? "publisher_api_ready" : "institutional_required",
+        isDirectDownloadable: hasKey,
+        bestPdfUrl: hasKey ? apiUrl : void 0,
+        landingUrl: record2.url || `https://doi.org/${cleanDoi}`,
+        channelDetails: {
+          doiPrefix,
+          hasConfiguredKey: hasKey,
+          recommendedMethod: hasKey ? "Elsevier API \u6781\u901F\u901A\u9053 (\u914D\u5408\u6821\u56ED\u7F51/VPN\u51FA\u53E3\u53EF\u514D insttoken \u76F4\u63A5\u4E0B\u8F7D)" : "Elsevier ScienceDirect \u673A\u6784\u8BBF\u95EE (\u9700\u914D\u7F6E ELSEVIER_API_KEY \u6216\u6821\u56ED\u7F51)",
+          scansciCommand: `scansci-pdf get ${cleanDoi}`
+        }
+      };
+    }
+    if (doiPrefix === "10.1109") {
+      const ieeeSourceId = record2.sources?.find((s) => s.source === "ieee")?.sourceId;
+      const articleNumber = record2.extra?.ieeeArticleNumber || (ieeeSourceId && /^\d+$/.test(ieeeSourceId) ? ieeeSourceId : "") || extractIeeeArticleNumber(record2.url);
+      const ieeePdfUrl = articleNumber ? `https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=${articleNumber}` : void 0;
+      const isOa = record2.openAccess || record2.extra?.isOa === true;
+      return {
+        recordId: record2.recordId,
+        title: record2.title,
+        doi: cleanDoi,
+        channel: "ieee_xplore",
+        publisher: "IEEE",
+        accessStatus: isOa ? "direct_pdf_ready" : "institutional_required",
+        isDirectDownloadable: isOa && Boolean(ieeePdfUrl),
+        bestPdfUrl: isOa ? record2.pdfUrl || ieeePdfUrl : void 0,
+        landingUrl: record2.url || (articleNumber ? `https://ieeexplore.ieee.org/document/${articleNumber}` : cleanDoi ? `https://doi.org/${cleanDoi}` : void 0),
+        channelDetails: {
+          doiPrefix,
+          hasConfiguredKey: Boolean(process.env.IEEE_XPLORE_API_KEY),
+          recommendedMethod: isOa ? "IEEE Xplore \u5F00\u653E\u83B7\u53D6\u76F4\u63A5\u8BBF\u95EE" : "IEEE \u673A\u6784\u8BA2\u9605\u901A\u9053 (\u9700\u6821\u56ED\u7F51/WebVPN/CARSI\u767B\u5F55)",
+          scansciCommand: cleanDoi ? `scansci-pdf get ${cleanDoi}` : void 0
+        }
+      };
+    }
+    if ((doiPrefix === "10.1007" || doiPrefix === "10.1038") && cleanDoi) {
+      const hasKey = Boolean(process.env.SPRINGER_API_KEY || process.env.SPRINGER_OPENACCESS_API_KEY);
+      const isOa = record2.openAccess;
+      return {
+        recordId: record2.recordId,
+        title: record2.title,
+        doi: cleanDoi,
+        channel: "springer_nature",
+        publisher: channelInfo?.publisher || "Springer Nature",
+        accessStatus: isOa ? "direct_pdf_ready" : hasKey ? "publisher_api_ready" : "institutional_required",
+        isDirectDownloadable: isOa && Boolean(record2.pdfUrl),
+        bestPdfUrl: isOa ? record2.pdfUrl : void 0,
+        landingUrl: record2.url || `https://doi.org/${cleanDoi}`,
+        channelDetails: {
+          doiPrefix,
+          hasConfiguredKey: hasKey,
+          recommendedMethod: isOa ? "Springer Nature \u5F00\u653E\u83B7\u53D6\u76F4\u8FBE" : hasKey ? "Springer TDM \u5B98\u65B9\u63A5\u53E3\u63D0\u53D6" : "SpringerLink \u673A\u6784\u8BBF\u95EE (\u6821\u56ED\u7F51 WebVPN)",
+          scansciCommand: `scansci-pdf get ${cleanDoi}`
+        }
+      };
+    }
+    const publisherName = channelInfo?.publisher || record2.venue || "Academic Publisher";
+    return {
+      recordId: record2.recordId,
+      title: record2.title,
+      doi: cleanDoi,
+      channel: "institution_or_vpn",
+      publisher: publisherName,
+      accessStatus: record2.openAccess && record2.pdfUrl ? "direct_pdf_ready" : "institutional_required",
+      isDirectDownloadable: Boolean(record2.openAccess && record2.pdfUrl),
+      bestPdfUrl: record2.openAccess ? record2.pdfUrl : void 0,
+      landingUrl: record2.url || (cleanDoi ? `https://doi.org/${cleanDoi}` : void 0),
+      channelDetails: {
+        doiPrefix,
+        hasConfiguredKey: false,
+        recommendedMethod: record2.openAccess ? "\u516C\u5171\u5F00\u653E\u83B7\u53D6\u4ED3\u50A8" : `${publisherName} \u673A\u6784\u8BA2\u9605\u901A\u9053 (\u63A8\u8350\u6821\u56ED\u7F51\u51FA\u5165\u53E3\u6216\u901A\u8FC7 scansci-pdf \u83B7\u53D6)`,
+        scansciCommand: cleanDoi ? `scansci-pdf get ${cleanDoi}` : void 0
+      }
+    };
+  }
+};
+function normalizeDoi3(value) {
+  if (!value) return "";
+  return value.trim().replace(/^doi:\s*/i, "").replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "").replace(/[.,;)\s]+$/, "").toLowerCase();
+}
+function extractDoiPrefix(doi) {
+  const match = doi.match(/^(10\.\d{4,9})/);
+  return match ? match[1] : void 0;
+}
+function extractArxivId(url3) {
+  if (!url3) return void 0;
+  const match = url3.match(/arxiv\.org\/(?:abs|pdf)\/([a-z\-]+(?:\.[a-z]{2})?\/\d{7}|\d{4}\.\d{4,5})/i);
+  return match ? match[1] : void 0;
+}
+function extractIeeeArticleNumber(url3) {
+  if (!url3) return void 0;
+  const match = url3.match(/\/document\/(\d+)/i) || url3.match(/[?&]arnumber=(\d+)/i);
+  return match ? match[1] : void 0;
+}
+
+// src/literature/ReadingCardService.ts
+var ReadingCardService = class {
+  /**
+   * Generate a structured reading packet for a collection of literature records.
+   */
+  static generatePacket(records, routesMap, screeningMap, brief) {
+    const cards = records.map((record2, index2) => {
+      const route = routesMap?.get(record2.recordId);
+      const screening = screeningMap?.[record2.recordId];
+      return this.generateSingleCard(record2, index2 + 1, route, screening, brief);
+    });
+    const combinedMarkdown = this.buildCombinedMarkdown(cards, brief);
+    return {
+      totalCards: cards.length,
+      briefContext: brief ? {
+        intent: brief.intent,
+        focusAreas: brief.focus,
+        seedDoi: brief.seed?.doi
+      } : void 0,
+      cards,
+      combinedMarkdown
+    };
+  }
+  /**
+   * Generate a reading card template for a single literature record.
+   */
+  static generateSingleCard(record2, index2, route, screening, brief) {
+    const title = record2.title || "Untitled Paper";
+    const doi = record2.doi || "N/A";
+    const authorsStr = record2.authors?.join(", ") || "Unknown Authors";
+    const venueStr = record2.venue || "Academic Journal / Conference";
+    const yearStr = record2.year ? String(record2.year) : "n.d.";
+    const bestPdf = route?.bestPdfUrl ? `[PDF \u94FE\u63A5](${route.bestPdfUrl})` : record2.pdfUrl ? `[PDF \u94FE\u63A5](${record2.pdfUrl})` : "\u9700\u901A\u8FC7\u673A\u6784/\u51FA\u7248\u5546\u83B7\u53D6";
+    const channelStr = route?.channelDetails?.recommendedMethod || (record2.openAccess ? "\u5F00\u653E\u83B7\u53D6 (OA)" : "\u673A\u6784\u901A\u9053");
+    const intentContext = brief?.intent ? `> **\u672C\u6B21\u8C03\u7814\u76EE\u6807**: ${brief.intent}
+` : "";
+    const template = [
+      `# \u3010\u6587\u732E\u7CBE\u8BFB\u5361 #${index2}\u3011${title}`,
+      "",
+      "## \u4E00\u3001\u6587\u732E\u57FA\u672C\u4FE1\u606F\u4E0E\u83B7\u53D6\u8DEF\u5F84",
+      `- **\u6807\u9898 (Title)**: ${title}`,
+      `- **\u4F5C\u8005 (Authors)**: ${authorsStr}`,
+      `- **\u51FA\u7248\u4FE1\u606F (Publication)**: ${venueStr} (${yearStr})`,
+      `- **DOI**: [${doi}](https://doi.org/${doi})`,
+      `- **\u5168\u6587\u83B7\u53D6\u6E20\u9053 (Full-Text Channel)**: ${channelStr}`,
+      `- **PDF \u63A8\u8350\u5730\u5740**: ${bestPdf}`,
+      ...screening ? [
+        `- **\u524D\u671F\u521D\u7B5B\u8BC4\u4F30**: ${screening.verdict === "include" ? "\u2705 \u7EB3\u5165\u6838\u5FC3\u7CBE\u8BFB" : "\u2753 \u5F85\u5B9A\u7814\u5224"}`,
+        `- **\u521D\u7B5B\u7EB3\u5165\u7406\u7531**: ${screening.reason}`
+      ] : [],
+      "",
+      "## \u4E8C\u3001\u4E0E\u672C\u7814\u7A76\u8BFE\u9898\u7684\u5173\u8054\u5EA6 (Relevance)",
+      intentContext,
+      `- **\u672C\u5DE5\u4F5C\u89E3\u51B3\u7684\u6838\u5FC3\u75DB\u70B9**: *(\u8BF7\u57FA\u4E8E MinerU \u89E3\u6790\u540E\u7684\u5F15\u8A00\u7B2C\u4E00/\u4E8C\u8282\u63D0\u70BC)*`,
+      `- **\u4E0E\u57FA\u51C6\u79CD\u5B50\u5DE5\u4F5C\u7684\u627F\u63A5\u6216\u5BF9\u6BD4\u70B9**: *(\u4E0E\u672C\u8BFE\u9898\u7814\u7A76\u65B9\u6848\u7684\u5F02\u540C)*`,
+      "",
+      "## \u4E09\u3001\u6838\u5FC3\u65B9\u6848\u4E0E\u6570\u5B66/\u7B97\u6CD5\u63A8\u5BFC (Methodology & Algorithms)",
+      "- **\u6838\u5FC3\u7CFB\u7EDF\u67B6\u6784/\u6A21\u578B\u7269\u7406\u56FE\u666F**:",
+      "  - ",
+      "- **\u5173\u952E\u7B97\u6CD5\u6B65\u9AA4\u4E0E\u516C\u5F0F\u63A8\u5BFC (\u652F\u6301 LaTeX $...$ \u8868\u8FBE)**:",
+      "  - \u6B65\u9AA4 1: ",
+      "  - \u6B65\u9AA4 2: ",
+      "  - \u5173\u952E\u516C\u5F0F: $$ $$",
+      "",
+      "## \u56DB\u3001\u5B9E\u9A8C\u9A8C\u8BC1\u4E0E\u91CF\u5316\u6027\u80FD\u6307\u6807\u5BF9\u6BD4\u8868 (Quantitative Benchmark)",
+      "*(\u8BF7\u4ECE\u6B63\u6587\u8868\u683C\u6216\u5B9E\u9A8C\u7ED3\u679C\u6BB5\u843D\u4E2D\u7CBE\u786E\u63D0\u53D6\u91CF\u5316\u6570\u503C\uFF0C\u7981\u6B62\u7F16\u9020)*",
+      "",
+      "| \u8BC4\u4F30\u6307\u6807 (Metric) | \u672C\u6587\u5B9E\u6D4B/\u4EFF\u771F\u6570\u503C | \u5BF9\u6BD4\u57FA\u7EBF (Baseline) | \u63D0\u5347\u5E45\u5EA6 / \u7ED3\u8BBA |",
+      "|-------------------|-------------------|---------------------|-----------------|",
+      "| \u6807\u5B9A\u6536\u655B\u901F\u5EA6 / \u65F6\u95F4 | | | |",
+      "| \u65C1\u74E3\u6291\u5236\u6BD4 (PSLR)  | | | |",
+      "| \u6307\u5411\u7CBE\u5EA6 / \u8BEF\u7801\u7387  | | | |",
+      "| \u9635\u5217\u89C4\u6A21 / \u6CE2\u6BB5    | | | |",
+      "",
+      "## \u4E94\u3001\u5B9E\u9A8C\u7269\u7406\u73AF\u5883\u4E0E\u786C\u4EF6\u7EA6\u675F (Experimental Setup)",
+      "- **\u5668\u4EF6/\u82AF\u7247\u89C4\u683C**: ",
+      "- **\u6D4B\u8BD5\u5E73\u53F0/\u4F20\u8F93\u8DDD\u79BB/\u4FE1\u9053\u73AF\u5883**: ",
+      "",
+      "## \u516D\u3001\u5C40\u9650\u6027\u4E0E\u672A\u6765\u7814\u7A76\u5207\u5165\u70B9 (Limitations & Research Gaps)",
+      "- **\u4F5C\u8005\u660E\u786E\u627F\u8BA4\u7684\u7F3A\u9677/\u672A\u8986\u76D6\u573A\u666F**: ",
+      "- **\u5BF9\u6211\u4EEC\u5F53\u524D\u8BFE\u9898\u7684\u542F\u53D1\u4E0E\u540E\u7EED\u53EF\u6539\u8FDB\u65B9\u5411**: ",
+      "",
+      "---",
+      ""
+    ].join("\n");
+    const prompt = [
+      `\u8BF7\u4F5C\u4E3A\u5149\u7535\u4FE1\u606F\u4E0E\u7A7A\u95F4\u901A\u4FE1\u9886\u57DF\u7684\u4E25\u8C28\u79D1\u7814\u8BC4\u5BA1\u4E13\u5BB6\uFF0C\u57FA\u4E8E MinerU \u63D0\u53D6\u81EA\u8BBA\u6587\u300A${title}\u300B(DOI: ${doi}) \u7684 Markdown \u5168\u6587\uFF0C`,
+      `\u4E25\u683C\u6309\u7167\u4E0A\u8FF0\u3010\u6587\u732E\u7CBE\u8BFB\u5361\u3011\u7684 6 \u5927\u677F\u5757\u63D0\u53D6\u5B66\u672F\u8BC1\u636E\u3002\u8981\u6C42\uFF1A`,
+      `1. \u6240\u6709\u7684\u6570\u503C\u6307\u6807\u5FC5\u987B\u6765\u6E90\u4E8E\u539F\u6587\u8868\u683C\u6216\u56FE\u6CE8\uFF0C\u4E25\u7981\u865A\u6784\u3002`,
+      `2. \u516C\u5F0F\u63A8\u5BFC\u8BF7\u4F7F\u7528\u6807\u51C6 LaTeX \u8868\u8FBE\u3002`,
+      `3. \u7A81\u51FA\u8BE5\u5DE5\u4F5C\u5BF9\u5F53\u524D\u7814\u7A76\u610F\u56FE\uFF08"${brief?.intent || "\u76F8\u5173\u9886\u57DF"}"\uFF09\u7684\u6280\u672F\u542F\u53D1\u4E0E\u5C40\u9650\u6027\u3002`
+    ].join("\n");
+    return {
+      recordId: record2.recordId,
+      title,
+      doi,
+      venue: record2.venue,
+      year: record2.year,
+      authors: record2.authors,
+      fullTextRoute: route,
+      screeningVerdict: screening?.verdict,
+      screeningReason: screening?.reason,
+      markdownTemplate: template,
+      mineruPrompt: prompt
+    };
+  }
+  static buildCombinedMarkdown(cards, brief) {
+    const header = [
+      "# TwoSCI \u6587\u732E\u7CBE\u8BFB\u8BC1\u636E\u5305 (Reading Packet & Extraction Cards)",
+      "",
+      `- **\u751F\u6210\u65F6\u95F4**: ${(/* @__PURE__ */ new Date()).toISOString().replace("T", " ").slice(0, 19)} UTC`,
+      `- **\u7CBE\u8BFB\u6587\u732E\u603B\u6570**: \u5171 ${cards.length} \u7BC7\u6838\u5FC3\u6587\u732E`,
+      ...brief ? [
+        `- **\u7814\u7A76\u610F\u56FE (Intent)**: ${brief.intent}`,
+        `- **\u57FA\u51C6\u79CD\u5B50\u6587\u732E (Seed)**: ${brief.seed?.title} (DOI: ${brief.seed?.doi || "N/A"})`
+      ] : [],
+      "",
+      "---",
+      "",
+      "> **\u4F7F\u7528\u63D0\u793A**\uFF1A\u672C\u7CBE\u8BFB\u8BC1\u636E\u5305\u5DF2\u9884\u8BBE\u89C4\u8303\u7684\u5B66\u672F\u63D0\u53D6 Schema\u3002\u5C06 PDF \u6587\u4EF6\u4EA4\u7531 MinerU \u89E3\u6790\u540E\uFF0C\u53EF\u5C06\u5BF9\u5E94\u7684\u7CBE\u8BFB\u5361\u6A21\u677F\u4E0E\u89E3\u6790\u6587\u672C\u8F93\u5165\u5206\u6790 Agent\uFF0C\u81EA\u52A8\u5316\u5B8C\u6210\u7ED3\u6784\u5316\u77E5\u8BC6\u5165\u5E93\u3002",
+      "",
+      "---",
+      ""
+    ].join("\n");
+    return header + "\n" + cards.map((c) => c.markdownTemplate).join("\n\n");
+  }
+};
+
 // src/literature/normalize.ts
 var import_node_crypto3 = require("node:crypto");
 var TITLE_STOPWORDS = /* @__PURE__ */ new Set([
@@ -361122,12 +361535,12 @@ var SOURCE_PRIORITY = {
   openalex: 2,
   crossref: 1
 };
-function normalizeDoi3(value) {
+function normalizeDoi4(value) {
   if (typeof value !== "string") return "";
   return value.trim().replace(/^doi:\s*/i, "").replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "").replace(/[.,;)\s]+$/, "").toLowerCase();
 }
 function recordFromPaper(paper, source, rank) {
-  const doi = normalizeDoi3(paper.doi);
+  const doi = normalizeDoi4(paper.doi);
   const extra = paper.extra || {};
   const wosUid = normalizeWosUid(extra.uid ?? (source === "webofscience" ? paper.paperId : void 0));
   const scopusEid = normalizeScopusEid(extra.eid ?? extra.scopusId ?? (source === "scopus" ? paper.paperId : void 0));
@@ -361181,7 +361594,7 @@ function recordFromPaper(paper, source, rank) {
   return record2;
 }
 function recordFromWosReference(reference) {
-  const doi = normalizeDoi3(reference.doi);
+  const doi = normalizeDoi4(reference.doi);
   const wosUid = normalizeWosUid(reference.uid);
   const title = cleanText3(reference.citedTitle || reference.citedWork || "") || "Untitled reference";
   const year = toNumber(reference.year);
@@ -361323,7 +361736,7 @@ function toPublicRecord(record2, layer, abstractChars = 3e3) {
 }
 function recordsMatch(left, right) {
   if (left.doi && right.doi) {
-    if (normalizeDoi3(left.doi) !== normalizeDoi3(right.doi)) return false;
+    if (normalizeDoi4(left.doi) !== normalizeDoi4(right.doi)) return false;
     return true;
   }
   if (sharedIdentifier(left.identifiers, right.identifiers)) return true;
@@ -361406,7 +361819,7 @@ function sourceIdentifier(source, paper, doi, wosUid, scopusEid, openalexId) {
   return doi || paper.paperId;
 }
 function makeRecordId(input2) {
-  const key = input2.doi ? `doi:${normalizeDoi3(input2.doi)}` : input2.wosUid ? `wos:${input2.wosUid}` : input2.scopusEid ? `scopus:${input2.scopusEid}` : input2.openalexId ? `openalex:${input2.openalexId}` : `title:${[...titleTokens(input2.title)].sort().join(" ")}:${input2.year || ""}`;
+  const key = input2.doi ? `doi:${normalizeDoi4(input2.doi)}` : input2.wosUid ? `wos:${input2.wosUid}` : input2.scopusEid ? `scopus:${input2.scopusEid}` : input2.openalexId ? `openalex:${input2.openalexId}` : `title:${[...titleTokens(input2.title)].sort().join(" ")}:${input2.year || ""}`;
   return `lit_${(0, import_node_crypto3.createHash)("sha256").update(key).digest("hex").slice(0, 16)}`;
 }
 function normalizeWosUid(value) {
@@ -361801,6 +362214,35 @@ var LiteratureService = class {
     return this.store.saveScreening(input2);
   }
   export(input2) {
+    const { records, search, brief } = this.selectRecordsForOperation(input2);
+    const content = exportRecords(records, input2.format, {
+      includeAbstract: input2.includeAbstract !== false,
+      context: {
+        query: search?.query,
+        search,
+        brief,
+        screening: search?.screening
+      }
+    });
+    return { format: input2.format, count: records.length, content };
+  }
+  resolveFullText(input2) {
+    const { records } = this.selectRecordsForOperation(input2);
+    return FullTextRouter.resolveBatch(records);
+  }
+  generateReadingCards(input2) {
+    const { records, search, brief } = this.selectRecordsForOperation(input2);
+    const resolution = FullTextRouter.resolveBatch(records);
+    const routesMap = new Map(resolution.routes.map((r) => [r.recordId, r]));
+    const screeningMap = {};
+    if (search?.screening) {
+      for (const [id, dec] of Object.entries(search.screening)) {
+        screeningMap[id] = { verdict: dec.verdict, reason: dec.reason };
+      }
+    }
+    return ReadingCardService.generatePacket(records, routesMap, screeningMap, brief);
+  }
+  selectRecordsForOperation(input2) {
     let records = [];
     let search;
     let brief;
@@ -361822,16 +362264,7 @@ var LiteratureService = class {
       throw new Error("Provide search_id, brief_id, or a search-scoped record_ids list.");
     }
     if (records.length === 0) throw new Error("No records matched the export selection.");
-    const content = exportRecords(records, input2.format, {
-      includeAbstract: input2.includeAbstract !== false,
-      context: {
-        query: search?.query,
-        search,
-        brief,
-        screening: search?.screening
-      }
-    });
-    return { format: input2.format, count: records.length, content };
+    return { records, search, brief };
   }
   async status(validate2 = false) {
     const searchers2 = this.getSearchers();
@@ -362037,7 +362470,7 @@ var LiteratureService = class {
         warnings.push(`OpenAlex ID lookup failed: ${sanitizeSensitiveText(error62?.message || "unknown error")}`);
       }
     }
-    const doi = normalizeDoi3(seed.doi || records.find((record2) => record2.doi)?.doi);
+    const doi = normalizeDoi4(seed.doi || records.find((record2) => record2.doi)?.doi);
     if (doi) {
       const existingSources = new Set(records.flatMap((record2) => record2.sources.map((source) => source.source)));
       records.push(...await this.resolveByDoi(doi, warnings, existingSources));
@@ -362190,7 +362623,7 @@ var LiteratureService = class {
     }
     const resolved = [...selected];
     for (const doi of input2.dois || []) {
-      resolved.push(...await this.resolveByDoi(normalizeDoi3(doi), []));
+      resolved.push(...await this.resolveByDoi(normalizeDoi4(doi), []));
     }
     return dedupeRecords(resolved);
   }
@@ -362245,7 +362678,7 @@ var LiteratureService = class {
         continue;
       }
       if (/^10\.\d{4,}\//.test(seed)) {
-        resolved.push(...await this.resolveByDoi(normalizeDoi3(seed), []));
+        resolved.push(...await this.resolveByDoi(normalizeDoi4(seed), []));
         continue;
       }
       throw new Error(`Unsupported seed identifier: ${seed}`);
@@ -362756,6 +363189,18 @@ var ExportLiteratureSchema = external_exports.object({
   verdict: external_exports.enum(["include", "exclude", "maybe", "all"]).optional(),
   includeAbstract: external_exports.boolean().optional().default(true)
 }).strict().refine((value) => Boolean(value.searchId || value.briefId), "Provide searchId or briefId");
+var ResolveFullTextAccessSchema = external_exports.object({
+  searchId: external_exports.string().optional(),
+  briefId: external_exports.string().optional(),
+  recordIds: external_exports.array(external_exports.string()).max(200).optional(),
+  verdict: external_exports.enum(["include", "exclude", "maybe", "all"]).optional().default("include")
+}).strict().refine((value) => Boolean(value.searchId || value.briefId || value.recordIds?.length), "Provide searchId, briefId, or recordIds");
+var GenerateReadingCardsSchema = external_exports.object({
+  searchId: external_exports.string().optional(),
+  briefId: external_exports.string().optional(),
+  recordIds: external_exports.array(external_exports.string()).max(100).optional(),
+  verdict: external_exports.enum(["include", "exclude", "maybe", "all"]).optional().default("include")
+}).strict().refine((value) => Boolean(value.searchId || value.briefId || value.recordIds?.length), "Provide searchId, briefId, or recordIds");
 var GetSourceStatusSchema = external_exports.object({
   validate: external_exports.boolean().optional().default(false)
 }).strict();
@@ -362864,6 +363309,10 @@ function parseToolArgs(toolName, args) {
       return SaveScreeningSchema.parse(args);
     case "export_literature":
       return ExportLiteratureSchema.parse(args);
+    case "resolve_fulltext_access":
+      return ResolveFullTextAccessSchema.parse(args);
+    case "generate_reading_cards":
+      return GenerateReadingCardsSchema.parse(args);
     case "get_source_status":
       return GetSourceStatusSchema.parse(args ?? {});
     default:
@@ -363902,6 +364351,10 @@ ${JSON.stringify(
     }
     case "export_literature":
       return jsonValueResponse(searchers2.literature.export(args));
+    case "resolve_fulltext_access":
+      return jsonValueResponse(searchers2.literature.resolveFullText(args));
+    case "generate_reading_cards":
+      return jsonValueResponse(searchers2.literature.generateReadingCards(args));
     case "get_source_status":
       return jsonValueResponse(await searchers2.literature.status(args.validate));
     case "get_citations": {
@@ -364221,7 +364674,23 @@ function registerMcpHandlers(server2, searcherFactory = initializeSearchers) {
 
 // src/server.ts
 init_Logger();
-dotenv.config();
+var import_meta = {};
+function loadEnvironment() {
+  const cwdEnv = path9.resolve(process.cwd(), ".env");
+  if (fs10.existsSync(cwdEnv)) {
+    dotenv.config({ path: cwdEnv });
+  }
+  try {
+    const currentDir = typeof __dirname !== "undefined" ? __dirname : path9.dirname((0, import_node_url.fileURLToPath)(import_meta.url));
+    const pluginEnv = path9.resolve(currentDir, "..", ".env");
+    if (fs10.existsSync(pluginEnv)) {
+      dotenv.config({ path: pluginEnv });
+    }
+  } catch {
+  }
+  dotenv.config();
+}
+loadEnvironment();
 var server = new Server(
   {
     name: "twosci",

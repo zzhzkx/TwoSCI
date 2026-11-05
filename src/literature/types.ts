@@ -166,6 +166,20 @@ export interface ExportInput {
   includeAbstract?: boolean;
 }
 
+export interface FullTextAccessInput {
+  searchId?: string;
+  briefId?: string;
+  recordIds?: string[];
+  verdict?: 'include' | 'exclude' | 'maybe' | 'all';
+}
+
+export interface ReadingCardsInput {
+  searchId?: string;
+  briefId?: string;
+  recordIds?: string[];
+  verdict?: 'include' | 'exclude' | 'maybe' | 'all';
+}
+
 export interface ScreeningInput {
   searchId: string;
   decisions: Array<{
