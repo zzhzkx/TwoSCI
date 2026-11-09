@@ -87,7 +87,14 @@ const codexManifest = {
 };
 const claudeManifest = {
   ...baseManifest,
-  skills: ['./skills/literature-search']
+  skills: [
+    './skills/academic-search',
+    './skills/intent-deep-research',
+    './skills/fulltext-acquisition',
+    './skills/citation-network',
+    './skills/academic-library',
+    './skills/literature-search'
+  ]
 };
 
 writeJson(join(outDir, 'package.json'), packageJson);

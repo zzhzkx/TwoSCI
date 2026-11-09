@@ -16,6 +16,11 @@ TwoSCI 是一个面向 Codex 和 Claude Code 的文献研究 MCP 服务与插件
 
 | 工具 | 用途 |
 | --- | --- |
+| `search_academic` | 基础文献检索，支持 metadata / abstract / fulltext 三级分层与标准卡片输出 |
+| `search_intent_literature` | 意图深度文献检索，基于 brief 意图展开多源检索与初筛 |
+| `download_and_parse_mineru` | 全文下载并使用 MinerU 解析为 Markdown 与图表切图，严格落盘 `./twosci/` |
+| `trace_citation_topology` | 引文网络与演化拓扑追踪，输出 Mermaid 关系图与演化脉络综述 |
+| `build_academic_library` | 构建并导出规范的 Markdown 学术文献数据库 (ACADEMIC_LIBRARY.md) |
 | `create_research_brief` | 解析种子文献，建立可复用的研究上下文 |
 | `search_literature` | WoS/Scopus/OpenAlex/Crossref/IEEE 统一检索与去重 |
 | `search_ieee` | 直接检索 IEEE Xplore 元数据和摘要 |
@@ -27,7 +32,14 @@ TwoSCI 是一个面向 Codex 和 Claude Code 的文献研究 MCP 服务与插件
 | `export_literature` | 导出 Markdown、JSON、BibTeX、RIS；支持 `verdict` 筛选过滤 |
 | `get_source_status` | 查看来源配置、产品等级、配额和会话状态 |
 
-原有的单平台工具仍然保留，用于定向查询、PDF 访问和兼容旧工作流。
+
+## 5 大专精 Skills
+
+1. **`academic-search`**：基础学术检索，针对确定目标和关键词，输出元数据/摘要/全文三种深度的标准学术卡片。
+2. **`intent-deep-research`**：意图深入调研，先通过多轮对话澄清用户研究意图与指标，再深度检索并交付标准卡片。
+3. **`fulltext-acquisition`**：全网全文获取与 MinerU 解析，规范保存在 `./twosci/{作者}-{年份}-{题目}-{DOI}/`。
+4. **`citation-network`**：学术引文网络与演化拓扑追踪，梳理理论基石与最新突破。
+5. **`academic-library`**：学术文献数据库生成，汇总为标准 `ACADEMIC_LIBRARY.md` 与 BibTeX 引文库。
 
 `search_ieee` 用于直接检索 IEEE Xplore 的元数据和摘要；IEEE 也可以作为
 `search_literature` 的显式来源。它默认不加入 `quick`、`balanced`、`deep`

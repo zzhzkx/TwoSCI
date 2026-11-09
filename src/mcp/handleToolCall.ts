@@ -887,6 +887,84 @@ async function handleToolCallWithContext(
     case 'generate_reading_cards':
       return jsonValueResponse(searchers.literature.generateReadingCards(args));
 
+    case 'search_academic': {
+      const { query, search_scope, platform, maxResults, year, author, journal, sortBy, sortOrder } = args;
+      const sources = platform === 'all'
+        ? undefined
+        : (platform === 'wos' || platform === 'webofscience' ? ['webofscience'] : [platform as any]);
+      const result = await searchers.literature.search({
+        query,
+        searchScope: search_scope,
+        sources,
+        maxResults,
+        year,
+        author,
+        journal,
+        sortBy,
+        sortOrder
+      });
+      return jsonValueResponse({
+        query,
+        search_scope: result.searchScope,
+        count: result.records.length,
+        cards: result.cards,
+        records: result.records,
+        search_id: result.search.searchId
+      });
+    }
+
+    case 'search_intent_literature': {
+      const result = await searchers.literature.search({
+        query: args.query,
+        briefId: args.briefId,
+        searchScope: args.search_scope,
+        mode: args.mode,
+        sources: args.sources,
+        maxResults: args.maxResults,
+        year: args.year,
+        author: args.author,
+        journal: args.journal
+      });
+      return jsonValueResponse({
+        search_id: result.search.searchId,
+        brief_id: result.search.briefId,
+        search_scope: result.searchScope,
+        cards: result.cards,
+        count: result.records.length,
+        records: result.records,
+        brief_context: result.brief
+          ? {
+              intent: result.brief.intent,
+              seed_title: result.brief.seed.title,
+              seed_doi: result.brief.seed.doi,
+              focus: result.brief.focus
+            }
+          : undefined
+      });
+    }
+
+    case 'download_and_parse_mineru': {
+      const result = await searchers.literature.downloadAndParseMineru(args);
+      return jsonValueResponse(result);
+    }
+
+    case 'trace_citation_topology': {
+      const result = await searchers.literature.traceCitationTopology(args);
+      return jsonValueResponse({
+        seed_title: result.seedRecord.title,
+        seed_doi: result.seedRecord.doi,
+        foundations_count: result.foundations.length,
+        evolutions_count: result.evolutions.length,
+        mermaid_graph: result.mermaidGraph,
+        report: result.markdownReport
+      });
+    }
+
+    case 'build_academic_library': {
+      const result = searchers.literature.buildAcademicLibrary(args);
+      return jsonValueResponse(result);
+    }
+
     case 'get_source_status':
       return jsonValueResponse(await searchers.literature.status(args.validate));
 

@@ -428,6 +428,89 @@ export const GetSourceStatusSchema = z
   })
   .strict();
 
+export const SearchAcademicSchema = z
+  .object({
+    query: z.string().trim().min(1).max(1000),
+    search_scope: z.enum(['metadata', 'abstract', 'fulltext']).optional().default('abstract'),
+    platform: z
+      .enum([
+        'all',
+        'wos',
+        'webofscience',
+        'scopus',
+        'ieee',
+        'pubmed',
+        'arxiv',
+        'crossref',
+        'openalex',
+        'sciencedirect',
+        'springer',
+        'biorxiv',
+        'medrxiv',
+        'semantic'
+      ])
+      .optional()
+      .default('all'),
+    maxResults: z.number().int().min(1).max(100).optional().default(10),
+    year: z.string().optional(),
+    author: z.string().optional(),
+    journal: z.string().optional(),
+    sortBy: SortBySchema.optional().default('relevance'),
+    sortOrder: SortOrderSchema.optional().default('desc')
+  })
+  .strip();
+
+export const SearchIntentLiteratureSchema = z
+  .object({
+    query: z.string().trim().min(1).max(1000),
+    briefId: z.string().min(1),
+    search_scope: z.enum(['metadata', 'abstract', 'fulltext']).optional().default('abstract'),
+    mode: SearchModeSchema.optional().default('balanced'),
+    sources: z.array(LiteratureSourceSchema).max(5).optional(),
+    maxResults: z.number().int().min(1).max(300).optional(),
+    year: z.string().optional(),
+    author: z.string().optional(),
+    journal: z.string().optional()
+  })
+  .strip();
+
+export const DownloadAndParseMineruSchema = z
+  .object({
+    dois: z.array(z.string().trim().min(1)).max(50).optional(),
+    doi: z.string().trim().optional(),
+    urls: z.array(z.string().trim().min(1)).max(50).optional(),
+    url: z.string().trim().optional(),
+    searchId: z.string().optional(),
+    recordIds: z.array(z.string()).max(50).optional()
+  })
+  .strip()
+  .refine(
+    val => Boolean(val.dois?.length || val.doi || val.urls?.length || val.url || val.searchId || val.recordIds?.length),
+    'Provide at least one DOI, URL, searchId, or recordId'
+  );
+
+export const TraceCitationTopologySchema = z
+  .object({
+    seed: z.string().trim().min(1),
+    searchId: z.string().optional(),
+    limit: z.number().int().min(1).max(50).optional().default(10)
+  })
+  .strip();
+
+export const BuildAcademicLibrarySchema = z
+  .object({
+    searchId: z.string().optional(),
+    briefId: z.string().optional(),
+    recordIds: z.array(z.string()).max(200).optional(),
+    verdict: z.enum(['include', 'exclude', 'maybe', 'all']).optional().default('include'),
+    outputPath: z.string().optional()
+  })
+  .strip()
+  .refine(
+    val => Boolean(val.searchId || val.briefId || val.recordIds?.length),
+    'Provide searchId, briefId, or recordIds'
+  );
+
 export function isDoiOnlyInput(value: string): boolean {
   const trimmed = value.trim();
   if (/^https?:\/\//i.test(trimmed)) {
@@ -510,7 +593,12 @@ export type ToolName =
   | 'resolve_fulltext_access'
   | 'generate_reading_cards'
   | 'get_source_status'
-  | 'get_citations';
+  | 'get_citations'
+  | 'search_academic'
+  | 'search_intent_literature'
+  | 'download_and_parse_mineru'
+  | 'trace_citation_topology'
+  | 'build_academic_library';
 
 export function parseToolArgs(toolName: ToolName, args: unknown): any {
   switch (toolName) {
@@ -586,6 +674,16 @@ export function parseToolArgs(toolName: ToolName, args: unknown): any {
       return GenerateReadingCardsSchema.parse(args);
     case 'get_source_status':
       return GetSourceStatusSchema.parse(args ?? {});
+    case 'search_academic':
+      return SearchAcademicSchema.parse(args);
+    case 'search_intent_literature':
+      return SearchIntentLiteratureSchema.parse(args);
+    case 'download_and_parse_mineru':
+      return DownloadAndParseMineruSchema.parse(args);
+    case 'trace_citation_topology':
+      return TraceCitationTopologySchema.parse(args);
+    case 'build_academic_library':
+      return BuildAcademicLibrarySchema.parse(args);
     default:
       return args;
   }

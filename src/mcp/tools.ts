@@ -896,5 +896,129 @@ export const TOOLS: Tool[] = [
       },
       required: ['doi']
     }
+  },
+  {
+    name: 'search_academic',
+    description:
+      'Unified academic literature search with multi-level retrieval scopes (metadata, abstract, fulltext). Returns standardized academic cards and records across multi-source databases or specific platforms.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Search keywords or boolean expression' },
+        search_scope: {
+          type: 'string',
+          enum: ['metadata', 'abstract', 'fulltext'],
+          default: 'abstract',
+          description: 'Retrieval scope: "metadata" (title, authors, keywords), "abstract" (topic & abstract), or "fulltext" (deep body text)'
+        },
+        platform: {
+          type: 'string',
+          enum: [
+            'all',
+            'wos',
+            'webofscience',
+            'scopus',
+            'ieee',
+            'pubmed',
+            'arxiv',
+            'crossref',
+            'openalex',
+            'sciencedirect',
+            'springer',
+            'biorxiv',
+            'medrxiv',
+            'semantic'
+          ],
+          default: 'all',
+          description: 'Target academic platform or "all" for multi-source deduplication'
+        },
+        maxResults: { type: 'number', minimum: 1, maximum: 100, default: 10 },
+        year: { type: 'string', description: 'Year filter (e.g., "2024", "2020-2024")' },
+        author: { type: 'string', description: 'Author filter' },
+        journal: { type: 'string', description: 'Journal/conference venue filter' },
+        sortBy: { type: 'string', enum: ['relevance', 'date', 'citations'], default: 'relevance' },
+        sortOrder: { type: 'string', enum: ['asc', 'desc'], default: 'desc' }
+      },
+      required: ['query']
+    }
+  },
+  {
+    name: 'search_intent_literature',
+    description:
+      'Intent-driven deep literature search grounded in a verified research brief. Supports metadata, abstract, and fulltext scopes and returns formatted cards for screening.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Search query refined by intent' },
+        briefId: { type: 'string', description: 'Active briefId returned by create_research_brief' },
+        search_scope: {
+          type: 'string',
+          enum: ['metadata', 'abstract', 'fulltext'],
+          default: 'abstract',
+          description: 'Retrieval scope: metadata, abstract, or fulltext'
+        },
+        mode: { type: 'string', enum: ['quick', 'balanced', 'deep'], default: 'balanced' },
+        sources: {
+          type: 'array',
+          items: { type: 'string', enum: ['webofscience', 'scopus', 'openalex', 'crossref', 'ieee'] },
+          description: 'Explicit list of sources'
+        },
+        maxResults: { type: 'number', description: 'Maximum total records to return' },
+        year: { type: 'string' },
+        author: { type: 'string' },
+        journal: { type: 'string' }
+      },
+      required: ['query', 'briefId']
+    }
+  },
+  {
+    name: 'download_and_parse_mineru',
+    description:
+      'Download academic papers and parse them into Markdown with images using MinerU. Strict file organization under ./twosci/{first_author}-{year}-{title}-{doi}/ with PDF, Markdown, and img/ assets.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        dois: { type: 'array', items: { type: 'string' }, description: 'Array of DOIs to download and parse' },
+        doi: { type: 'string', description: 'Single DOI' },
+        urls: { type: 'array', items: { type: 'string' }, description: 'Direct PDF or landing URLs' },
+        url: { type: 'string', description: 'Single PDF URL' },
+        searchId: { type: 'string', description: 'Search session ID' },
+        recordIds: { type: 'array', items: { type: 'string' }, description: 'Record IDs from current session' }
+      }
+    }
+  },
+  {
+    name: 'trace_citation_topology',
+    description:
+      'Trace citation topology (foundational references and evolutionary citing works) for a paper. Generates a Mermaid topology diagram and evolutionary narrative.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        seed: { type: 'string', description: 'Seed DOI, title, or recordId to trace' },
+        searchId: { type: 'string', description: 'Optional searchId to resolve seed from session' },
+        limit: { type: 'number', minimum: 1, maximum: 50, default: 10 }
+      },
+      required: ['seed']
+    }
+  },
+  {
+    name: 'build_academic_library',
+    description:
+      'Compile searched, screened, and parsed literature into a structured Markdown academic database (./twosci/ACADEMIC_LIBRARY.md), BibTeX references, and screening audit JSON.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        searchId: { type: 'string', description: 'Search session ID' },
+        briefId: { type: 'string', description: 'Brief session ID' },
+        recordIds: { type: 'array', items: { type: 'string' } },
+        verdict: {
+          type: 'string',
+          enum: ['include', 'exclude', 'maybe', 'all'],
+          default: 'include',
+          description: 'Filter by screening verdict'
+        },
+        outputPath: { type: 'string', description: 'Custom path for ACADEMIC_LIBRARY.md' }
+      }
+    }
   }
 ];

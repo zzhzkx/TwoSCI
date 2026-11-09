@@ -1,4 +1,5 @@
 export type LiteratureSource = 'webofscience' | 'scopus' | 'openalex' | 'crossref' | 'ieee';
+export type SearchScope = 'metadata' | 'abstract' | 'fulltext';
 export type SearchMode = 'quick' | 'balanced' | 'deep';
 export type ResultLayer = 'metadata' | 'abstract' | 'evidence';
 export type ScreeningVerdict = 'include' | 'exclude' | 'maybe';
@@ -117,6 +118,7 @@ export interface SearchSession {
 export interface SearchInput {
   query: string;
   briefId?: string;
+  searchScope?: SearchScope;
   mode?: SearchMode;
   layer?: ResultLayer;
   sources?: LiteratureSource[];

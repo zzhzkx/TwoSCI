@@ -19,6 +19,11 @@
   "homepage": "https://github.com/zzhzkx/TwoSCI",
   "repository": "https://github.com/zzhzkx/TwoSCI",
   "skills": [
+    "./skills/academic-search",
+    "./skills/intent-deep-research",
+    "./skills/fulltext-acquisition",
+    "./skills/citation-network",
+    "./skills/academic-library",
     "./skills/literature-search"
   ],
   "mcpServers": "./.mcp.json"

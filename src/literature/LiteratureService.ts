@@ -5,6 +5,10 @@ import { sanitizeSensitiveText, withTimeout } from '../utils/SecurityUtils.js';
 import { exportRecords } from './export.js';
 import { FullTextRouter, type FullTextResolutionResult, type FullTextRoute } from './FullTextRouter.js';
 import { ReadingCardService, type ReadingPacketResult } from './ReadingCardService.js';
+import { CardFormatter } from './CardFormatter.js';
+import { MineruService, type MineruBatchResult } from './MineruService.js';
+import { CitationTopologyService, type CitationTopologyResult } from './CitationTopologyService.js';
+import { AcademicLibraryService, type AcademicLibraryResult } from './AcademicLibraryService.js';
 import {
   applyReciprocalRankFusion,
   dedupeRecords,
@@ -29,6 +33,7 @@ import type {
   LiteratureSource,
   ResearchBrief,
   SearchInput,
+  SearchScope,
   SearchMode,
   SearchSession,
   SourceRun
@@ -130,10 +135,13 @@ export class LiteratureService {
     search: SearchSession;
     brief?: ResearchBrief;
     records: Record<string, unknown>[];
+    cards: string;
+    searchScope: SearchScope;
   }> {
     const mode = input.mode || 'balanced';
     const config = MODE_CONFIG[mode];
     const layer = input.layer || 'abstract';
+    const searchScope: SearchScope = input.searchScope || 'abstract';
     const brief = input.briefId ? this.store.getBrief(input.briefId) : undefined;
     if (input.briefId && !brief) {
       throw new Error(`Unknown or expired brief_id: ${input.briefId}`);
@@ -177,10 +185,14 @@ export class LiteratureService {
       warnings
     });
 
+    const cards = CardFormatter.formatRecords(deduped, searchScope);
+
     return {
       search,
       brief,
-      records: deduped.map(record => toPublicRecord(record, layer, input.abstractChars || 3000))
+      records: deduped.map(record => toPublicRecord(record, layer, input.abstractChars || 3000)),
+      cards,
+      searchScope
     };
   }
 
@@ -332,6 +344,93 @@ export class LiteratureService {
       }
     }
     return ReadingCardService.generatePacket(records, routesMap, screeningMap, brief);
+  }
+
+  async downloadAndParseMineru(input: {
+    dois?: string[];
+    doi?: string;
+    urls?: string[];
+    url?: string;
+    searchId?: string;
+    recordIds?: string[];
+  }): Promise<MineruBatchResult> {
+    const targets: Array<{ doi?: string; url?: string; record?: LiteratureRecord }> = [];
+
+    if (input.doi) {
+      targets.push({ doi: input.doi });
+    }
+    if (input.dois && input.dois.length > 0) {
+      for (const d of input.dois) {
+        targets.push({ doi: d });
+      }
+    }
+    if (input.url) {
+      targets.push({ url: input.url });
+    }
+    if (input.urls && input.urls.length > 0) {
+      for (const u of input.urls) {
+        targets.push({ url: u });
+      }
+    }
+
+    if (input.searchId || (input.recordIds && input.recordIds.length > 0)) {
+      const sessionRecords = await this.resolveStoredRecords({
+        searchId: input.searchId,
+        recordIds: input.recordIds
+      });
+      for (const rec of sessionRecords) {
+        targets.push({ doi: rec.doi, url: rec.pdfUrl || rec.url, record: rec });
+      }
+    }
+
+    return MineruService.processBatch(targets);
+  }
+
+  async traceCitationTopology(input: {
+    seed: string;
+    searchId?: string;
+    limit?: number;
+  }): Promise<CitationTopologyResult> {
+    const seeds = await this.resolveSeeds([input.seed], input.searchId);
+    if (seeds.length === 0) {
+      throw new Error(`无法解析目标文献种子: ${input.seed}`);
+    }
+    const seed = seeds[0];
+    const limit = input.limit || 10;
+
+    let refRecords: LiteratureRecord[] = [];
+    let citeRecords: LiteratureRecord[] = [];
+
+    try {
+      const refRes = await this.getRelatedRecords(seed, 'references', limit, 'full');
+      refRecords = refRes.records;
+    } catch {
+      // ignore
+    }
+
+    try {
+      const citeRes = await this.getRelatedRecords(seed, 'citing', limit, 'full');
+      citeRecords = citeRes.records;
+    } catch {
+      // ignore
+    }
+
+    return CitationTopologyService.buildTopology(seed, refRecords, citeRecords);
+  }
+
+  buildAcademicLibrary(input: {
+    searchId?: string;
+    briefId?: string;
+    recordIds?: string[];
+    verdict?: 'include' | 'exclude' | 'maybe' | 'all';
+    outputPath?: string;
+  }): AcademicLibraryResult {
+    const { records, search, brief } = this.selectRecordsForOperation(input);
+    return AcademicLibraryService.buildLibrary(records, {
+      brief,
+      screening: search?.screening,
+      outputPath: input.outputPath
+    });
   }
 
   private selectRecordsForOperation(input: {
