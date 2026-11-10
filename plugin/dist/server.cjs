@@ -33221,7 +33221,7 @@ var init_constants = __esm({
       OPENALEX: "https://api.openalex.org",
       IEEE_XPLORE: "https://ieeexploreapi.ieee.org/api/v1"
     };
-    USER_AGENT = "TwoSCI/0.2.1 (Academic Research Tool)";
+    USER_AGENT = "TwoSCI/0.2.2 (Academic Research Tool)";
     DEFAULT_MAILTO = process.env.CROSSREF_MAILTO || "twosci@example.com";
   }
 });
@@ -292714,7 +292714,7 @@ var require_snapshot_recorder = __commonJS({
   "node_modules/undici/lib/mock/snapshot-recorder.js"(exports2, module2) {
     "use strict";
     var { writeFile, readFile, mkdir } = require("node:fs/promises");
-    var { dirname: dirname5, resolve: resolve6 } = require("node:path");
+    var { dirname: dirname6, resolve: resolve6 } = require("node:path");
     var { setTimeout: setTimeout2, clearTimeout: clearTimeout2 } = require("node:timers");
     var { InvalidArgumentError, UndiciError } = require_errors2();
     var { hashId, isUrlExcludedFactory, normalizeHeaders, createHeaderFilters } = require_snapshot_utils();
@@ -292945,7 +292945,7 @@ var require_snapshot_recorder = __commonJS({
           throw new InvalidArgumentError("Snapshot path is required");
         }
         const resolvedPath = resolve6(path12);
-        await mkdir(dirname5(resolvedPath), { recursive: true });
+        await mkdir(dirname6(resolvedPath), { recursive: true });
         const data2 = Array.from(this.#snapshots.entries()).map(([hash2, snapshot]) => ({
           hash: hash2,
           snapshot
@@ -364095,6 +364095,46 @@ function escapeBibtex(value) {
 }
 
 // src/literature/FullTextRouter.ts
+var MDPI_SLUGS = {
+  su: "sustainability",
+  atmos: "atmosphere",
+  w: "water",
+  f: "forests",
+  min: "minerals",
+  en: "energies",
+  polym: "polymers",
+  applbiosci: "appliedbiosciences",
+  app: "applsci",
+  educsci: "education",
+  tourhosp: "tourismhosp",
+  d: "diversity",
+  a: "algorithms",
+  dj: "dentistry",
+  ma: "materials",
+  catal: "catalysts"
+};
+function getMdpiCdnVariants(doi) {
+  const clean = normalizeDoi3(doi);
+  const m = clean.match(/^10\.3390\/([a-z]+)(\d{6,})$/i);
+  if (!m) return [];
+  const pref = m[1].toLowerCase();
+  const digits = m[2];
+  const slug = MDPI_SLUGS[pref] || pref;
+  const out = [];
+  const seen = /* @__PURE__ */ new Set();
+  for (const volTake of [2, 1]) {
+    if (digits.length <= volTake + 2) continue;
+    const vol = String(parseInt(digits.slice(0, volTake), 10)).padStart(2, "0");
+    const art = String(parseInt(digits.slice(volTake + 2), 10)).padStart(5, "0");
+    const base = `${slug}-${vol}-${art}`;
+    if (seen.has(base)) continue;
+    seen.add(base);
+    for (const suffix of ["", "-v2", "-v3", "-v4"]) {
+      out.push(`https://mdpi-res.com/d_attachment/${slug}/${base}/article_deploy/${base}${suffix}.pdf`);
+    }
+  }
+  return out;
+}
 var DOI_CHANNEL_MAP = {
   "10.1016": { channel: "elsevier_api", publisher: "Elsevier / ScienceDirect" },
   "10.3390": { channel: "mdpi_cdn", publisher: "MDPI" },
@@ -364146,6 +364186,7 @@ var FullTextRouter = class {
     const arxivId = record2.identifiers?.arxiv || extractArxivId(record2.url) || extractArxivId(record2.pdfUrl);
     if (arxivId) {
       const pdfUrl = `https://arxiv.org/pdf/${arxivId}.pdf`;
+      const exportPdfUrl = `https://export.arxiv.org/pdf/${arxivId}.pdf`;
       return {
         recordId: record2.recordId,
         title: record2.title,
@@ -364155,6 +364196,7 @@ var FullTextRouter = class {
         accessStatus: "direct_pdf_ready",
         isDirectDownloadable: true,
         bestPdfUrl: pdfUrl,
+        candidatePdfUrls: [pdfUrl, exportPdfUrl],
         landingUrl: `https://arxiv.org/abs/${arxivId}`,
         channelDetails: {
           doiPrefix,
@@ -364165,7 +364207,8 @@ var FullTextRouter = class {
       };
     }
     if (doiPrefix === "10.3390" && cleanDoi) {
-      const mdpiPdfUrl = `https://www.mdpi.com/${cleanDoi}/pdf`;
+      const mdpiVariants = getMdpiCdnVariants(cleanDoi);
+      const bestUrl = mdpiVariants[0] || (record2.pdfUrl && !record2.pdfUrl.includes("www.mdpi.com") ? record2.pdfUrl : `https://doi.org/${cleanDoi}`);
       return {
         recordId: record2.recordId,
         title: record2.title,
@@ -364174,12 +364217,13 @@ var FullTextRouter = class {
         publisher: "MDPI",
         accessStatus: "direct_pdf_ready",
         isDirectDownloadable: true,
-        bestPdfUrl: record2.pdfUrl || mdpiPdfUrl,
+        bestPdfUrl: bestUrl,
+        candidatePdfUrls: mdpiVariants,
         landingUrl: record2.url || `https://doi.org/${cleanDoi}`,
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: true,
-          recommendedMethod: "MDPI CDN \u5F00\u653E\u83B7\u53D6\u76F4\u8FBE",
+          recommendedMethod: "MDPI \u5F00\u653E CDN \u76F4\u8FDE (mdpi-res.com)",
           scansciCommand: `scansci-pdf get ${cleanDoi}`
         }
       };
@@ -364195,6 +364239,7 @@ var FullTextRouter = class {
         accessStatus: "direct_pdf_ready",
         isDirectDownloadable: true,
         bestPdfUrl: record2.pdfUrl || plosPdfUrl,
+        candidatePdfUrls: [plosPdfUrl, ...record2.pdfUrl ? [record2.pdfUrl] : []],
         landingUrl: record2.url || `https://doi.org/${cleanDoi}`,
         channelDetails: {
           doiPrefix,
@@ -364214,6 +364259,7 @@ var FullTextRouter = class {
         accessStatus: "direct_pdf_ready",
         isDirectDownloadable: true,
         bestPdfUrl: record2.pdfUrl,
+        candidatePdfUrls: [record2.pdfUrl],
         landingUrl: record2.url || (cleanDoi ? `https://doi.org/${cleanDoi}` : void 0),
         channelDetails: {
           doiPrefix,
@@ -364235,6 +364281,7 @@ var FullTextRouter = class {
         accessStatus: hasKey ? "publisher_api_ready" : "institutional_required",
         isDirectDownloadable: hasKey,
         bestPdfUrl: hasKey ? apiUrl : void 0,
+        candidatePdfUrls: hasKey ? [apiUrl] : record2.pdfUrl ? [record2.pdfUrl] : [],
         landingUrl: record2.url || `https://doi.org/${cleanDoi}`,
         channelDetails: {
           doiPrefix,
@@ -364258,6 +364305,7 @@ var FullTextRouter = class {
         accessStatus: isOa ? "direct_pdf_ready" : "institutional_required",
         isDirectDownloadable: isOa && Boolean(ieeePdfUrl),
         bestPdfUrl: isOa ? record2.pdfUrl || ieeePdfUrl : void 0,
+        candidatePdfUrls: isOa && ieeePdfUrl ? [ieeePdfUrl] : record2.pdfUrl ? [record2.pdfUrl] : [],
         landingUrl: record2.url || (articleNumber ? `https://ieeexplore.ieee.org/document/${articleNumber}` : cleanDoi ? `https://doi.org/${cleanDoi}` : void 0),
         channelDetails: {
           doiPrefix,
@@ -364279,6 +364327,7 @@ var FullTextRouter = class {
         accessStatus: isOa ? "direct_pdf_ready" : hasKey ? "publisher_api_ready" : "institutional_required",
         isDirectDownloadable: isOa && Boolean(record2.pdfUrl),
         bestPdfUrl: isOa ? record2.pdfUrl : void 0,
+        candidatePdfUrls: isOa && record2.pdfUrl ? [record2.pdfUrl] : [],
         landingUrl: record2.url || `https://doi.org/${cleanDoi}`,
         channelDetails: {
           doiPrefix,
@@ -364298,6 +364347,7 @@ var FullTextRouter = class {
       accessStatus: record2.openAccess && record2.pdfUrl ? "direct_pdf_ready" : "institutional_required",
       isDirectDownloadable: Boolean(record2.openAccess && record2.pdfUrl),
       bestPdfUrl: record2.openAccess ? record2.pdfUrl : void 0,
+      candidatePdfUrls: record2.openAccess && record2.pdfUrl ? [record2.pdfUrl] : [],
       landingUrl: record2.url || (cleanDoi ? `https://doi.org/${cleanDoi}` : void 0),
       channelDetails: {
         doiPrefix,
@@ -364602,6 +364652,22 @@ var fs9 = __toESM(require("node:fs"), 1);
 var path9 = __toESM(require("node:path"), 1);
 init_axios2();
 var import_adm_zip = __toESM(require_adm_zip(), 1);
+function extractFirstAuthorSurname(authors) {
+  if (!authors || authors.length === 0) return "UnknownAuthor";
+  const raw = (authors[0] || "").trim();
+  if (!raw) return "UnknownAuthor";
+  if (raw.includes(",")) {
+    const surname = raw.split(",")[0].trim();
+    return surname || "UnknownAuthor";
+  }
+  const parts = raw.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) return parts[0];
+  const last2 = parts[parts.length - 1].replace(/[.,]/g, "");
+  if (/^(jr|sr|ii|iii|iv|v|phd|md)$/i.test(last2) && parts.length > 2) {
+    return parts[parts.length - 2];
+  }
+  return parts[parts.length - 1];
+}
 var MineruService = class {
   /**
    * Clean and sanitize string for filesystem directory or file name.
@@ -364615,21 +364681,73 @@ var MineruService = class {
    * Build standard directory name: {first_author}-{year}-{sanitized_title}-{sanitized_doi}
    */
   static buildDirectoryName(record2) {
-    const firstAuthor = this.sanitizeName(record2.authors?.[0]?.split(/[\s,]+/)[0] || "UnknownAuthor", 30);
+    const surname = extractFirstAuthorSurname(record2.authors);
+    const firstAuthor = this.sanitizeName(surname, 30);
     const year = record2.year ? String(record2.year).trim() : "ND";
     const cleanTitle = this.sanitizeName(record2.title, 50);
     const cleanDoi = this.sanitizeName(record2.doi || "no-doi", 40);
     return `${firstAuthor}-${year}-${cleanTitle}-${cleanDoi}`;
   }
+  static async resolveMetadataForDoi(doi) {
+    const cleanDoi = doi.trim().replace(/^doi:\s*/i, "").replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "").replace(/[.,;)\s]+$/, "");
+    if (!cleanDoi) return void 0;
+    try {
+      const resp = await axios_default.get(`https://api.crossref.org/works/${encodeURIComponent(cleanDoi)}`, {
+        timeout: 1e4,
+        headers: { "User-Agent": "TwoSCI/0.2.2 (mailto:research@twosci.org)" }
+      });
+      const item = resp.data?.message;
+      if (item) {
+        const title = Array.isArray(item.title) ? item.title[0] : item.title || "";
+        const authors = [];
+        if (Array.isArray(item.author)) {
+          for (const a of item.author) {
+            if (a.family && a.given) {
+              authors.push(`${a.given} ${a.family}`);
+            } else if (a.family) {
+              authors.push(a.family);
+            } else if (a.name) {
+              authors.push(a.name);
+            }
+          }
+        }
+        const year = item["published-print"]?.["date-parts"]?.[0]?.[0] || item["published-online"]?.["date-parts"]?.[0]?.[0] || item.created?.["date-parts"]?.[0]?.[0];
+        const link = item.link?.find((l) => l["content-type"] === "application/pdf")?.URL;
+        return {
+          recordId: cleanDoi,
+          title: title || `Paper_${cleanDoi}`,
+          authors: authors.length > 0 ? authors : ["Author"],
+          year,
+          doi: cleanDoi,
+          url: `https://doi.org/${cleanDoi}`,
+          pdfUrl: link || "",
+          abstract: item.abstract ? String(item.abstract).replace(/<[^>]+>/g, " ").trim() : "",
+          keywords: [],
+          categories: [],
+          openAccess: Boolean(link),
+          identifiers: { doi: cleanDoi },
+          sources: [],
+          citedBy: {},
+          references: []
+        };
+      }
+    } catch {
+    }
+    return void 0;
+  }
   /**
    * Process single paper: download PDF and convert with MinerU into standard ./twosci directory.
    */
   static async processSinglePaper(input2, workDir = process.cwd()) {
-    const doi = input2.doi || input2.record?.doi || "";
-    const title = input2.record?.title || (doi ? `Paper_${this.sanitizeName(doi)}` : "Academic_Paper");
-    const authors = input2.record?.authors || ["Author"];
-    const firstAuthor = authors[0]?.split(/[\s,]+/)[0] || "Author";
-    const year = input2.record?.year || (/* @__PURE__ */ new Date()).getFullYear();
+    let record2 = input2.record;
+    const doi = input2.doi || record2?.doi || "";
+    if (!record2 && doi) {
+      record2 = await this.resolveMetadataForDoi(doi);
+    }
+    const title = record2?.title || (doi ? `Paper_${this.sanitizeName(doi)}` : "Academic_Paper");
+    const authors = record2?.authors || ["Author"];
+    const firstAuthor = extractFirstAuthorSurname(authors);
+    const year = record2?.year || (/* @__PURE__ */ new Date()).getFullYear();
     const folderName = this.buildDirectoryName({ authors, year, title, doi });
     const targetDir = path9.resolve(workDir, "twosci", folderName);
     const imgDir = path9.join(targetDir, "img");
@@ -364637,8 +364755,8 @@ var MineruService = class {
     const pdfPath = path9.join(targetDir, `${cleanTitle}.pdf`);
     const mdPath = path9.join(targetDir, `${cleanTitle}.md`);
     let route;
-    if (input2.record) {
-      route = FullTextRouter.resolveRoute(input2.record);
+    if (record2) {
+      route = FullTextRouter.resolveRoute(record2);
     } else if (doi) {
       route = FullTextRouter.resolveRoute({
         recordId: "temp",
@@ -364658,11 +364776,17 @@ var MineruService = class {
       });
     }
     const downloadUrl = input2.url || route?.bestPdfUrl || (doi ? `https://doi.org/${encodeURI(doi)}` : "");
+    const candidateUrls = route?.candidatePdfUrls || [];
     const channel = route?.channel || "oa_direct";
     try {
       if (!fs9.existsSync(pdfPath)) {
         fs9.mkdirSync(imgDir, { recursive: true });
-        await this.acquirePdf(downloadUrl, pdfPath);
+        await this.acquirePdf(downloadUrl, pdfPath, {
+          candidateUrls,
+          doi,
+          targetDir,
+          elsevierApiKey: process.env.ELSEVIER_API_KEY
+        });
       } else {
         fs9.mkdirSync(imgDir, { recursive: true });
         this.validatePdfFile(pdfPath);
@@ -364672,7 +364796,7 @@ var MineruService = class {
         authors,
         year,
         doi,
-        abstract: input2.record?.abstract
+        abstract: record2?.abstract
       });
       return {
         doi,
@@ -364729,31 +364853,91 @@ var MineruService = class {
       artifacts
     };
   }
-  static async acquirePdf(url3, destPath) {
-    if (!url3 || url3.startsWith("#")) {
-      throw new Error("\u672A\u63D0\u4F9B\u6709\u6548\u7684 PDF \u4E0B\u8F7D\u94FE\u63A5");
+  static async acquirePdf(url3, destPath, options) {
+    const candidates = [];
+    const seen = /* @__PURE__ */ new Set();
+    const addUrl = (u) => {
+      if (!u || u.startsWith("#") || seen.has(u)) return;
+      seen.add(u);
+      candidates.push(u);
+    };
+    if (options?.doi && /^10\.3390\//i.test(options.doi)) {
+      for (const cdnUrl of getMdpiCdnVariants(options.doi)) {
+        addUrl(cdnUrl);
+      }
     }
-    try {
-      const response = await axios_default.get(url3, {
-        responseType: "arraybuffer",
-        timeout: 25e3,
-        headers: {
+    if (options?.candidateUrls) {
+      for (const u of options.candidateUrls) addUrl(u);
+    }
+    if (url3 && !url3.includes("www.mdpi.com/")) {
+      addUrl(url3);
+    }
+    if (options?.doi && /^10\.1016\//i.test(options.doi) && options?.elsevierApiKey) {
+      addUrl(`https://api.elsevier.com/content/article/doi/${encodeURIComponent(options.doi)}?httpAccept=application/pdf`);
+    }
+    let lastError;
+    for (const candidateUrl of candidates) {
+      try {
+        const headers = {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
           Accept: "application/pdf,application/octet-stream;q=0.9,*/*;q=0.8"
+        };
+        if (candidateUrl.includes("api.elsevier.com") && options?.elsevierApiKey) {
+          headers["X-ELS-APIKey"] = options.elsevierApiKey;
         }
-      });
-      const buffer = Buffer.from(response.data);
-      this.validatePdfBuffer(buffer, url3);
-      fs9.writeFileSync(destPath, buffer);
-    } catch (err) {
-      if (err?.response?.status === 403) {
-        throw new Error(`\u4E0B\u8F7D\u5931\u8D25 (403 Forbidden): \u51FA\u7248\u5546\u542F\u7528\u4E86\u53CD\u722C\u4FDD\u62A4 (\u5982 Akamai/Cloudflare)\u3002\u672A\u751F\u6210\u4F2A\u9020\u6587\u4EF6\u3002\u5EFA\u8BAE\u901A\u8FC7\u6D4F\u89C8\u5668\u6216\u6821\u56ED\u7F51/VPN\u76F4\u63A5\u8BBF\u95EE: ${url3}`);
+        const response = await axios_default.get(candidateUrl, {
+          responseType: "arraybuffer",
+          timeout: 25e3,
+          headers
+        });
+        const buffer = Buffer.from(response.data);
+        this.validatePdfBuffer(buffer, candidateUrl);
+        fs9.writeFileSync(destPath, buffer);
+        return;
+      } catch (err) {
+        lastError = err;
       }
-      if (err?.response?.status === 404) {
-        throw new Error(`\u4E0B\u8F7D\u5931\u8D25 (404 Not Found): PDF \u94FE\u63A5\u4E0D\u53EF\u7528 (${url3})`);
-      }
-      throw new Error(`PDF \u4E0B\u8F7D\u5931\u8D25: ${err?.message || String(err)} (${url3})`);
     }
+    if (options?.doi && process.env.NODE_ENV !== "test") {
+      const scansciOk = await this.tryScansciDownload(options.doi, destPath, options.targetDir);
+      if (scansciOk) return;
+    }
+    if (candidates.length === 0 && !url3) {
+      throw new Error("\u672A\u63D0\u4F9B\u6709\u6548\u7684 PDF \u4E0B\u8F7D\u94FE\u63A5");
+    }
+    if (lastError?.message && lastError.message.includes("\u975E PDF \u6570\u636E")) {
+      throw lastError;
+    }
+    throw new Error(`PDF \u4E0B\u8F7D\u5931\u8D25: \u672A\u80FD\u5728\u5F00\u653E\u83B7\u53D6\u6E20\u9053\u83B7\u53D6\u5230\u6709\u6548 PDF \u539F\u6587\u3002\u5DF2\u5C1D\u8BD5\u5F00\u653E CDN\u3001\u4ED3\u50A8\u76F4\u94FE\u4E0E scansci \u7EA7\u8054 (${options?.doi || url3})`);
+  }
+  static async tryScansciDownload(doi, destPath, targetDir) {
+    try {
+      const { exec } = await import("node:child_process");
+      const { promisify } = await import("node:util");
+      const execAsync = promisify(exec);
+      const outDir = targetDir || path9.dirname(destPath);
+      await execAsync(`python -m scansci_pdf get "${doi}" --output "${outDir}"`, {
+        timeout: 45e3
+      });
+      const files = fs9.readdirSync(outDir);
+      const pdfFiles = files.filter((f) => f.toLowerCase().endsWith(".pdf") && f !== path9.basename(destPath));
+      if (pdfFiles.length > 0) {
+        const downloadedPdf = path9.join(outDir, pdfFiles[0]);
+        const buf = fs9.readFileSync(downloadedPdf);
+        if (buf.length > 500 && buf.slice(0, 5).toString("ascii") === "%PDF-") {
+          fs9.renameSync(downloadedPdf, destPath);
+          return true;
+        }
+      }
+      if (fs9.existsSync(destPath)) {
+        const buf = fs9.readFileSync(destPath);
+        if (buf.length > 500 && buf.slice(0, 5).toString("ascii") === "%PDF-") {
+          return true;
+        }
+      }
+    } catch {
+    }
+    return false;
   }
   static validatePdfBuffer(buffer, url3) {
     if (!buffer || buffer.length < 500) {
@@ -364790,6 +364974,13 @@ var MineruService = class {
         }
       } catch {
       }
+    }
+    try {
+      const cliRes = await this.tryMineruCliParse(pdfPath, mdPath, imgDir);
+      if (cliRes.success) {
+        return { imageCount: cliRes.imageCount, method: "mineru_cloud" };
+      }
+    } catch {
     }
     const pdfBuffer = fs9.readFileSync(pdfPath);
     const extractor = new PDFExtractor();
@@ -364838,17 +365029,17 @@ ${meta3.abstract}
     }
     const pdfBuffer = fs9.readFileSync(pdfPath);
     await axios_default.put(uploadUrl, pdfBuffer, {
-      headers: { "Content-Type": "application/pdf" },
-      timeout: 3e4
+      headers: { "Content-Type": "" },
+      timeout: 6e4
     });
     let zipUrl;
-    for (let i = 0; i < 15; i++) {
-      await new Promise((r) => setTimeout(r, 2e3));
+    for (let i = 0; i < 30; i++) {
+      await new Promise((r) => setTimeout(r, 2500));
       const pollRes = await axios_default.get(
         `https://mineru.net/api/v4/extract-results/batch/${batchId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
-          timeout: 1e4
+          timeout: 15e3
         }
       );
       const result = pollRes.data?.data?.extract_result?.[0];
@@ -364865,7 +365056,7 @@ ${meta3.abstract}
     }
     const zipRes = await axios_default.get(zipUrl, {
       responseType: "arraybuffer",
-      timeout: 3e4
+      timeout: 6e4
     });
     const zip = new import_adm_zip.default(Buffer.from(zipRes.data));
     const entries = zip.getEntries();
@@ -364882,6 +365073,23 @@ ${meta3.abstract}
       }
     }
     return { success: true, imageCount };
+  }
+  static async tryMineruCliParse(pdfPath, mdPath, imgDir) {
+    const { exec } = await import("node:child_process");
+    const { promisify } = await import("node:util");
+    const execAsync = promisify(exec);
+    await execAsync(`mineru parse "${pdfPath}" -o "${mdPath}" --no-marker`, {
+      timeout: 6e4
+    });
+    if (fs9.existsSync(mdPath) && fs9.statSync(mdPath).size > 100) {
+      let count = 0;
+      if (fs9.existsSync(imgDir)) {
+        const images = fs9.readdirSync(imgDir).filter((f) => /\.(png|jpe?g|webp)$/i.test(f));
+        count = images.length;
+      }
+      return { success: true, imageCount: count };
+    }
+    return { success: false, imageCount: 0 };
   }
 };
 
@@ -365514,6 +365722,14 @@ var ResearchStore = class {
   maxSearches;
   briefs = /* @__PURE__ */ new Map();
   searches = /* @__PURE__ */ new Map();
+  records = /* @__PURE__ */ new Map();
+  saveRecords(records) {
+    this.prune();
+    const expiresAt = Date.now() + this.ttlMs;
+    for (const record2 of records) {
+      this.records.set(record2.recordId, { value: record2, expiresAt });
+    }
+  }
   createBrief(value) {
     this.prune();
     const brief = {
@@ -365547,6 +365763,8 @@ var ResearchStore = class {
   }
   findRecord(recordId) {
     this.prune();
+    const standalone = this.records.get(recordId);
+    if (standalone) return standalone.value;
     for (const entry of this.searches.values()) {
       const record2 = entry.value.records.find((item) => item.recordId === recordId);
       if (record2) return record2;
@@ -365559,6 +365777,9 @@ var ResearchStore = class {
   findRecordByDoi(doi) {
     this.prune();
     const clean = doi.trim().toLowerCase();
+    for (const entry of this.records.values()) {
+      if ((entry.value.doi || "").trim().toLowerCase() === clean) return entry.value;
+    }
     for (const entry of this.searches.values()) {
       const record2 = entry.value.records.find((item) => (item.doi || "").trim().toLowerCase() === clean);
       if (record2) return record2;
@@ -365611,6 +365832,9 @@ var ResearchStore = class {
     }
     for (const [key, entry] of this.searches) {
       if (entry.expiresAt <= now) this.searches.delete(key);
+    }
+    for (const [key, entry] of this.records) {
+      if (entry.expiresAt <= now) this.records.delete(key);
     }
   }
   enforceLimit(store, limit) {
@@ -365731,6 +365955,9 @@ var LiteratureService = class {
     }
     const candidates = applyReciprocalRankFusion(dedupeRecords(normalized));
     const deduped = candidates.slice(0, maxResults);
+    if (searchScope !== "metadata") {
+      await this.enrichMissingAbstracts(deduped);
+    }
     const search = this.store.createSearch({
       briefId: input2.briefId,
       query: input2.query,
@@ -365887,7 +366114,13 @@ var LiteratureService = class {
       const stored = this.store.findRecordByDoi(d);
       if (stored) return stored;
       const records = await this.resolveByDoi(d, []).catch(() => []);
-      return records[0];
+      if (records.length === 0) return void 0;
+      const deduped = dedupeRecords(records);
+      const merged = deduped[0];
+      if (merged) {
+        this.store.saveRecords([merged]);
+      }
+      return merged;
     };
     if (input2.doi) {
       const rec = await resolveRecord(input2.doi);
@@ -366231,6 +366464,32 @@ var LiteratureService = class {
       }
     });
     return records;
+  }
+  async enrichMissingAbstracts(records) {
+    const targets = records.filter((r) => !r.abstract && r.doi);
+    if (targets.length === 0) return;
+    const searchers2 = this.getSearchers();
+    await Promise.allSettled(targets.map(async (record2) => {
+      try {
+        let paper = null;
+        if (record2.identifiers.scopusEid && searchers2.scopus.hasApiKey()) {
+          paper = await searchers2.scopus.getAbstract(record2.identifiers.scopusEid).catch(() => null);
+        }
+        if (!paper?.abstract && record2.doi) {
+          paper = await searchers2.openalex.getPaperByDoi(record2.doi).catch(() => null);
+        }
+        if (!paper?.abstract && record2.doi) {
+          paper = await searchers2.crossref.getPaperByDoi(record2.doi).catch(() => null);
+        }
+        if (paper?.abstract) {
+          record2.abstract = paper.abstract;
+        }
+        if (paper?.keywords && paper.keywords.length > 0 && record2.keywords.length === 0) {
+          record2.keywords = paper.keywords;
+        }
+      } catch {
+      }
+    }));
   }
   async resolveByTitle(title, warnings) {
     const searchers2 = this.getSearchers();
@@ -368498,7 +368757,7 @@ function registerMcpHandlers(server2, searcherFactory = initializeSearchers) {
       },
       serverInfo: {
         name: "twosci",
-        version: "0.2.1"
+        version: "0.2.2"
       }
     };
   });
@@ -368576,7 +368835,7 @@ loadEnvironment();
 var server = new Server(
   {
     name: "twosci",
-    version: "0.2.1"
+    version: "0.2.2"
   },
   {
     capabilities: {

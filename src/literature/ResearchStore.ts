@@ -14,12 +14,21 @@ const DEFAULT_MAX_SEARCHES = 50;
 export class ResearchStore {
   private readonly briefs = new Map<string, { value: ResearchBrief; expiresAt: number }>();
   private readonly searches = new Map<string, { value: SearchSession; expiresAt: number }>();
+  private readonly records = new Map<string, { value: LiteratureRecord; expiresAt: number }>();
 
   constructor(
     private readonly ttlMs = DEFAULT_TTL_MS,
     private readonly maxBriefs = DEFAULT_MAX_BRIEFS,
     private readonly maxSearches = DEFAULT_MAX_SEARCHES
   ) {}
+
+  saveRecords(records: LiteratureRecord[]): void {
+    this.prune();
+    const expiresAt = Date.now() + this.ttlMs;
+    for (const record of records) {
+      this.records.set(record.recordId, { value: record, expiresAt });
+    }
+  }
 
   createBrief(value: Omit<ResearchBrief, 'briefId' | 'createdAt'>): ResearchBrief {
     this.prune();
@@ -58,6 +67,8 @@ export class ResearchStore {
 
   findRecord(recordId: string): LiteratureRecord | undefined {
     this.prune();
+    const standalone = this.records.get(recordId);
+    if (standalone) return standalone.value;
     for (const entry of this.searches.values()) {
       const record = entry.value.records.find(item => item.recordId === recordId);
       if (record) return record;
@@ -71,6 +82,9 @@ export class ResearchStore {
   findRecordByDoi(doi: string): LiteratureRecord | undefined {
     this.prune();
     const clean = doi.trim().toLowerCase();
+    for (const entry of this.records.values()) {
+      if ((entry.value.doi || '').trim().toLowerCase() === clean) return entry.value;
+    }
     for (const entry of this.searches.values()) {
       const record = entry.value.records.find(item => (item.doi || '').trim().toLowerCase() === clean);
       if (record) return record;
@@ -131,6 +145,9 @@ export class ResearchStore {
     }
     for (const [key, entry] of this.searches) {
       if (entry.expiresAt <= now) this.searches.delete(key);
+    }
+    for (const [key, entry] of this.records) {
+      if (entry.expiresAt <= now) this.records.delete(key);
     }
   }
 

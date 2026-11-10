@@ -2,9 +2,18 @@ import { describe, expect, it } from '@jest/globals';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
-import { MineruService } from '../../src/literature/MineruService.js';
+import { MineruService, extractFirstAuthorSurname } from '../../src/literature/MineruService.js';
 
 describe('MineruService', () => {
+  it('correctly extracts true academic surname from various author formats', () => {
+    expect(extractFirstAuthorSurname(['Qinfeng Zhao', 'Zhirui Wu'])).toBe('Zhao');
+    expect(extractFirstAuthorSurname(['Zhao, Qinfeng', 'Wu, Zhirui'])).toBe('Zhao');
+    expect(extractFirstAuthorSurname(['Liu, Xuelian', 'Wang, Chunyang'])).toBe('Liu');
+    expect(extractFirstAuthorSurname(['John Smith Jr.'])).toBe('Smith');
+    expect(extractFirstAuthorSurname(['Plato'])).toBe('Plato');
+    expect(extractFirstAuthorSurname([])).toBe('UnknownAuthor');
+  });
+
   it('builds standard directory name following {first_author}-{year}-{title}-{doi}', () => {
     const dir = MineruService.buildDirectoryName({
       authors: ['Liu, Xuelian', 'Wang, Chunyang'],
@@ -26,7 +35,7 @@ describe('MineruService', () => {
         tmpDir
       );
       expect(res.status).toBe('failed');
-      expect(res.message).toMatch(/(未提供有效的 PDF 下载链接|非 PDF 数据)/);
+      expect(res.message).toMatch(/(未提供有效的 PDF 下载链接|非 PDF 数据|PDF 下载失败)/);
       // 验证绝不创建伪造文件
       expect(fs.existsSync(res.pdfPath)).toBe(false);
       expect(fs.existsSync(res.markdownPath)).toBe(false);

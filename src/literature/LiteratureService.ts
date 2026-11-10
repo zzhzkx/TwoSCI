@@ -174,6 +174,11 @@ export class LiteratureService {
 
     const candidates = applyReciprocalRankFusion(dedupeRecords(normalized));
     const deduped = candidates.slice(0, maxResults);
+
+    if (searchScope !== 'metadata') {
+      await this.enrichMissingAbstracts(deduped);
+    }
+
     const search = this.store.createSearch({
       briefId: input.briefId,
       query: input.query,
@@ -360,7 +365,13 @@ export class LiteratureService {
       const stored = this.store.findRecordByDoi(d);
       if (stored) return stored;
       const records = await this.resolveByDoi(d, []).catch(() => []);
-      return records[0];
+      if (records.length === 0) return undefined;
+      const deduped = dedupeRecords(records);
+      const merged = deduped[0];
+      if (merged) {
+        this.store.saveRecords([merged]);
+      }
+      return merged;
     };
 
     if (input.doi) {
@@ -770,6 +781,34 @@ export class LiteratureService {
       }
     });
     return records;
+  }
+
+  private async enrichMissingAbstracts(records: LiteratureRecord[]): Promise<void> {
+    const targets = records.filter(r => !r.abstract && r.doi);
+    if (targets.length === 0) return;
+    const searchers = this.getSearchers();
+    await Promise.allSettled(targets.map(async record => {
+      try {
+        let paper: Paper | null = null;
+        if (record.identifiers.scopusEid && searchers.scopus.hasApiKey()) {
+          paper = await searchers.scopus.getAbstract(record.identifiers.scopusEid).catch(() => null);
+        }
+        if (!paper?.abstract && record.doi) {
+          paper = await searchers.openalex.getPaperByDoi(record.doi).catch(() => null);
+        }
+        if (!paper?.abstract && record.doi) {
+          paper = await searchers.crossref.getPaperByDoi(record.doi).catch(() => null);
+        }
+        if (paper?.abstract) {
+          record.abstract = paper.abstract;
+        }
+        if (paper?.keywords && paper.keywords.length > 0 && record.keywords.length === 0) {
+          record.keywords = paper.keywords;
+        }
+      } catch {
+        // ignore optional enrichment failure
+      }
+    }));
   }
 
   private async resolveByTitle(title: string, warnings: string[]): Promise<LiteratureRecord[]> {

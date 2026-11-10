@@ -46,7 +46,8 @@ describe('FullTextRouter', () => {
     expect(route.channel).toBe('mdpi_cdn');
     expect(route.isDirectDownloadable).toBe(true);
     expect(route.accessStatus).toBe('direct_pdf_ready');
-    expect(route.bestPdfUrl).toBe('https://www.mdpi.com/10.3390/s24010123/pdf');
+    expect(route.bestPdfUrl).toContain('mdpi-res.com');
+    expect(route.bestPdfUrl).toContain('s-24-00123.pdf');
   });
 
   it('constructs direct PLOS printable file link for 10.1371 papers', () => {

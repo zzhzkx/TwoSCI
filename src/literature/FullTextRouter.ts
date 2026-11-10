@@ -40,6 +40,7 @@ export interface FullTextRoute {
   accessStatus: AccessStatus;
   isDirectDownloadable: boolean;
   bestPdfUrl?: string;
+  candidatePdfUrls?: string[];
   landingUrl?: string;
   channelDetails: {
     doiPrefix?: string;
@@ -55,6 +56,48 @@ export interface FullTextResolutionResult {
   publisherApiCount: number;
   institutionalCount: number;
   routes: FullTextRoute[];
+}
+
+const MDPI_SLUGS: Record<string, string> = {
+  su: 'sustainability',
+  atmos: 'atmosphere',
+  w: 'water',
+  f: 'forests',
+  min: 'minerals',
+  en: 'energies',
+  polym: 'polymers',
+  applbiosci: 'appliedbiosciences',
+  app: 'applsci',
+  educsci: 'education',
+  tourhosp: 'tourismhosp',
+  d: 'diversity',
+  a: 'algorithms',
+  dj: 'dentistry',
+  ma: 'materials',
+  catal: 'catalysts'
+};
+
+export function getMdpiCdnVariants(doi: string): string[] {
+  const clean = normalizeDoi(doi);
+  const m = clean.match(/^10\.3390\/([a-z]+)(\d{6,})$/i);
+  if (!m) return [];
+  const pref = m[1].toLowerCase();
+  const digits = m[2];
+  const slug = MDPI_SLUGS[pref] || pref;
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const volTake of [2, 1]) {
+    if (digits.length <= volTake + 2) continue;
+    const vol = String(parseInt(digits.slice(0, volTake), 10)).padStart(2, '0');
+    const art = String(parseInt(digits.slice(volTake + 2), 10)).padStart(5, '0');
+    const base = `${slug}-${vol}-${art}`;
+    if (seen.has(base)) continue;
+    seen.add(base);
+    for (const suffix of ['', '-v2', '-v3', '-v4']) {
+      out.push(`https://mdpi-res.com/d_attachment/${slug}/${base}/article_deploy/${base}${suffix}.pdf`);
+    }
+  }
+  return out;
 }
 
 const DOI_CHANNEL_MAP: Record<string, { channel: FullTextChannel; publisher: string }> = {
@@ -115,6 +158,7 @@ export class FullTextRouter {
     const arxivId = record.identifiers?.arxiv || extractArxivId(record.url) || extractArxivId(record.pdfUrl);
     if (arxivId) {
       const pdfUrl = `https://arxiv.org/pdf/${arxivId}.pdf`;
+      const exportPdfUrl = `https://export.arxiv.org/pdf/${arxivId}.pdf`;
       return {
         recordId: record.recordId,
         title: record.title,
@@ -124,6 +168,7 @@ export class FullTextRouter {
         accessStatus: 'direct_pdf_ready',
         isDirectDownloadable: true,
         bestPdfUrl: pdfUrl,
+        candidatePdfUrls: [pdfUrl, exportPdfUrl],
         landingUrl: `https://arxiv.org/abs/${arxivId}`,
         channelDetails: {
           doiPrefix,
@@ -136,7 +181,8 @@ export class FullTextRouter {
 
     // 2. Check for MDPI (10.3390)
     if (doiPrefix === '10.3390' && cleanDoi) {
-      const mdpiPdfUrl = `https://www.mdpi.com/${cleanDoi}/pdf`;
+      const mdpiVariants = getMdpiCdnVariants(cleanDoi);
+      const bestUrl = mdpiVariants[0] || (record.pdfUrl && !record.pdfUrl.includes('www.mdpi.com') ? record.pdfUrl : `https://doi.org/${cleanDoi}`);
       return {
         recordId: record.recordId,
         title: record.title,
@@ -145,12 +191,13 @@ export class FullTextRouter {
         publisher: 'MDPI',
         accessStatus: 'direct_pdf_ready',
         isDirectDownloadable: true,
-        bestPdfUrl: record.pdfUrl || mdpiPdfUrl,
+        bestPdfUrl: bestUrl,
+        candidatePdfUrls: mdpiVariants,
         landingUrl: record.url || `https://doi.org/${cleanDoi}`,
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: true,
-          recommendedMethod: 'MDPI CDN 开放获取直达',
+          recommendedMethod: 'MDPI 开放 CDN 直连 (mdpi-res.com)',
           scansciCommand: `scansci-pdf get ${cleanDoi}`
         }
       };
@@ -168,6 +215,7 @@ export class FullTextRouter {
         accessStatus: 'direct_pdf_ready',
         isDirectDownloadable: true,
         bestPdfUrl: record.pdfUrl || plosPdfUrl,
+        candidatePdfUrls: [plosPdfUrl, ...(record.pdfUrl ? [record.pdfUrl] : [])],
         landingUrl: record.url || `https://doi.org/${cleanDoi}`,
         channelDetails: {
           doiPrefix,
@@ -189,6 +237,7 @@ export class FullTextRouter {
         accessStatus: 'direct_pdf_ready',
         isDirectDownloadable: true,
         bestPdfUrl: record.pdfUrl,
+        candidatePdfUrls: [record.pdfUrl],
         landingUrl: record.url || (cleanDoi ? `https://doi.org/${cleanDoi}` : undefined),
         channelDetails: {
           doiPrefix,
@@ -212,6 +261,7 @@ export class FullTextRouter {
         accessStatus: hasKey ? 'publisher_api_ready' : 'institutional_required',
         isDirectDownloadable: hasKey,
         bestPdfUrl: hasKey ? apiUrl : undefined,
+        candidatePdfUrls: hasKey ? [apiUrl] : (record.pdfUrl ? [record.pdfUrl] : []),
         landingUrl: record.url || `https://doi.org/${cleanDoi}`,
         channelDetails: {
           doiPrefix,
@@ -244,6 +294,7 @@ export class FullTextRouter {
         accessStatus: isOa ? 'direct_pdf_ready' : 'institutional_required',
         isDirectDownloadable: isOa && Boolean(ieeePdfUrl),
         bestPdfUrl: isOa ? (record.pdfUrl || ieeePdfUrl) : undefined,
+        candidatePdfUrls: isOa && ieeePdfUrl ? [ieeePdfUrl] : (record.pdfUrl ? [record.pdfUrl] : []),
         landingUrl: record.url || (articleNumber ? `https://ieeexplore.ieee.org/document/${articleNumber}` : (cleanDoi ? `https://doi.org/${cleanDoi}` : undefined)),
         channelDetails: {
           doiPrefix,
@@ -269,6 +320,7 @@ export class FullTextRouter {
         accessStatus: isOa ? 'direct_pdf_ready' : (hasKey ? 'publisher_api_ready' : 'institutional_required'),
         isDirectDownloadable: isOa && Boolean(record.pdfUrl),
         bestPdfUrl: isOa ? record.pdfUrl : undefined,
+        candidatePdfUrls: isOa && record.pdfUrl ? [record.pdfUrl] : [],
         landingUrl: record.url || `https://doi.org/${cleanDoi}`,
         channelDetails: {
           doiPrefix,
@@ -292,6 +344,7 @@ export class FullTextRouter {
       accessStatus: record.openAccess && record.pdfUrl ? 'direct_pdf_ready' : 'institutional_required',
       isDirectDownloadable: Boolean(record.openAccess && record.pdfUrl),
       bestPdfUrl: record.openAccess ? record.pdfUrl : undefined,
+      candidatePdfUrls: record.openAccess && record.pdfUrl ? [record.pdfUrl] : [],
       landingUrl: record.url || (cleanDoi ? `https://doi.org/${cleanDoi}` : undefined),
       channelDetails: {
         doiPrefix,
