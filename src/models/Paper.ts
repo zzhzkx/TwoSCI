@@ -77,6 +77,7 @@ export class PaperFactory {
    * 创建Paper对象
    */
   static create(data: Partial<Paper> & Required<Pick<Paper, 'paperId' | 'title' | 'source'>>): Paper {
+    const derivedYear = data.year ?? (data.publishedDate instanceof Date && !isNaN(data.publishedDate.getTime()) ? data.publishedDate.getFullYear() : undefined);
     return {
       paperId: data.paperId,
       title: data.title,
@@ -96,7 +97,7 @@ export class PaperFactory {
       volume: data.volume,
       issue: data.issue,
       pages: data.pages,
-      year: data.year,
+      year: derivedYear,
       extra: data.extra || {}
     };
   }

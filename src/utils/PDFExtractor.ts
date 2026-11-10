@@ -77,7 +77,10 @@ export class PDFExtractor {
         pdfOptions.max = options.maxPages;
       }
 
-      const data = await pdf(buffer, pdfOptions);
+      const pdfInput = Buffer.isBuffer(buffer)
+        ? { data: new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength) }
+        : buffer;
+      const data = await pdf(pdfInput as any, pdfOptions);
 
       let text = data.text;
 

@@ -359,6 +359,7 @@ export class ScopusSearcher extends PaperSource {
         abstract: cleanScopusText(entry['dc:description']),
         doi: entry['prism:doi'],
         publishedDate: entry['prism:coverDate'] ? new Date(entry['prism:coverDate']) : null,
+        year: entry['prism:coverDate'] ? parseInt(entry['prism:coverDate'].slice(0, 4), 10) : undefined,
         url: paperUrl,
         source: 'scopus',
         journal: entry['prism:publicationName'],
@@ -391,8 +392,14 @@ export class ScopusSearcher extends PaperSource {
     try {
       await this.rateLimiter.waitForPermission();
 
+      const endpoint = scopusId.startsWith('2-s2.0-')
+        ? `/content/abstract/eid/${encodeURIComponent(scopusId)}`
+        : (scopusId.includes('/')
+            ? `/content/abstract/doi/${encodeURIComponent(scopusId)}`
+            : `/content/abstract/scopus_id/${encodeURIComponent(scopusId)}`);
+
       const response = await ErrorHandler.retryWithBackoff(
-        () => this.client.get<ScopusAbstractResponse>(`/content/abstract/scopus_id/${scopusId}`, {
+        () => this.client.get<ScopusAbstractResponse>(endpoint, {
           params: { view: 'FULL' },
           headers: {
             'X-ELS-APIKey': this.elsevierApiKey
@@ -429,6 +436,7 @@ export class ScopusSearcher extends PaperSource {
         abstract: coredata['dc:description'] || '',
         doi: coredata['prism:doi'],
         publishedDate: coredata['prism:coverDate'] ? new Date(coredata['prism:coverDate']) : null,
+        year: coredata['prism:coverDate'] ? parseInt(coredata['prism:coverDate'].slice(0, 4), 10) : undefined,
         url: coredata['prism:doi'] ? `https://doi.org/${coredata['prism:doi']}` : undefined,
         source: 'scopus',
         journal: coredata['prism:publicationName'],

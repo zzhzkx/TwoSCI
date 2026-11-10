@@ -30,6 +30,7 @@ export class CitationTopologyService {
     citingPapers: LiteratureRecord[] = []
   ): CitationTopologyResult {
     const foundations: CitationTopologyNode[] = references.slice(0, 5).map((ref, i) => {
+      const cited = ref.citedBy?.webofscience || ref.citedBy?.scopus || 0;
       return {
         id: `Ref_${i + 1}`,
         title: ref.title,
@@ -37,13 +38,14 @@ export class CitationTopologyService {
         year: ref.year || '历史工作',
         doi: ref.doi,
         venue: ref.venue,
-        citedCount: ref.citedBy?.webofscience || ref.citedBy?.scopus || 0,
+        citedCount: cited,
         role: 'foundation_ref',
-        relationshipNote: i === 0 ? '物理与数学模型基石' : (i === 1 ? '基础架构与制造先驱' : '理论推导参考')
+        relationshipNote: `前驱参考文献 (Cited Reference · ${ref.year || '历史工作'} · 被引: ${cited} 次)`
       };
     });
 
     const evolutions: CitationTopologyNode[] = citingPapers.slice(0, 5).map((cite, i) => {
+      const cited = cite.citedBy?.webofscience || cite.citedBy?.scopus || 0;
       return {
         id: `Cite_${i + 1}`,
         title: cite.title,
@@ -51,9 +53,9 @@ export class CitationTopologyService {
         year: cite.year || '最新进展',
         doi: cite.doi,
         venue: cite.venue,
-        citedCount: cite.citedBy?.webofscience || cite.citedBy?.scopus || 0,
+        citedCount: cited,
         role: 'evolution_cite',
-        relationshipNote: i === 0 ? '抗扰与闭环优化改进' : (i === 1 ? '系统级传输与组网应用拓展' : '多波束性能提升')
+        relationshipNote: `后继施引文献 (Citing Paper · ${cite.year || '最新进展'} · 被引: ${cited} 次)`
       };
     });
 
@@ -120,7 +122,7 @@ export class CitationTopologyService {
       ``,
       `---`,
       ``,
-      `## 一、向前溯源：理论基石与前驱工作 (Foundational References)`,
+      `## 一、向前溯源：参考文献拓扑脉络 (Foundational References)`,
       ``
     ];
 
@@ -131,12 +133,14 @@ export class CitationTopologyService {
         const doiStr = f.doi ? ` · DOI: [${f.doi}](https://doi.org/${encodeURI(f.doi)})` : '';
         lines.push(`### [Ref-${i + 1}] ${f.title}`);
         lines.push(`- **基本信息**: ${f.authors.slice(0, 3).join('; ')} · ${f.year}${doiStr}`);
-        lines.push(`- **学术承接定位**: ${f.relationshipNote}`);
+        lines.push(`- **引文关系**: 前驱参考文献 (Cited Reference)`);
+        lines.push(`- **出版刊物**: ${f.venue || '未知出版物'}`);
+        lines.push(`- **引用频次**: 记录被引 ${f.citedCount} 次`);
         lines.push(``);
       });
     }
 
-    lines.push(`## 二、向后追踪：最新应用与演进脉络 (Evolutionary Citing Works)`);
+    lines.push(`## 二、向后追踪：施引文献演进脉络 (Evolutionary Citing Works)`);
     lines.push(``);
 
     if (evolutions.length === 0) {
@@ -146,7 +150,9 @@ export class CitationTopologyService {
         const doiStr = c.doi ? ` · DOI: [${c.doi}](https://doi.org/${encodeURI(c.doi)})` : '';
         lines.push(`### [Cite-${i + 1}] ${c.title}`);
         lines.push(`- **基本信息**: ${c.authors.slice(0, 3).join('; ')} · ${c.year}${doiStr}`);
-        lines.push(`- **技术演进突破**: ${c.relationshipNote}`);
+        lines.push(`- **引文关系**: 后继施引工作 (Citing Paper)`);
+        lines.push(`- **出版刊物**: ${c.venue || '未知出版物'}`);
+        lines.push(`- **引用频次**: 记录被引 ${c.citedCount} 次`);
         lines.push(``);
       });
     }

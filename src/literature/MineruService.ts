@@ -1,6 +1,8 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import axios from 'axios';
+import AdmZip from 'adm-zip';
+import { PDFExtractor } from '../utils/PDFExtractor.js';
 import { FullTextRouter, type FullTextRoute } from './FullTextRouter.js';
 import type { LiteratureRecord } from './types.js';
 
@@ -16,6 +18,7 @@ export interface ProcessedPaperArtifact {
   imageCount: number;
   sourceChannel: string;
   status: 'success' | 'partial' | 'failed';
+  method?: 'mineru_cloud' | 'local_pdf_parse';
   message?: string;
 }
 
@@ -75,8 +78,6 @@ export class MineruService {
     const targetDir = path.resolve(workDir, 'twosci', folderName);
     const imgDir = path.join(targetDir, 'img');
 
-    fs.mkdirSync(imgDir, { recursive: true });
-
     const cleanTitle = this.sanitizeName(title, 60);
     const pdfPath = path.join(targetDir, `${cleanTitle}.pdf`);
     const mdPath = path.join(targetDir, `${cleanTitle}.md`);
@@ -107,12 +108,16 @@ export class MineruService {
     const channel = route?.channel || 'oa_direct';
 
     try {
-      // 1. 获取 PDF (如果已存在则直接使用已有本地副本，保证每篇论文只存一份)
+      // 1. 获取真实 PDF (若本地已存在有效 PDF 则复用，保证每篇论文只存一份)
       if (!fs.existsSync(pdfPath)) {
+        fs.mkdirSync(imgDir, { recursive: true });
         await this.acquirePdf(downloadUrl, pdfPath);
+      } else {
+        fs.mkdirSync(imgDir, { recursive: true });
+        this.validatePdfFile(pdfPath);
       }
 
-      // 2. 调用 MinerU 或本地转换引擎生成 Markdown 与图片
+      // 2. 调用真实 MinerU 开放接口或本地真实 pdf 引擎生成 Markdown 与图片
       const conversion = await this.convertWithMineru(pdfPath, mdPath, imgDir, {
         title,
         authors,
@@ -132,12 +137,17 @@ export class MineruService {
         imageDirPath: imgDir,
         imageCount: conversion.imageCount,
         sourceChannel: channel,
+        method: conversion.method,
         status: 'success'
       };
     } catch (err: any) {
-      // 兜底生成结构化 Markdown 骨架，确保目录契约完整
-      if (!fs.existsSync(mdPath)) {
-        this.writeFallbackMarkdown(mdPath, { title, authors, year, doi, abstract: input.record?.abstract });
+      // 下载或解析失败时，绝不伪造 PDF 或 Markdown 文件！
+      try {
+        if (fs.existsSync(targetDir) && fs.readdirSync(targetDir).length === 0) {
+          fs.rmdirSync(targetDir);
+        }
+      } catch {
+        // ignore cleanup error
       }
       return {
         doi,
@@ -150,7 +160,7 @@ export class MineruService {
         imageDirPath: imgDir,
         imageCount: 0,
         sourceChannel: channel,
-        status: fs.existsSync(pdfPath) ? 'partial' : 'failed',
+        status: 'failed',
         message: err?.message || String(err)
       };
     }
@@ -180,7 +190,7 @@ export class MineruService {
 
   private static async acquirePdf(url: string, destPath: string): Promise<void> {
     if (!url || url.startsWith('#')) {
-      throw new Error('未提供有效的 PDF 下载 URL');
+      throw new Error('未提供有效的 PDF 下载链接');
     }
     try {
       const response = await axios.get(url, {
@@ -191,11 +201,45 @@ export class MineruService {
           Accept: 'application/pdf,application/octet-stream;q=0.9,*/*;q=0.8'
         }
       });
-      fs.writeFileSync(destPath, Buffer.from(response.data));
-    } catch {
-      // 若远端直下受限，写入带来源标记的占位说明 PDF 缓冲文件，以便离线工作流推进
-      const placeholderContent = `%PDF-1.4\n1 0 obj\n<< /Title (${path.basename(destPath)}) /Author (TwoSCI) >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF`;
-      fs.writeFileSync(destPath, Buffer.from(placeholderContent, 'utf8'));
+
+      const buffer = Buffer.from(response.data);
+      this.validatePdfBuffer(buffer, url);
+      fs.writeFileSync(destPath, buffer);
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        throw new Error(`下载失败 (403 Forbidden): 出版商启用了反爬保护 (如 Akamai/Cloudflare)。未生成伪造文件。建议通过浏览器或校园网/VPN直接访问: ${url}`);
+      }
+      if (err?.response?.status === 404) {
+        throw new Error(`下载失败 (404 Not Found): PDF 链接不可用 (${url})`);
+      }
+      throw new Error(`PDF 下载失败: ${err?.message || String(err)} (${url})`);
+    }
+  }
+
+  private static validatePdfBuffer(buffer: Buffer, url?: string): void {
+    if (!buffer || buffer.length < 500) {
+      throw new Error(`下载内容尺寸过小 (${buffer?.length || 0} bytes)，非有效 PDF 文件`);
+    }
+    const header = buffer.slice(0, 5).toString('ascii');
+    if (header !== '%PDF-') {
+      throw new Error(`下载内容为非 PDF 数据 (可能遇到反爬验证页或登录跳转): ${url || ''}`);
+    }
+  }
+
+  private static validatePdfFile(filePath: string): void {
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`文件不存在: ${filePath}`);
+    }
+    const stat = fs.statSync(filePath);
+    if (stat.size < 500) {
+      throw new Error(`PDF 文件尺寸异常 (${stat.size} bytes)，疑似空壳或损坏`);
+    }
+    const fd = fs.openSync(filePath, 'r');
+    const buf = Buffer.alloc(5);
+    fs.readSync(fd, buf, 0, 5, 0);
+    fs.closeSync(fd);
+    if (buf.toString('ascii') !== '%PDF-') {
+      throw new Error(`文件不是标准 PDF: ${filePath}`);
     }
   }
 
@@ -204,66 +248,128 @@ export class MineruService {
     mdPath: string,
     imgDir: string,
     meta: { title: string; authors: string[]; year: number | string; doi: string; abstract?: string }
-  ): Promise<{ imageCount: number }> {
+  ): Promise<{ imageCount: number; method: 'mineru_cloud' | 'local_pdf_parse' }> {
     const mineruToken = process.env.MINERU_TOKEN || process.env.MINERU_API_TOKEN;
 
-    // 如果配置了 MinerU Token，可尝试调用 MinerU 开放接口；在离线或本地环境下生成高精度 Markdown 与插图结构
-    let imageCount = 0;
-    const sampleFigPath = path.join(imgDir, 'figure_1_system_architecture.png');
-    if (!fs.existsSync(sampleFigPath)) {
-      // 创建一个示例图表占位，确保 img 目录完备
-      const transparentPng1x1 = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
-      fs.writeFileSync(sampleFigPath, transparentPng1x1);
-      imageCount = 1;
+    // 优先尝试真实的 MinerU Cloud API
+    if (mineruToken) {
+      try {
+        const cloudRes = await this.callMineruCloudApi(pdfPath, mdPath, imgDir, mineruToken);
+        if (cloudRes.success) {
+          return { imageCount: cloudRes.imageCount, method: 'mineru_cloud' };
+        }
+      } catch {
+        // MinerU 云端调用受限时降级为本地真实 PDF 文本解析
+      }
     }
 
-    const mdContent = [
+    // 本地真实 PDF 文本提取降级（从实际 PDF 缓冲中抽取真实文字，绝无虚构）
+    const pdfBuffer = fs.readFileSync(pdfPath);
+    const extractor = new PDFExtractor();
+    const parsed = await extractor.extractFromBuffer(pdfBuffer);
+    const realText = (parsed?.text || '').trim();
+
+    const cleanAbstract = meta.abstract ? `## Abstract\n\n${meta.abstract}\n\n` : '';
+    const realMd = [
       `# ${meta.title}`,
-      ``,
+      '',
       `**Authors**: ${meta.authors.join('; ')}  `,
       `**Year**: ${meta.year} | **DOI**: [${meta.doi}](https://doi.org/${encodeURI(meta.doi)})  `,
-      ``,
-      `---`,
-      ``,
-      `## Abstract`,
-      ``,
-      `${meta.abstract || '*(Abstract text extracted from source)*'}`,
-      ``,
-      `## 1. Introduction & Methodology`,
-      ``,
-      `This paper presents theoretical models and experimental validation for optical phase modulation and free-space beam control. The underlying system formulation obeys the generalized wave propagation equation:`,
-      ``,
-      `$$E(r, \theta, z) = \\sum_{m=1}^{N} A_m \\exp\\left(j \\left[ \\phi_m + \\frac{k r^2}{2R} \\right]\\right)$$`,
-      ``,
-      `where $\\phi_m$ represents the compensated phase shift across array channel $m$, and $k = 2\\pi / \\lambda$ is the optical wave number.`,
-      ``,
-      `![System Architecture](img/figure_1_system_architecture.png)`,
-      `*Fig. 1. System schematic and optical modulation architecture.*`,
-      ``,
-      `## 2. Experimental Verification & Results`,
-      ``,
-      `Quantitative evaluation demonstrates robust beam pointing accuracy and rapid phase convergence under dynamic perturbations.`
-    ].join('\n');
+      '',
+      '---',
+      '',
+      cleanAbstract,
+      '*(注：本文档由本地 PDF 文本引擎从下载的原始 PDF 正文中真实提取)*',
+      '',
+      '## 正文提取内容 (Extracted Text)',
+      '',
+      realText || '*(PDF 未包含可提取的纯文本图层)*'
+    ].filter(Boolean).join('\n');
 
-    fs.writeFileSync(mdPath, mdContent, 'utf8');
-    return { imageCount };
+    fs.writeFileSync(mdPath, realMd, 'utf8');
+    return { imageCount: 0, method: 'local_pdf_parse' };
   }
 
-  private static writeFallbackMarkdown(
+  private static async callMineruCloudApi(
+    pdfPath: string,
     mdPath: string,
-    meta: { title: string; authors: string[]; year: number | string; doi: string; abstract?: string }
-  ): void {
-    const content = [
-      `# ${meta.title}`,
-      ``,
-      `- **Authors**: ${meta.authors.join('; ')}`,
-      `- **Year**: ${meta.year}`,
-      `- **DOI**: [${meta.doi}](https://doi.org/${encodeURI(meta.doi)})`,
-      ``,
-      `## Abstract`,
-      ``,
-      `${meta.abstract || 'No abstract available.'}`
-    ].join('\n');
-    fs.writeFileSync(mdPath, content, 'utf8');
+    imgDir: string,
+    token: string
+  ): Promise<{ success: boolean; imageCount: number }> {
+    const fileName = path.basename(pdfPath);
+    // 1. 创建批次任务
+    const batchRes = await axios.post(
+      'https://mineru.net/api/v4/file-urls/batch',
+      { files: [{ name: fileName, is_ocr: false }] },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        timeout: 15000
+      }
+    );
+
+    const batchId = batchRes.data?.data?.batch_id;
+    const uploadUrl = batchRes.data?.data?.file_urls?.[0];
+    if (!batchId || !uploadUrl) {
+      return { success: false, imageCount: 0 };
+    }
+
+    // 2. 上传 PDF 到预签名 URL
+    const pdfBuffer = fs.readFileSync(pdfPath);
+    await axios.put(uploadUrl, pdfBuffer, {
+      headers: { 'Content-Type': 'application/pdf' },
+      timeout: 30000
+    });
+
+    // 3. 轮询解析结果
+    let zipUrl: string | undefined;
+    for (let i = 0; i < 15; i++) {
+      await new Promise(r => setTimeout(r, 2000));
+      const pollRes = await axios.get(
+        `https://mineru.net/api/v4/extract-results/batch/${batchId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          timeout: 10000
+        }
+      );
+      const result = pollRes.data?.data?.extract_result?.[0];
+      if (result?.state === 'done') {
+        zipUrl = result.full_zip_url;
+        break;
+      }
+      if (result?.state === 'failed') {
+        return { success: false, imageCount: 0 };
+      }
+    }
+
+    if (!zipUrl) {
+      return { success: false, imageCount: 0 };
+    }
+
+    // 4. 下载 zip 并真实解压
+    const zipRes = await axios.get(zipUrl, {
+      responseType: 'arraybuffer',
+      timeout: 30000
+    });
+
+    const zip = new AdmZip(Buffer.from(zipRes.data));
+    const entries = zip.getEntries();
+    let imageCount = 0;
+
+    for (const entry of entries) {
+      const lower = entry.entryName.toLowerCase();
+      if (lower.endsWith('.md')) {
+        const mdText = entry.getData().toString('utf8');
+        fs.writeFileSync(mdPath, mdText, 'utf8');
+      } else if (/\.(png|jpe?g|webp|svg)$/i.test(lower)) {
+        const imgTarget = path.join(imgDir, path.basename(entry.entryName));
+        fs.writeFileSync(imgTarget, entry.getData());
+        imageCount++;
+      }
+    }
+
+    return { success: true, imageCount };
   }
 }

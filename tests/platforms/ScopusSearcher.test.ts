@@ -123,6 +123,7 @@ describe('ScopusSearcher', () => {
 
       expect(results).toHaveLength(30);
       expect(results[0].abstract).toBe('Abstract 0');
+      expect(results[0].year).toBe(2024);
       expect(adapter).toHaveBeenCalledTimes(2);
       expect(adapter.mock.calls[0][0].params).toEqual(expect.objectContaining({
         start: 0,
@@ -264,7 +265,7 @@ describe('ScopusSearcher', () => {
       client.defaults.adapter = adapter;
 
       const papers = await instance.search('machine learning', { maxResults: 2 });
-      expect(papers).toEqual([expect.objectContaining({ title: 'Standard view paper', authors: ['A. Author'], keywords: [] })]);
+      expect(papers).toEqual([expect.objectContaining({ title: 'Standard view paper', authors: ['A. Author'], keywords: [], year: 2024 })]);
       expect(adapter).toHaveBeenCalledTimes(2);
       const [completeConfig, standardConfig] = adapter.mock.calls.map((call: any[]) => call[0]);
       expect(completeConfig.params).toEqual({

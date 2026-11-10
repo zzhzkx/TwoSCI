@@ -68,9 +68,11 @@ describe('CitationTopologyService', () => {
     expect(result.mermaidGraph).toContain('```mermaid');
     expect(result.mermaidGraph).toContain('graph TD');
     expect(result.markdownReport).toContain('# 🕸️ 学术引文网络与演化拓扑追踪报告');
-    expect(result.markdownReport).toContain('向前溯源：理论基石与前驱工作');
-    expect(result.markdownReport).toContain('向后追踪：最新应用与演进脉络');
+    expect(result.markdownReport).toContain('向前溯源：参考文献拓扑脉络');
+    expect(result.markdownReport).toContain('向后追踪：施引文献演进脉络');
     expect(result.markdownReport).toContain('Optical Phased Array Technology');
     expect(result.markdownReport).toContain('Fractional-Order Disturbance Observer for Liquid Crystal OPA');
+    expect(result.markdownReport).not.toContain('物理与数学模型基石');
+    expect(result.markdownReport).not.toContain('技术演进突破');
   });
 });

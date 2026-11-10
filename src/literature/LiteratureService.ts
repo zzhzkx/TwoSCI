@@ -356,12 +356,21 @@ export class LiteratureService {
   }): Promise<MineruBatchResult> {
     const targets: Array<{ doi?: string; url?: string; record?: LiteratureRecord }> = [];
 
+    const resolveRecord = async (d: string): Promise<LiteratureRecord | undefined> => {
+      const stored = this.store.findRecordByDoi(d);
+      if (stored) return stored;
+      const records = await this.resolveByDoi(d, []).catch(() => []);
+      return records[0];
+    };
+
     if (input.doi) {
-      targets.push({ doi: input.doi });
+      const rec = await resolveRecord(input.doi);
+      targets.push({ doi: input.doi, record: rec, url: rec?.pdfUrl || rec?.url });
     }
     if (input.dois && input.dois.length > 0) {
       for (const d of input.dois) {
-        targets.push({ doi: d });
+        const rec = await resolveRecord(d);
+        targets.push({ doi: d, record: rec, url: rec?.pdfUrl || rec?.url });
       }
     }
     if (input.url) {

@@ -68,6 +68,19 @@ export class ResearchStore {
     return undefined;
   }
 
+  findRecordByDoi(doi: string): LiteratureRecord | undefined {
+    this.prune();
+    const clean = doi.trim().toLowerCase();
+    for (const entry of this.searches.values()) {
+      const record = entry.value.records.find(item => (item.doi || '').trim().toLowerCase() === clean);
+      if (record) return record;
+    }
+    for (const entry of this.briefs.values()) {
+      if ((entry.value.seed.doi || '').trim().toLowerCase() === clean) return entry.value.seed;
+    }
+    return undefined;
+  }
+
   saveScreening(input: ScreeningInput): {
     search: SearchSession;
     counts: Record<string, number>;

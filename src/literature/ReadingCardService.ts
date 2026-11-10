@@ -119,14 +119,14 @@ export class ReadingCardService {
       '',
       '| 评估指标 (Metric) | 本文实测/仿真数值 | 对比基线 (Baseline) | 提升幅度 / 结论 |',
       '|-------------------|-------------------|---------------------|-----------------|',
-      '| 标定收敛速度 / 时间 | | | |',
-      '| 旁瓣抑制比 (PSLR)  | | | |',
-      '| 指向精度 / 误码率  | | | |',
-      '| 阵列规模 / 波段    | | | |',
+      '| 核心性能指标 1     |                   |                     |                 |',
+      '| 核心性能指标 2     |                   |                     |                 |',
+      '| 计算开销 / 效率    |                   |                     |                 |',
+      '| 误差 / 精度 / 损失 |                   |                     |                 |',
       '',
-      '## 五、实验物理环境与硬件约束 (Experimental Setup)',
-      '- **器件/芯片规格**: ',
-      '- **测试平台/传输距离/信道环境**: ',
+      '## 五、实验设置与环境约束 (Experimental Setup & Constraints)',
+      '- **数据集 / 样本规模 / 实验对象**: ',
+      '- **测试环境 / 硬件平台 / 参数配置**: ',
       '',
       '## 六、局限性与未来研究切入点 (Limitations & Research Gaps)',
       '- **作者明确承认的缺陷/未覆盖场景**: ',
@@ -136,8 +136,13 @@ export class ReadingCardService {
       ''
     ].join('\n');
 
+    const domain = brief?.scope?.discipline
+      || (brief?.focus?.length ? brief.focus.join(' / ') : '')
+      || (record.categories?.length ? record.categories.join(' / ') : '')
+      || '相关学术研究';
+
     const prompt = [
-      `请作为光电信息与空间通信领域的严谨科研评审专家，基于 MinerU 提取自论文《${title}》(DOI: ${doi}) 的 Markdown 全文，`,
+      `请作为【${domain}】领域的严谨科研评审专家，基于 MinerU 提取自论文《${title}》(DOI: ${doi}) 的 Markdown 全文，`,
       `严格按照上述【文献精读卡】的 6 大板块提取学术证据。要求：`,
       `1. 所有的数值指标必须来源于原文表格或图注，严禁虚构。`,
       `2. 公式推导请使用标准 LaTeX 表达。`,

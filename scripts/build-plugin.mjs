@@ -31,7 +31,7 @@ cpSync(join(root, '.env.example'), join(outDir, '.env.example'));
 
 const packageJson = {
   name: 'twosci',
-  version: '0.2.0',
+  version: '0.2.1',
   private: true,
   type: 'commonjs'
 };
@@ -54,7 +54,7 @@ const interfaceMetadata = {
 
 const baseManifest = {
   name: 'twosci',
-  version: '0.2.0',
+  version: '0.2.1',
   description:
     'Seed-paper-driven literature discovery, abstract screening, citation expansion, and evidence export across Web of Science, Scopus, OpenAlex, Crossref, and IEEE Xplore.',
   author: { name: 'zzhzkx' },

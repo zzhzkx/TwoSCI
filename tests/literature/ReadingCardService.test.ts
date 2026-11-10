@@ -61,11 +61,11 @@ describe('ReadingCardService', () => {
     expect(card.markdownTemplate).toContain('二、与本研究课题的关联度 (Relevance)');
     expect(card.markdownTemplate).toContain('三、核心方案与数学/算法推导 (Methodology & Algorithms)');
     expect(card.markdownTemplate).toContain('四、实验验证与量化性能指标对比表 (Quantitative Benchmark)');
-    expect(card.markdownTemplate).toContain('五、实验物理环境与硬件约束 (Experimental Setup)');
+    expect(card.markdownTemplate).toContain('五、实验设置与环境约束 (Experimental Setup & Constraints)');
     expect(card.markdownTemplate).toContain('六、局限性与未来研究切入点 (Limitations & Research Gaps)');
     expect(card.markdownTemplate).toContain('Directly validates phase calibration');
 
-    expect(card.mineruPrompt).toContain('请作为光电信息与空间通信领域的严谨科研评审专家');
+    expect(card.mineruPrompt).toContain('请作为【calibration / beam steering】领域的严谨科研评审专家');
     expect(card.mineruPrompt).toContain('基于 MinerU 提取自论文');
     expect(card.mineruPrompt).toContain(record.title);
   });

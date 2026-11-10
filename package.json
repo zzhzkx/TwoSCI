@@ -1,6 +1,6 @@
 {
   "name": "twosci",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "TwoSCI: seed-paper-driven literature research MCP server and plugin for Codex and Claude Code.",
   "main": "dist/server.js",
   "files": [
@@ -49,6 +49,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
     "@types/cheerio": "^0.22.35",
+    "adm-zip": "^0.6.1",
     "axios": "^1.21.0",
     "cheerio": "^1.1.2",
     "dotenv": "^16.4.5",
@@ -61,6 +62,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.8",
     "@types/jest": "^29.5.14",
     "@types/lru-cache": "^7.10.9",
     "@types/node": "^20.14.10",

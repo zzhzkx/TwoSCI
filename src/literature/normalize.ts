@@ -56,11 +56,13 @@ export function recordFromPaper(
     ...(extra.recordView ? { recordView: String(extra.recordView) } : {})
   };
 
+  const resolvedYear = paper.year ?? (paper.publishedDate ? (typeof paper.publishedDate === 'string' ? parseInt((paper.publishedDate as string).slice(0, 4), 10) : (paper.publishedDate instanceof Date && !isNaN(paper.publishedDate.getTime()) ? paper.publishedDate.getFullYear() : undefined)) : undefined);
+
   const record: LiteratureRecord = {
-    recordId: makeRecordId({ doi, wosUid, scopusEid, openalexId, title: paper.title, year: paper.year }),
+    recordId: makeRecordId({ doi, wosUid, scopusEid, openalexId, title: paper.title, year: resolvedYear }),
     title: cleanText(paper.title) || 'No title available',
     authors: uniqueStrings(paper.authors || []),
-    year: paper.year,
+    year: resolvedYear,
     venue: cleanText(paper.journal || '') || undefined,
     volume: cleanText(paper.volume || '') || undefined,
     issue: cleanText(paper.issue || '') || undefined,
