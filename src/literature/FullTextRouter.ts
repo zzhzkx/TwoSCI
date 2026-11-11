@@ -46,7 +46,6 @@ export interface FullTextRoute {
     doiPrefix?: string;
     hasConfiguredKey: boolean;
     recommendedMethod: string;
-    scansciCommand?: string;
   };
 }
 
@@ -173,8 +172,7 @@ export class FullTextRouter {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: true,
-          recommendedMethod: 'arXiv 开放获取直接下载',
-          scansciCommand: `scansci-pdf get ${arxivId}`
+          recommendedMethod: 'arXiv 开放获取直接下载'
         }
       };
     }
@@ -197,8 +195,7 @@ export class FullTextRouter {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: true,
-          recommendedMethod: 'MDPI 开放 CDN 直连 (mdpi-res.com)',
-          scansciCommand: `scansci-pdf get ${cleanDoi}`
+          recommendedMethod: 'MDPI 开放 CDN 直连 (mdpi-res.com)'
         }
       };
     }
@@ -220,8 +217,7 @@ export class FullTextRouter {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: true,
-          recommendedMethod: 'PLOS 官方开放获取直取',
-          scansciCommand: `scansci-pdf get ${cleanDoi}`
+          recommendedMethod: 'PLOS 官方开放获取直取'
         }
       };
     }
@@ -242,8 +238,7 @@ export class FullTextRouter {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: true,
-          recommendedMethod: '已验证开放获取 (Gold/Green OA) PDF 直链',
-          scansciCommand: cleanDoi ? `scansci-pdf get ${cleanDoi}` : undefined
+          recommendedMethod: '已验证开放获取 (Gold/Green OA) PDF 直链'
         }
       };
     }
@@ -268,8 +263,7 @@ export class FullTextRouter {
           hasConfiguredKey: hasKey,
           recommendedMethod: hasKey
             ? 'Elsevier API 极速通道 (配合校园网/VPN出口可免 insttoken 直接下载)'
-            : 'Elsevier ScienceDirect 机构访问 (需配置 ELSEVIER_API_KEY 或校园网)',
-          scansciCommand: `scansci-pdf get ${cleanDoi}`
+            : 'Elsevier ScienceDirect 机构访问 (需配置 ELSEVIER_API_KEY 或校园网)'
         }
       };
     }
@@ -301,8 +295,7 @@ export class FullTextRouter {
           hasConfiguredKey: Boolean(process.env.IEEE_XPLORE_API_KEY),
           recommendedMethod: isOa
             ? 'IEEE Xplore 开放获取直接访问'
-            : 'IEEE 机构订阅通道 (需校园网/WebVPN/CARSI登录)',
-          scansciCommand: cleanDoi ? `scansci-pdf get ${cleanDoi}` : undefined
+            : 'IEEE 机构订阅通道 (需校园网/WebVPN/CARSI登录)'
         }
       };
     }
@@ -327,13 +320,40 @@ export class FullTextRouter {
           hasConfiguredKey: hasKey,
           recommendedMethod: isOa
             ? 'Springer Nature 开放获取直达'
-            : (hasKey ? 'Springer TDM 官方接口提取' : 'SpringerLink 机构访问 (校园网 WebVPN)'),
-          scansciCommand: `scansci-pdf get ${cleanDoi}`
+            : (hasKey ? 'Springer TDM 官方接口提取' : 'SpringerLink 机构访问 (校园网 WebVPN)')
         }
       };
     }
 
-    // 8. General publisher / institutional fallback
+    // 8. Publisher profile routes (22 publishers ported from scansci-pdf)
+    const profile = publisherProfileFor(cleanDoi, record.url);
+    const profileCandidates = profile
+      ? buildPdfCandidates(profile, cleanDoi, {
+          sourceUrl: record.url,
+          discoveredUrls: record.pdfUrl ? [record.pdfUrl] : []
+        })
+      : [];
+    if (profileCandidates.length > 0) {
+      return {
+        recordId: record.recordId,
+        title: record.title,
+        doi: cleanDoi,
+        channel: 'oa_direct',
+        publisher: profile!.name,
+        accessStatus: 'direct_pdf_ready',
+        isDirectDownloadable: true,
+        bestPdfUrl: profileCandidates[0],
+        candidatePdfUrls: profileCandidates,
+        landingUrl: record.url || (cleanDoi ? `https://doi.org/${cleanDoi}` : undefined),
+        channelDetails: {
+          doiPrefix,
+          hasConfiguredKey: false,
+          recommendedMethod: `${profile!.name} 官方 PDF 路由`
+        }
+      };
+    }
+
+    // 9. General publisher / institutional fallback
     const publisherName = channelInfo?.publisher || record.venue || 'Academic Publisher';
     return {
       recordId: record.recordId,
@@ -351,8 +371,7 @@ export class FullTextRouter {
         hasConfiguredKey: false,
         recommendedMethod: record.openAccess
           ? '公共开放获取仓储'
-          : `${publisherName} 机构订阅通道 (推荐校园网出入口或通过 scansci-pdf 获取)`,
-        scansciCommand: cleanDoi ? `scansci-pdf get ${cleanDoi}` : undefined
+          : `${publisherName} 机构订阅通道 (需校园网/WebVPN/CARSI 或手动导入 cookie)`
       }
     };
   }
@@ -386,3 +405,4 @@ function extractIeeeArticleNumber(url?: string): string | undefined {
 }
 
 export default FullTextRouter;
+import { buildPdfCandidates, publisherProfileFor } from './download/publisherPdfRouter.js';

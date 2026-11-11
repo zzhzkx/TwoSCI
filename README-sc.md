@@ -45,6 +45,36 @@ TwoSCI 是一个面向 Codex 和 Claude Code 的文献研究 MCP 服务与插件
 `search_literature` 的显式来源。它默认不加入 `quick`、`balanced`、`deep`
 的检索源集合。
 
+## 全文获取：原生集成，不依赖外部 CLI
+
+PDF 获取逻辑已从 scansci-pdf 移植为 TypeScript，默认不调用 `scansci-pdf`
+或 `mineru` 命令行。获取顺序：
+
+1. 记录自带的 PDF 直链 / 输入 URL
+2. arXiv（含 `10.48550/arXiv.*` DOI）
+3. Unpaywall
+4. OpenAlex
+5. Semantic Scholar
+6. Europe PMC / PMC
+7. Crossref PDF link
+8. Elsevier API（`ELSEVIER_API_KEY`）
+9. 22 家出版商的确定性 PDF 路由（Elsevier、Springer Nature、Wiley、IEEE、
+   MDPI、PLOS、Frontiers、Copernicus、ACS、RSC、IOP、AIP、APS、Oxford、
+   SAGE、Taylor & Francis、Science、PNAS、Optica、ACM 等）
+10. WebVPN / CARSI（可选，原生实现）
+11. 落地页 HTML 中的 `citation_pdf_url` / PDF 链接
+
+配置项：
+
+- `MINERU_TOKEN`：MinerU Cloud 解析；未配置时回退到内置 `pdf-parse`。
+- `OA_EMAIL`：Unpaywall/Crossref/OpenAlex 的 polite-pool 邮箱。
+- `TWOSCI_WEBVPN_*`、`TWOSCI_CARSI_*`：机构访问；也可用
+  `TWOSCI_SCANSCI_CONFIG` 显式导入一次已有的 scansci 配置（只读）。
+
+边界：插件不捆绑浏览器，也不集成 Sci-Hub。Cloudflare/Akamai 强验证或交互式
+SSO 登录无法用纯 HTTP 复刻；这类情况会诚实返回失败原因，可用机构 cookie
+或后续可选的浏览器模块处理。
+
 ## 结果三层
 
 - `metadata`：标题、作者、年份、期刊、DOI、来源 ID。

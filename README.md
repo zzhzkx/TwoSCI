@@ -47,6 +47,35 @@ access, and legacy workflows.
 also accepted as an explicit source in `search_literature`; it is not part of
 the default `quick`, `balanced`, or `deep` source sets.
 
+## Native Full-Text Acquisition
+
+PDF acquisition is ported from scansci-pdf into TypeScript and requires no
+external `scansci-pdf` or `mineru` CLI. Resolution order:
+
+1. Record-provided PDF URL or input URL
+2. arXiv
+3. Unpaywall
+4. OpenAlex
+5. Semantic Scholar
+6. Europe PMC / PMC
+7. Crossref PDF links
+8. Elsevier API (`ELSEVIER_API_KEY`)
+9. Deterministic routes for 22 publishers (Elsevier, Springer Nature, Wiley,
+   IEEE, MDPI, PLOS, Frontiers, Copernicus, ACS, RSC, IOP, AIP, APS, Oxford,
+   SAGE, Taylor & Francis, Science, PNAS, Optica, ACM, and others)
+10. Optional WebVPN / CARSI
+11. PDF links discovered on the landing page
+
+`MINERU_TOKEN` enables MinerU Cloud parsing; without it, the bundled
+`pdf-parse` extractor is used. `OA_EMAIL` is used for polite-pool requests.
+Institutional access is configured with `TWOSCI_WEBVPN_*` and
+`TWOSCI_CARSI_*`; an existing scansci config can be imported read-only via
+`TWOSCI_SCANSCI_CONFIG`.
+
+The plugin does not bundle a browser and does not integrate Sci-Hub.
+Cloudflare/Akamai challenges and interactive SSO cannot be replicated over
+plain HTTP; those cases fail with an explicit reason.
+
 ## Result Layers
 
 `search_literature` separates response detail from upstream quota:

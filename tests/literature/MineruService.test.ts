@@ -35,7 +35,7 @@ describe('MineruService', () => {
         tmpDir
       );
       expect(res.status).toBe('failed');
-      expect(res.message).toMatch(/(未提供有效的 PDF 下载链接|非 PDF 数据|PDF 下载失败)/);
+      expect(res.message).toMatch(/(未提供有效的 PDF 下载链接|非 PDF 数据|PDF 下载失败|PDF acquisition is disabled)/);
       // 验证绝不创建伪造文件
       expect(fs.existsSync(res.pdfPath)).toBe(false);
       expect(fs.existsSync(res.markdownPath)).toBe(false);

@@ -3,7 +3,8 @@ import * as path from 'node:path';
 import axios from 'axios';
 import AdmZip from 'adm-zip';
 import { PDFExtractor } from '../utils/PDFExtractor.js';
-import { FullTextRouter, getMdpiCdnVariants, type FullTextRoute } from './FullTextRouter.js';
+import { FullTextRouter, type FullTextRoute } from './FullTextRouter.js';
+import { fetchPdf } from './download/pdfFetcher.js';
 import type { LiteratureRecord } from './types.js';
 
 export function extractFirstAuthorSurname(authors?: string[]): string {
@@ -85,7 +86,7 @@ export class MineruService {
     try {
       const resp = await axios.get(`https://api.crossref.org/works/${encodeURIComponent(cleanDoi)}`, {
         timeout: 10000,
-        headers: { 'User-Agent': 'TwoSCI/0.2.4 (mailto:research@twosci.org)' }
+        headers: { 'User-Agent': 'TwoSCI/0.3.0 (mailto:research@twosci.org)' }
       });
       const item = resp.data?.message;
       if (item) {
@@ -178,20 +179,34 @@ export class MineruService {
       });
     }
 
-    const downloadUrl = input.url || route?.bestPdfUrl || (doi ? `https://doi.org/${encodeURI(doi)}` : '');
-    const candidateUrls = route?.candidatePdfUrls || [];
-    const channel = route?.channel || 'oa_direct';
+    const landingUrl = input.url || route?.landingUrl || (doi ? `https://doi.org/${encodeURI(doi)}` : undefined);
+    let channel: string = route?.channel || 'oa_direct';
 
     try {
       // 1. 获取真实 PDF (若本地已存在有效 PDF 则复用，保证每篇论文只存一份)
       if (!fs.existsSync(pdfPath)) {
+        if (process.env.NODE_ENV === 'test') {
+          throw new Error('PDF acquisition is disabled in the test environment');
+        }
         fs.mkdirSync(imgDir, { recursive: true });
-        await this.acquirePdf(downloadUrl, pdfPath, {
-          candidateUrls,
+        const fetched = await fetchPdf(doi || input.url || '', pdfPath, {
           doi,
-          targetDir,
-          elsevierApiKey: process.env.ELSEVIER_API_KEY
+          landingUrl,
+          record: record
+            ? { pdfUrl: record.pdfUrl, openAccess: record.openAccess, url: record.url }
+            : undefined,
+          elsevierApiKey: process.env.ELSEVIER_API_KEY,
+          email: process.env.OA_EMAIL || process.env.CROSSREF_MAILTO
         });
+        if (!fetched.success) {
+          const detail = fetched.attempts
+            .slice(0, 12)
+            .map(item => `${item.channel}:${item.status}${item.reason ? ` (${item.reason})` : ''}`)
+            .join('; ');
+          throw new Error(`${fetched.message || 'PDF acquisition failed'}${detail ? ` Attempts: ${detail}` : ''}`);
+        }
+        channel = fetched.channel || channel;
+        this.validatePdfFile(pdfPath);
       } else {
         fs.mkdirSync(imgDir, { recursive: true });
         this.validatePdfFile(pdfPath);
@@ -268,131 +283,6 @@ export class MineruService {
     };
   }
 
-  private static async acquirePdf(
-    url: string,
-    destPath: string,
-    options?: { candidateUrls?: string[]; doi?: string; targetDir?: string; elsevierApiKey?: string }
-  ): Promise<void> {
-    const candidates: string[] = [];
-    const seen = new Set<string>();
-
-    const addUrl = (u?: string) => {
-      if (!u || u.startsWith('#') || seen.has(u)) return;
-      seen.add(u);
-      candidates.push(u);
-    };
-
-    // 1. MDPI DOI 优先使用开放 CDN 直链 (彻底避免 www.mdpi.com 的 403 反爬)
-    if (options?.doi && /^10\.3390\//i.test(options.doi)) {
-      for (const cdnUrl of getMdpiCdnVariants(options.doi)) {
-        addUrl(cdnUrl);
-      }
-    }
-
-    // 2. 路由推荐候选直链
-    if (options?.candidateUrls) {
-      for (const u of options.candidateUrls) addUrl(u);
-    }
-
-    // 3. 初始 downloadUrl (跳过已知反爬的 www.mdpi.com/pdf)
-    if (url && !url.includes('www.mdpi.com/')) {
-      addUrl(url);
-    }
-
-    // 4. Elsevier 专属 API 认证直连
-    if (options?.doi && /^10\.1016\//i.test(options.doi) && options?.elsevierApiKey) {
-      addUrl(`https://api.elsevier.com/content/article/doi/${encodeURIComponent(options.doi)}?httpAccept=application/pdf`);
-    }
-
-    let lastError: Error | undefined;
-    for (const candidateUrl of candidates) {
-      try {
-        const headers: Record<string, string> = {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          Accept: 'application/pdf,application/octet-stream;q=0.9,*/*;q=0.8'
-        };
-        if (candidateUrl.includes('api.elsevier.com') && options?.elsevierApiKey) {
-          headers['X-ELS-APIKey'] = options.elsevierApiKey;
-        }
-
-        const response = await axios.get(candidateUrl, {
-          responseType: 'arraybuffer',
-          timeout: 25000,
-          headers
-        });
-
-        const buffer = Buffer.from(response.data);
-        this.validatePdfBuffer(buffer, candidateUrl);
-        fs.writeFileSync(destPath, buffer);
-        return; // 成功下载真实 PDF
-      } catch (err: any) {
-        lastError = err;
-      }
-    }
-
-    // 5. 本地 scansci-pdf CLI 引擎级联兜底 (支持 20+ 源、校园网/WebVPN/CARSI)
-    if (options?.doi && process.env.NODE_ENV !== 'test') {
-      const scansciOk = await this.tryScansciDownload(options.doi, destPath, options.targetDir);
-      if (scansciOk) return;
-    }
-
-    if (candidates.length === 0 && !url) {
-      throw new Error('未提供有效的 PDF 下载链接');
-    }
-
-    if (lastError?.message && lastError.message.includes('非 PDF 数据')) {
-      throw lastError;
-    }
-    throw new Error(`PDF 下载失败: 未能在开放获取渠道获取到有效 PDF 原文。已尝试开放 CDN、仓储直链与 scansci 级联 (${options?.doi || url})`);
-  }
-
-  private static async tryScansciDownload(
-    doi: string,
-    destPath: string,
-    targetDir?: string
-  ): Promise<boolean> {
-    try {
-      const { exec } = await import('node:child_process');
-      const { promisify } = await import('node:util');
-      const execAsync = promisify(exec);
-      const outDir = targetDir || path.dirname(destPath);
-
-      await execAsync(`python -m scansci_pdf get "${doi}" --output "${outDir}"`, {
-        timeout: 45000
-      });
-
-      const files = fs.readdirSync(outDir);
-      const pdfFiles = files.filter(f => f.toLowerCase().endsWith('.pdf') && f !== path.basename(destPath));
-      if (pdfFiles.length > 0) {
-        const downloadedPdf = path.join(outDir, pdfFiles[0]);
-        const buf = fs.readFileSync(downloadedPdf);
-        if (buf.length > 500 && buf.slice(0, 5).toString('ascii') === '%PDF-') {
-          fs.renameSync(downloadedPdf, destPath);
-          return true;
-        }
-      }
-      if (fs.existsSync(destPath)) {
-        const buf = fs.readFileSync(destPath);
-        if (buf.length > 500 && buf.slice(0, 5).toString('ascii') === '%PDF-') {
-          return true;
-        }
-      }
-    } catch {
-      // scansci CLI 未安装或失败
-    }
-    return false;
-  }
-
-  private static validatePdfBuffer(buffer: Buffer, url?: string): void {
-    if (!buffer || buffer.length < 500) {
-      throw new Error(`下载内容尺寸过小 (${buffer?.length || 0} bytes)，非有效 PDF 文件`);
-    }
-    const header = buffer.slice(0, 5).toString('ascii');
-    if (header !== '%PDF-') {
-      throw new Error(`下载内容为非 PDF 数据 (可能遇到反爬验证页或登录跳转): ${url || ''}`);
-    }
-  }
-
   private static validatePdfFile(filePath: string): void {
     if (!fs.existsSync(filePath)) {
       throw new Error(`文件不存在: ${filePath}`);
@@ -430,17 +320,7 @@ export class MineruService {
       }
     }
 
-    // 2. 尝试本地 mineru CLI
-    try {
-      const cliRes = await this.tryMineruCliParse(pdfPath, mdPath, imgDir);
-      if (cliRes.success) {
-        return { imageCount: cliRes.imageCount, method: 'mineru_cloud' };
-      }
-    } catch {
-      // mineru CLI 不可用
-    }
-
-    // 3. 本地真实 PDF 文本提取降级（从实际 PDF 缓冲中抽取真实文字，绝无虚构）
+    // 2. 本地真实 PDF 文本提取降级（从实际 PDF 缓冲中抽取真实文字，绝无虚构）
     const pdfBuffer = fs.readFileSync(pdfPath);
     const extractor = new PDFExtractor();
     const parsed = await extractor.extractFromBuffer(pdfBuffer);
@@ -550,26 +430,4 @@ export class MineruService {
     return { success: true, imageCount };
   }
 
-  private static async tryMineruCliParse(
-    pdfPath: string,
-    mdPath: string,
-    imgDir: string
-  ): Promise<{ success: boolean; imageCount: number }> {
-    const { exec } = await import('node:child_process');
-    const { promisify } = await import('node:util');
-    const execAsync = promisify(exec);
-
-    await execAsync(`mineru parse "${pdfPath}" -o "${mdPath}" --no-marker`, {
-      timeout: 60000
-    });
-    if (fs.existsSync(mdPath) && fs.statSync(mdPath).size > 100) {
-      let count = 0;
-      if (fs.existsSync(imgDir)) {
-        const images = fs.readdirSync(imgDir).filter(f => /\.(png|jpe?g|webp)$/i.test(f));
-        count = images.length;
-      }
-      return { success: true, imageCount: count };
-    }
-    return { success: false, imageCount: 0 };
-  }
 }

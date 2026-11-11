@@ -33,7 +33,7 @@ describe('FullTextRouter', () => {
     expect(route.channel).toBe('elsevier_api');
     expect(route.publisher).toContain('Elsevier');
     expect(route.channelDetails.doiPrefix).toBe('10.1016');
-    expect(route.channelDetails.scansciCommand).toContain('scansci-pdf get 10.1016/j.optlastec.2026.116502');
+    expect(route.channelDetails.recommendedMethod).toContain('Elsevier');
   });
 
   it('constructs direct MDPI CDN link for 10.3390 papers', () => {

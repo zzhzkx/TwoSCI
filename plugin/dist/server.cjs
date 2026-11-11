@@ -6,10 +6,10 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __glob = (map3) => (path12) => {
-  var fn = map3[path12];
+var __glob = (map3) => (path13) => {
+  var fn = map3[path13];
   if (fn) return fn();
-  throw new Error("Module not found in bundle: " + path12);
+  throw new Error("Module not found in bundle: " + path13);
 };
 var __esm = (fn, res, err) => function __init() {
   if (err) throw err[0];
@@ -3276,8 +3276,8 @@ var require_utils = __commonJS({
       }
       return ind;
     }
-    function removeDotSegments(path12) {
-      let input2 = path12;
+    function removeDotSegments(path13) {
+      let input2 = path13;
       const output2 = [];
       let nextSlash = -1;
       let len = 0;
@@ -3351,11 +3351,11 @@ var require_utils = __commonJS({
       }
       return output2.join("");
     }
-    function removeDotSegmentsRelative(path12) {
-      if (path12 === "" || path12[0] === "/") {
-        return removeDotSegments(path12);
+    function removeDotSegmentsRelative(path13) {
+      if (path13 === "" || path13[0] === "/") {
+        return removeDotSegments(path13);
       }
-      const segments = path12.split("/");
+      const segments = path13.split("/");
       const last2 = segments.length - 1;
       const output2 = [];
       let trailingDirectory = false;
@@ -3718,8 +3718,8 @@ var require_schemes = __commonJS({
       }
       if (wsComponent.resourceName) {
         const queryIndex = wsComponent.resourceName.indexOf("?");
-        const path12 = queryIndex === -1 ? wsComponent.resourceName : wsComponent.resourceName.slice(0, queryIndex);
-        wsComponent.path = path12 && path12 !== "/" ? path12 : void 0;
+        const path13 = queryIndex === -1 ? wsComponent.resourceName : wsComponent.resourceName.slice(0, queryIndex);
+        wsComponent.path = path13 && path13 !== "/" ? path13 : void 0;
         wsComponent.query = queryIndex === -1 ? void 0 : wsComponent.resourceName.slice(queryIndex + 1);
         wsComponent.resourceName = void 0;
       }
@@ -7256,12 +7256,12 @@ var require_dist = __commonJS({
         throw new Error(`Unknown format "${name}"`);
       return f;
     };
-    function addFormats(ajv, list, fs13, exportName) {
+    function addFormats(ajv, list, fs15, exportName) {
       var _a5;
       var _b;
       (_a5 = (_b = ajv.opts.code).formats) !== null && _a5 !== void 0 ? _a5 : _b.formats = (0, codegen_1._)`require("ajv-formats/dist/formats").${exportName}`;
       for (const f of list)
-        ajv.addFormat(f, fs13[f]);
+        ajv.addFormat(f, fs15[f]);
     }
     module2.exports = exports2 = formatsPlugin;
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -7340,8 +7340,8 @@ var require_package = __commonJS({
 // node_modules/dotenv/lib/main.js
 var require_main = __commonJS({
   "node_modules/dotenv/lib/main.js"(exports2, module2) {
-    var fs13 = require("fs");
-    var path12 = require("path");
+    var fs15 = require("fs");
+    var path13 = require("path");
     var os2 = require("os");
     var crypto2 = require("crypto");
     var packageJson = require_package();
@@ -7449,7 +7449,7 @@ var require_main = __commonJS({
       if (options && options.path && options.path.length > 0) {
         if (Array.isArray(options.path)) {
           for (const filepath of options.path) {
-            if (fs13.existsSync(filepath)) {
+            if (fs15.existsSync(filepath)) {
               possibleVaultPath = filepath.endsWith(".vault") ? filepath : `${filepath}.vault`;
             }
           }
@@ -7457,15 +7457,15 @@ var require_main = __commonJS({
           possibleVaultPath = options.path.endsWith(".vault") ? options.path : `${options.path}.vault`;
         }
       } else {
-        possibleVaultPath = path12.resolve(process.cwd(), ".env.vault");
+        possibleVaultPath = path13.resolve(process.cwd(), ".env.vault");
       }
-      if (fs13.existsSync(possibleVaultPath)) {
+      if (fs15.existsSync(possibleVaultPath)) {
         return possibleVaultPath;
       }
       return null;
     }
     function _resolveHome(envPath) {
-      return envPath[0] === "~" ? path12.join(os2.homedir(), envPath.slice(1)) : envPath;
+      return envPath[0] === "~" ? path13.join(os2.homedir(), envPath.slice(1)) : envPath;
     }
     function _configVault(options) {
       const debug = Boolean(options && options.debug);
@@ -7482,7 +7482,7 @@ var require_main = __commonJS({
       return { parsed };
     }
     function configDotenv(options) {
-      const dotenvPath = path12.resolve(process.cwd(), ".env");
+      const dotenvPath = path13.resolve(process.cwd(), ".env");
       let encoding = "utf8";
       const debug = Boolean(options && options.debug);
       const quiet = options && "quiet" in options ? options.quiet : true;
@@ -7506,13 +7506,13 @@ var require_main = __commonJS({
       }
       let lastError;
       const parsedAll = {};
-      for (const path13 of optionPaths) {
+      for (const path14 of optionPaths) {
         try {
-          const parsed = DotenvModule.parse(fs13.readFileSync(path13, { encoding }));
+          const parsed = DotenvModule.parse(fs15.readFileSync(path14, { encoding }));
           DotenvModule.populate(parsedAll, parsed, options);
         } catch (e) {
           if (debug) {
-            _debug(`Failed to load ${path13} ${e.message}`);
+            _debug(`Failed to load ${path14} ${e.message}`);
           }
           lastError = e;
         }
@@ -7527,7 +7527,7 @@ var require_main = __commonJS({
         const shortPaths = [];
         for (const filePath of optionPaths) {
           try {
-            const relative3 = path12.relative(process.cwd(), filePath);
+            const relative3 = path13.relative(process.cwd(), filePath);
             shortPaths.push(relative3);
           } catch (e) {
             if (debug) {
@@ -17709,11 +17709,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path12) {
-      if (!path12 || typeof path12 !== "string") {
+    function lookup(path13) {
+      if (!path13 || typeof path13 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path12).toLowerCase().substr(1);
+      var extension2 = extname("x." + path13).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -17787,10 +17787,10 @@ var require_abort = __commonJS({
   "node_modules/asynckit/lib/abort.js"(exports2, module2) {
     module2.exports = abort;
     function abort(state) {
-      Object.keys(state.jobs).forEach(clean.bind(state));
+      Object.keys(state.jobs).forEach(clean2.bind(state));
       state.jobs = {};
     }
-    function clean(key) {
+    function clean2(key) {
       if (typeof this.jobs[key] == "function") {
         this.jobs[key]();
       }
@@ -18818,11 +18818,11 @@ var require_form_data = __commonJS({
     "use strict";
     var CombinedStream = require_combined_stream();
     var util4 = require("util");
-    var path12 = require("path");
+    var path13 = require("path");
     var http3 = require("http");
     var https2 = require("https");
     var parseUrl2 = require("url").parse;
-    var fs13 = require("fs");
+    var fs15 = require("fs");
     var Stream = require("stream").Stream;
     var crypto2 = require("crypto");
     var mime = require_mime_types();
@@ -18892,7 +18892,7 @@ var require_form_data = __commonJS({
         if (value.end != void 0 && value.end != Infinity && value.start != void 0) {
           callback(null, value.end + 1 - (value.start ? value.start : 0));
         } else {
-          fs13.stat(value.path, function(err, stat) {
+          fs15.stat(value.path, function(err, stat) {
             if (err) {
               callback(err);
               return;
@@ -18949,11 +18949,11 @@ var require_form_data = __commonJS({
     FormData3.prototype._getContentDisposition = function(value, options) {
       var filename;
       if (typeof options.filepath === "string") {
-        filename = path12.normalize(options.filepath).replace(/\\/g, "/");
+        filename = path13.normalize(options.filepath).replace(/\\/g, "/");
       } else if (options.filename || value && (value.name || value.path)) {
-        filename = path12.basename(options.filename || value && (value.name || value.path));
+        filename = path13.basename(options.filename || value && (value.name || value.path));
       } else if (value && value.readable && hasOwn2(value, "httpVersion")) {
-        filename = path12.basename(value.client._httpMessage.path || "");
+        filename = path13.basename(value.client._httpMessage.path || "");
       }
       if (filename) {
         return 'filename="' + escapeHeaderParam(filename) + '"';
@@ -19166,9 +19166,9 @@ function isVisitable(thing) {
 function removeBrackets(key) {
   return utils_default.endsWith(key, "[]") ? key.slice(0, -2) : key;
 }
-function renderKey(path12, key, dots) {
-  if (!path12) return key;
-  return path12.concat(key).map(function each2(token, i) {
+function renderKey(path13, key, dots) {
+  if (!path13) return key;
+  return path13.concat(key).map(function each2(token, i) {
     token = removeBrackets(token);
     return !dots && i ? "[" + token + "]" : token;
   }).join(dots ? "." : "");
@@ -19246,13 +19246,13 @@ function toFormData(obj, formData, options) {
       return currentValue;
     });
   }
-  function defaultVisitor(value, key, path12) {
+  function defaultVisitor(value, key, path13) {
     let arr = value;
     if (utils_default.isReactNative(formData) && utils_default.isReactNativeBlob(value)) {
-      formData.append(renderKey(path12, key, dots), convertValue(value));
+      formData.append(renderKey(path13, key, dots), convertValue(value));
       return false;
     }
-    if (value && !path12 && typeof value === "object") {
+    if (value && !path13 && typeof value === "object") {
       if (utils_default.endsWith(key, "{}")) {
         key = metaTokens ? key : key.slice(0, -2);
         value = stringifyWithDepthLimit(value, 1);
@@ -19271,7 +19271,7 @@ function toFormData(obj, formData, options) {
     if (isVisitable(value)) {
       return true;
     }
-    formData.append(renderKey(path12, key, dots), convertValue(value));
+    formData.append(renderKey(path13, key, dots), convertValue(value));
     return false;
   }
   const exposedHelpers = Object.assign(predicates, {
@@ -19279,17 +19279,17 @@ function toFormData(obj, formData, options) {
     convertValue,
     isVisitable
   });
-  function build(value, path12, depth = 0) {
+  function build(value, path13, depth = 0) {
     if (utils_default.isUndefined(value)) return;
     throwIfMaxDepthExceeded(depth);
     if (stack.indexOf(value) !== -1) {
-      throw new Error("Circular reference detected in " + path12.join("."));
+      throw new Error("Circular reference detected in " + path13.join("."));
     }
     stack.push(value);
     utils_default.forEach(value, function each2(el, key) {
-      const result = !(utils_default.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default.isString(key) ? key.trim() : key, path12, exposedHelpers);
+      const result = !(utils_default.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default.isString(key) ? key.trim() : key, path13, exposedHelpers);
       if (result === true) {
-        build(el, path12 ? path12.concat(key) : [key], depth + 1);
+        build(el, path13 ? path13.concat(key) : [key], depth + 1);
       }
     });
     stack.pop();
@@ -19646,7 +19646,7 @@ var init_platform = __esm({
 // node_modules/axios/lib/helpers/toURLEncodedForm.js
 function toURLEncodedForm(data2, options) {
   return toFormData_default(data2, new platform_default.classes.URLSearchParams(), {
-    visitor: function(value, key, path12, helpers) {
+    visitor: function(value, key, path13, helpers) {
       if (platform_default.isNode && utils_default.isBuffer(value)) {
         this.append(key, value.toString("base64"));
         return false;
@@ -19675,14 +19675,14 @@ function throwIfDepthExceeded(index2) {
   }
 }
 function parsePropPath(name) {
-  const path12 = [];
+  const path13 = [];
   const pattern = /[^.[\]]+|\[([^.[\]]*)]/g;
   let match;
   while ((match = pattern.exec(name)) !== null) {
-    throwIfDepthExceeded(path12.length);
-    path12.push(match[0] === "[]" ? "" : match[1] || match[0]);
+    throwIfDepthExceeded(path13.length);
+    path13.push(match[0] === "[]" ? "" : match[1] || match[0]);
   }
-  return path12;
+  return path13;
 }
 function arrayToObject(arr) {
   const obj = {};
@@ -19715,12 +19715,12 @@ function normalizeArrays(obj) {
   return obj;
 }
 function formDataToJSON(formData) {
-  function buildPath(path12, value, target, index2) {
+  function buildPath(path13, value, target, index2) {
     throwIfDepthExceeded(index2);
-    let name = path12[index2++];
+    let name = path13[index2++];
     if (name === "__proto__") return true;
     const isNumericKey = Number.isFinite(+name);
-    const isLast = index2 >= path12.length;
+    const isLast = index2 >= path13.length;
     name = !name && utils_default.isArray(target) ? target.length : name;
     if (isLast) {
       if (utils_default.hasOwnProp(target, name)) {
@@ -19734,7 +19734,7 @@ function formDataToJSON(formData) {
     if (!utils_default.hasOwnProp(target, name) || !utils_default.isObject(target[name])) {
       target[name] = [];
     }
-    const result = buildPath(path12, value, target[name], index2);
+    const result = buildPath(path13, value, target[name], index2);
     if (result && utils_default.isArray(target[name])) {
       target[name] = arrayToObject(target[name]);
     }
@@ -23702,9 +23702,9 @@ var init_http = __esm({
           auth = urlUsername + ":" + urlPassword;
         }
         auth && headers.delete("authorization");
-        let path12;
+        let path13;
         try {
-          path12 = buildURL(
+          path13 = buildURL(
             parsed.pathname + parsed.search,
             own3("params"),
             own3("paramsSerializer")
@@ -23726,7 +23726,7 @@ var init_http = __esm({
           http2Options = Object.assign(/* @__PURE__ */ Object.create(null), http2Options, { lookup });
         }
         const options = Object.assign(/* @__PURE__ */ Object.create(null), {
-          path: path12,
+          path: path13,
           method,
           headers: toByteStringHeaderObject(headers),
           agents: { http: httpAgent, https: httpsAgent },
@@ -24150,14 +24150,14 @@ var init_cookies = __esm({
     cookies_default = platform_default.hasStandardBrowserEnv ? (
       // Standard browser envs support document.cookie
       {
-        write(name, value, expires, path12, domain2, secure, sameSite) {
+        write(name, value, expires, path13, domain2, secure, sameSite) {
           if (typeof document === "undefined") return;
           const cookie = [`${name}=${encodeURIComponent(value)}`];
           if (utils_default.isNumber(expires)) {
             cookie.push(`expires=${new Date(expires).toUTCString()}`);
           }
-          if (utils_default.isString(path12)) {
-            cookie.push(`path=${path12}`);
+          if (utils_default.isString(path13)) {
+            cookie.push(`path=${path13}`);
           }
           if (utils_default.isString(domain2)) {
             cookie.push(`domain=${domain2}`);
@@ -33006,7 +33006,7 @@ var init_ErrorHandler = __esm({
       /**
        * Get suggested retry delay based on error
        */
-      static getRetryDelay(error62, attempt = 1) {
+      static getRetryDelay(error62, attempt2 = 1) {
         const status = error62.response?.status || error62.status;
         if (status === 429) {
           const retryAfter = error62.response?.headers?.["retry-after"];
@@ -33016,12 +33016,12 @@ var init_ErrorHandler = __esm({
               return seconds * 1e3;
             }
           }
-          return Math.min(6e4, 1e3 * Math.pow(2, attempt));
+          return Math.min(6e4, 1e3 * Math.pow(2, attempt2));
         }
         if (status && status >= 500) {
-          return Math.min(3e4, 1e3 * Math.pow(2, attempt));
+          return Math.min(3e4, 1e3 * Math.pow(2, attempt2));
         }
-        return 1e3 * attempt;
+        return 1e3 * attempt2;
       }
       /**
        * Retry a function with exponential backoff and full jitter
@@ -33039,7 +33039,7 @@ var init_ErrorHandler = __esm({
           onRetry
         } = options;
         let lastError;
-        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        for (let attempt2 = 0; attempt2 <= maxRetries; attempt2++) {
           throwIfAborted(signal);
           try {
             return await fn();
@@ -33049,14 +33049,14 @@ var init_ErrorHandler = __esm({
               if (isAbortAwareError(error62)) throw error62;
               throw createAbortError();
             }
-            if (attempt >= maxRetries || !shouldRetry(error62, attempt)) {
+            if (attempt2 >= maxRetries || !shouldRetry(error62, attempt2)) {
               throw error62;
             }
-            const baseDelay = Math.min(maxDelayMs, initialDelayMs * Math.pow(2, attempt));
+            const baseDelay = Math.min(maxDelayMs, initialDelayMs * Math.pow(2, attempt2));
             const boundedRandom = Math.min(1, Math.max(0, Number(random()) || 0));
             const jitteredDelay = Math.floor(boundedRandom * baseDelay);
-            logDebug(`[Retry] ${context} attempt ${attempt + 1}/${maxRetries} failed, retrying in ${jitteredDelay}ms`);
-            onRetry?.(error62, attempt, jitteredDelay);
+            logDebug(`[Retry] ${context} attempt ${attempt2 + 1}/${maxRetries} failed, retrying in ${jitteredDelay}ms`);
+            onRetry?.(error62, attempt2, jitteredDelay);
             await waitForRetry(sleep, jitteredDelay, signal);
           }
         }
@@ -33149,8 +33149,8 @@ var init_PaperSource = __esm({
       /**
        * 获取建议的重试延迟
        */
-      getRetryDelay(error62, attempt = 1) {
-        return ErrorHandler.getRetryDelay(error62, attempt);
+      getRetryDelay(error62, attempt2 = 1) {
+        return ErrorHandler.getRetryDelay(error62, attempt2);
       }
       /**
        * 通用的日期解析
@@ -33221,7 +33221,7 @@ var init_constants = __esm({
       OPENALEX: "https://api.openalex.org",
       IEEE_XPLORE: "https://ieeexploreapi.ieee.org/api/v1"
     };
-    USER_AGENT = "TwoSCI/0.2.4 (Academic Research Tool)";
+    USER_AGENT = "TwoSCI/0.3.0 (Academic Research Tool)";
     DEFAULT_MAILTO = process.env.CROSSREF_MAILTO || "twosci@example.com";
   }
 });
@@ -46110,11 +46110,11 @@ var require_pdf_worker = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs13 = new FileSpec(names[name], xref);
+                      var fs15 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs13.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs15.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -51414,8 +51414,8 @@ var require_pdf_worker = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace)) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path12 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path12]);
+                        var path13 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path13]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -61137,7 +61137,7 @@ var require_pdf_worker = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join10(separator) {
+                join: function join11(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -88180,7 +88180,7 @@ var require_pdf = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join10(separator) {
+                join: function join11(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -94103,10 +94103,10 @@ var require_pdf = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path12 = paths[i];
-                    ctx.setTransform.apply(ctx, path12.transform);
-                    ctx.translate(path12.x, path12.y);
-                    path12.addToPath(ctx, path12.fontSize);
+                    var path13 = paths[i];
+                    ctx.setTransform.apply(ctx, path13.transform);
+                    ctx.translate(path13.x, path13.y);
+                    path13.addToPath(ctx, path13.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -95966,7 +95966,7 @@ var require_pdf = __commonJS({
                 throw new TypeError("Cannot call a class as a function");
               }
             }
-            var fs13 = require("fs");
+            var fs15 = require("fs");
             var http3 = require("http");
             var https2 = require("https");
             var url3 = require("url");
@@ -96299,8 +96299,8 @@ var require_pdf = __commonJS({
               function PDFNodeStreamFsFullReader2(stream4) {
                 _classCallCheck(this, PDFNodeStreamFsFullReader2);
                 var _this7 = _possibleConstructorReturn(this, (PDFNodeStreamFsFullReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsFullReader2)).call(this, stream4));
-                var path12 = decodeURI(_this7._url.path);
-                fs13.lstat(path12, function(error62, stat) {
+                var path13 = decodeURI(_this7._url.path);
+                fs15.lstat(path13, function(error62, stat) {
                   if (error62) {
                     _this7._errored = true;
                     _this7._reason = error62;
@@ -96308,7 +96308,7 @@ var require_pdf = __commonJS({
                     return;
                   }
                   _this7._contentLength = stat.size;
-                  _this7._setReadableStream(fs13.createReadStream(path12));
+                  _this7._setReadableStream(fs15.createReadStream(path13));
                   _this7._headersCapability.resolve();
                 });
                 return _this7;
@@ -96320,7 +96320,7 @@ var require_pdf = __commonJS({
               function PDFNodeStreamFsRangeReader2(stream4, start, end2) {
                 _classCallCheck(this, PDFNodeStreamFsRangeReader2);
                 var _this8 = _possibleConstructorReturn(this, (PDFNodeStreamFsRangeReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsRangeReader2)).call(this, stream4));
-                _this8._setReadableStream(fs13.createReadStream(decodeURI(_this8._url.path), {
+                _this8._setReadableStream(fs15.createReadStream(decodeURI(_this8._url.path), {
                   start,
                   end: end2 - 1
                 }));
@@ -108314,11 +108314,11 @@ var require_pdf_worker2 = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs13 = new FileSpec(names[name], xref);
+                      var fs15 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs13.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs15.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -113618,8 +113618,8 @@ var require_pdf_worker2 = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace)) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path12 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path12]);
+                        var path13 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path13]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -123352,7 +123352,7 @@ var require_pdf_worker2 = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join10(separator) {
+                join: function join11(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -150499,7 +150499,7 @@ var require_pdf2 = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join10(separator) {
+                join: function join11(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -156415,10 +156415,10 @@ var require_pdf2 = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path12 = paths[i];
-                    ctx.setTransform.apply(ctx, path12.transform);
-                    ctx.translate(path12.x, path12.y);
-                    path12.addToPath(ctx, path12.fontSize);
+                    var path13 = paths[i];
+                    ctx.setTransform.apply(ctx, path13.transform);
+                    ctx.translate(path13.x, path13.y);
+                    path13.addToPath(ctx, path13.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -157802,7 +157802,7 @@ var require_pdf2 = __commonJS({
                 throw new TypeError("Cannot call a class as a function");
               }
             }
-            var fs13 = require("fs");
+            var fs15 = require("fs");
             var http3 = require("http");
             var https2 = require("https");
             var url3 = require("url");
@@ -158135,8 +158135,8 @@ var require_pdf2 = __commonJS({
               function PDFNodeStreamFsFullReader2(stream4) {
                 _classCallCheck(this, PDFNodeStreamFsFullReader2);
                 var _this7 = _possibleConstructorReturn(this, (PDFNodeStreamFsFullReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsFullReader2)).call(this, stream4));
-                var path12 = decodeURI(_this7._url.path);
-                fs13.lstat(path12, function(error62, stat) {
+                var path13 = decodeURI(_this7._url.path);
+                fs15.lstat(path13, function(error62, stat) {
                   if (error62) {
                     _this7._errored = true;
                     _this7._reason = error62;
@@ -158144,7 +158144,7 @@ var require_pdf2 = __commonJS({
                     return;
                   }
                   _this7._contentLength = stat.size;
-                  _this7._setReadableStream(fs13.createReadStream(path12));
+                  _this7._setReadableStream(fs15.createReadStream(path13));
                   _this7._headersCapability.resolve();
                 });
                 return _this7;
@@ -158156,7 +158156,7 @@ var require_pdf2 = __commonJS({
               function PDFNodeStreamFsRangeReader2(stream4, start, end2) {
                 _classCallCheck(this, PDFNodeStreamFsRangeReader2);
                 var _this8 = _possibleConstructorReturn(this, (PDFNodeStreamFsRangeReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsRangeReader2)).call(this, stream4));
-                _this8._setReadableStream(fs13.createReadStream(decodeURI(_this8._url.path), {
+                _this8._setReadableStream(fs15.createReadStream(decodeURI(_this8._url.path), {
                   start,
                   end: end2 - 1
                 }));
@@ -175721,8 +175721,8 @@ var require_pdf_worker3 = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace)) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path12 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path12]);
+                        var path13 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path13]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -180540,11 +180540,11 @@ var require_pdf_worker3 = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs13 = new FileSpec(names[name], xref);
+                      var fs15 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs13.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs15.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -210177,10 +210177,10 @@ var require_pdf3 = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path12 = paths[i];
-                    ctx.setTransform.apply(ctx, path12.transform);
-                    ctx.translate(path12.x, path12.y);
-                    path12.addToPath(ctx, path12.fontSize);
+                    var path13 = paths[i];
+                    ctx.setTransform.apply(ctx, path13.transform);
+                    ctx.translate(path13.x, path13.y);
+                    path13.addToPath(ctx, path13.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -222425,11 +222425,11 @@ var require_pdf_worker4 = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs13 = new FileSpec(names[name], xref);
+                      var fs15 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs13.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs15.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -235575,8 +235575,8 @@ var require_pdf_worker4 = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace || state.fillColorSpace.name === "Pattern")) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path12 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path12]);
+                        var path13 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path13]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -267540,10 +267540,10 @@ var require_pdf4 = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path12 = paths[i];
-                    ctx.setTransform.apply(ctx, path12.transform);
-                    ctx.translate(path12.x, path12.y);
-                    path12.addToPath(ctx, path12.fontSize);
+                    var path13 = paths[i];
+                    ctx.setTransform.apply(ctx, path13.transform);
+                    ctx.translate(path13.x, path13.y);
+                    path13.addToPath(ctx, path13.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -272812,7 +272812,7 @@ var require_pdf4 = __commonJS({
                 throw new TypeError("Cannot call a class as a function");
               }
             }
-            var fs13 = require("fs");
+            var fs15 = require("fs");
             var http3 = require("http");
             var https2 = require("https");
             var url3 = require("url");
@@ -273166,11 +273166,11 @@ var require_pdf4 = __commonJS({
               function PDFNodeStreamFsFullReader2(stream4) {
                 _classCallCheck(this, PDFNodeStreamFsFullReader2);
                 var _this7 = _possibleConstructorReturn(this, (PDFNodeStreamFsFullReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsFullReader2)).call(this, stream4));
-                var path12 = decodeURIComponent(_this7._url.path);
+                var path13 = decodeURIComponent(_this7._url.path);
                 if (fileUriRegex.test(_this7._url.href)) {
-                  path12 = path12.replace(/^\//, "");
+                  path13 = path13.replace(/^\//, "");
                 }
-                fs13.lstat(path12, function(error62, stat) {
+                fs15.lstat(path13, function(error62, stat) {
                   if (error62) {
                     _this7._errored = true;
                     _this7._reason = error62;
@@ -273178,7 +273178,7 @@ var require_pdf4 = __commonJS({
                     return;
                   }
                   _this7._contentLength = stat.size;
-                  _this7._setReadableStream(fs13.createReadStream(path12));
+                  _this7._setReadableStream(fs15.createReadStream(path13));
                   _this7._headersCapability.resolve();
                 });
                 return _this7;
@@ -273190,11 +273190,11 @@ var require_pdf4 = __commonJS({
               function PDFNodeStreamFsRangeReader2(stream4, start, end2) {
                 _classCallCheck(this, PDFNodeStreamFsRangeReader2);
                 var _this8 = _possibleConstructorReturn(this, (PDFNodeStreamFsRangeReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsRangeReader2)).call(this, stream4));
-                var path12 = decodeURIComponent(_this8._url.path);
+                var path13 = decodeURIComponent(_this8._url.path);
                 if (fileUriRegex.test(_this8._url.href)) {
-                  path12 = path12.replace(/^\//, "");
+                  path13 = path13.replace(/^\//, "");
                 }
-                _this8._setReadableStream(fs13.createReadStream(path12, {
+                _this8._setReadableStream(fs15.createReadStream(path13, {
                   start,
                   end: end2 - 1
                 }));
@@ -279931,14 +279931,14 @@ var require_util2 = __commonJS({
         }
         const port = url3.port != null ? url3.port : url3.protocol === "https:" ? 443 : 80;
         let origin2 = url3.origin != null ? url3.origin : `${url3.protocol || ""}//${url3.hostname || ""}:${port}`;
-        let path12 = url3.path != null ? url3.path : `${url3.pathname || ""}${url3.search || ""}`;
+        let path13 = url3.path != null ? url3.path : `${url3.pathname || ""}${url3.search || ""}`;
         if (origin2[origin2.length - 1] === "/") {
           origin2 = origin2.slice(0, origin2.length - 1);
         }
-        if (path12 && path12[0] !== "/") {
-          path12 = `/${path12}`;
+        if (path13 && path13[0] !== "/") {
+          path13 = `/${path13}`;
         }
-        return new URL(`${origin2}${path12}`);
+        return new URL(`${origin2}${path13}`);
       }
       if (!isHttpOrHttpsPrefixed(url3.origin || url3.protocol)) {
         throw new InvalidArgumentError("Invalid URL protocol: the URL must start with `http:` or `https:`.");
@@ -280759,9 +280759,9 @@ var require_diagnostics = __commonJS({
         "undici:client:sendHeaders",
         (evt) => {
           const {
-            request: { method, path: path12, origin: origin2 }
+            request: { method, path: path13, origin: origin2 }
           } = evt;
-          debugLog("sending request to %s %s%s", method, origin2, path12);
+          debugLog("sending request to %s %s%s", method, origin2, path13);
         }
       );
     }
@@ -280779,14 +280779,14 @@ var require_diagnostics = __commonJS({
         "undici:request:headers",
         (evt) => {
           const {
-            request: { method, path: path12, origin: origin2 },
+            request: { method, path: path13, origin: origin2 },
             response: { statusCode }
           } = evt;
           debugLog(
             "received response to %s %s%s - HTTP %d",
             method,
             origin2,
-            path12,
+            path13,
             statusCode
           );
         }
@@ -280795,23 +280795,23 @@ var require_diagnostics = __commonJS({
         "undici:request:trailers",
         (evt) => {
           const {
-            request: { method, path: path12, origin: origin2 }
+            request: { method, path: path13, origin: origin2 }
           } = evt;
-          debugLog("trailers received from %s %s%s", method, origin2, path12);
+          debugLog("trailers received from %s %s%s", method, origin2, path13);
         }
       );
       diagnosticsChannel.subscribe(
         "undici:request:error",
         (evt) => {
           const {
-            request: { method, path: path12, origin: origin2 },
+            request: { method, path: path13, origin: origin2 },
             error: error62
           } = evt;
           debugLog(
             "request to %s %s%s errored - %s",
             method,
             origin2,
-            path12,
+            path13,
             error62.message
           );
         }
@@ -280926,7 +280926,7 @@ var require_request = __commonJS({
     var kHandler = /* @__PURE__ */ Symbol("handler");
     var Request = class {
       constructor(origin2, {
-        path: path12,
+        path: path13,
         method,
         body,
         headers,
@@ -280943,11 +280943,11 @@ var require_request = __commonJS({
         maxRedirections,
         typeOfService
       }, handler) {
-        if (typeof path12 !== "string") {
+        if (typeof path13 !== "string") {
           throw new InvalidArgumentError("path must be a string");
-        } else if (path12[0] !== "/" && !(path12.startsWith("http://") || path12.startsWith("https://")) && method !== "CONNECT") {
+        } else if (path13[0] !== "/" && !(path13.startsWith("http://") || path13.startsWith("https://")) && method !== "CONNECT") {
           throw new InvalidArgumentError("path must be an absolute URL or start with a slash");
-        } else if (invalidPathRegex.test(path12)) {
+        } else if (invalidPathRegex.test(path13)) {
           throw new InvalidArgumentError("invalid request path");
         }
         if (typeof method !== "string") {
@@ -281022,7 +281022,7 @@ var require_request = __commonJS({
         this.completed = false;
         this.aborted = false;
         this.upgrade = upgrade || null;
-        this.path = query ? serializePathWithQuery(path12, query) : path12;
+        this.path = query ? serializePathWithQuery(path13, query) : path13;
         this.origin = origin2;
         this.protocol = getProtocolFromUrlString(origin2);
         this.idempotent = idempotent == null ? method === "HEAD" || method === "GET" : idempotent;
@@ -286247,7 +286247,7 @@ var require_client_h1 = __commonJS({
       return method !== "GET" && method !== "HEAD" && method !== "OPTIONS" && method !== "TRACE" && method !== "CONNECT";
     }
     function writeH1(client, request) {
-      const { method, path: path12, host, upgrade, blocking, reset } = request;
+      const { method, path: path13, host, upgrade, blocking, reset } = request;
       let { body, headers, contentLength } = request;
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH" || method === "QUERY" || method === "PROPFIND" || method === "PROPPATCH";
       if (util4.isFormDataLike(body)) {
@@ -286325,7 +286325,7 @@ var require_client_h1 = __commonJS({
       if (socket.setTypeOfService) {
         socket.setTypeOfService(request.typeOfService);
       }
-      let header = `${method} ${path12} HTTP/1.1\r
+      let header = `${method} ${path13} HTTP/1.1\r
 `;
       if (typeof host === "string") {
         header += `host: ${host}\r
@@ -287002,7 +287002,7 @@ var require_client_h2 = __commonJS({
       const headersTimeout = request.headersTimeout ?? client[kHeadersTimeout];
       const bodyTimeout = request.bodyTimeout ?? client[kBodyTimeout];
       const session = client[kHTTP2Session];
-      const { method, path: path12, host, upgrade, expectContinue, signal, protocol, headers: reqHeaders } = request;
+      const { method, path: path13, host, upgrade, expectContinue, signal, protocol, headers: reqHeaders } = request;
       let { body } = request;
       if (upgrade != null && upgrade !== "websocket") {
         util4.errorRequest(client, request, new InvalidArgumentError(`Custom upgrade "${upgrade}" not supported over HTTP/2`));
@@ -287071,7 +287071,7 @@ var require_client_h2 = __commonJS({
           }
           headers[HTTP2_HEADER_METHOD] = "CONNECT";
           headers[HTTP2_HEADER_PROTOCOL] = "websocket";
-          headers[HTTP2_HEADER_PATH] = path12;
+          headers[HTTP2_HEADER_PATH] = path13;
           if (protocol === "ws:" || protocol === "wss:") {
             headers[HTTP2_HEADER_SCHEME] = protocol === "ws:" ? "http" : "https";
           } else {
@@ -287123,7 +287123,7 @@ var require_client_h2 = __commonJS({
         stream4.setTimeout(headersTimeout);
         return true;
       }
-      headers[HTTP2_HEADER_PATH] = path12;
+      headers[HTTP2_HEADER_PATH] = path13;
       headers[HTTP2_HEADER_SCHEME] = protocol === "http:" ? "http" : "https";
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH";
       if (body && typeof body.read === "function") {
@@ -289479,10 +289479,10 @@ var require_proxy_agent = __commonJS({
         };
         const {
           origin: origin2,
-          path: path12 = "/",
+          path: path13 = "/",
           headers = {}
         } = opts;
-        opts.path = origin2 + path12;
+        opts.path = origin2 + path13;
         if (!("host" in headers) && !("Host" in headers)) {
           const { host } = new URL(origin2);
           headers.host = host;
@@ -291642,20 +291642,20 @@ var require_mock_utils = __commonJS({
       }
       return normalizedQp;
     }
-    function safeUrl(path12) {
-      if (typeof path12 !== "string") {
-        return path12;
+    function safeUrl(path13) {
+      if (typeof path13 !== "string") {
+        return path13;
       }
-      const pathSegments = path12.split("?", 3);
+      const pathSegments = path13.split("?", 3);
       if (pathSegments.length !== 2) {
-        return path12;
+        return path13;
       }
       const qp = new URLSearchParams(pathSegments.pop());
       qp.sort();
       return [...pathSegments, qp.toString()].join("?");
     }
-    function matchKey(mockDispatch2, { path: path12, method, body, headers }) {
-      const pathMatch = matchValue(mockDispatch2.path, path12);
+    function matchKey(mockDispatch2, { path: path13, method, body, headers }) {
+      const pathMatch = matchValue(mockDispatch2.path, path13);
       const methodMatch = matchValue(mockDispatch2.method, method);
       const bodyMatch = typeof mockDispatch2.body !== "undefined" ? matchValue(mockDispatch2.body, body) : true;
       const headersMatch = matchHeaders(mockDispatch2, headers);
@@ -291680,8 +291680,8 @@ var require_mock_utils = __commonJS({
       const basePath = key.query ? serializePathWithQuery(key.path, key.query) : key.path;
       const resolvedPath = typeof basePath === "string" ? safeUrl(basePath) : basePath;
       const resolvedPathWithoutTrailingSlash = removeTrailingSlash(resolvedPath);
-      let matchedMockDispatches = mockDispatches.filter(({ consumed }) => !consumed).filter(({ path: path12, ignoreTrailingSlash }) => {
-        return ignoreTrailingSlash ? matchValue(removeTrailingSlash(safeUrl(path12)), resolvedPathWithoutTrailingSlash) : matchValue(safeUrl(path12), resolvedPath);
+      let matchedMockDispatches = mockDispatches.filter(({ consumed }) => !consumed).filter(({ path: path13, ignoreTrailingSlash }) => {
+        return ignoreTrailingSlash ? matchValue(removeTrailingSlash(safeUrl(path13)), resolvedPathWithoutTrailingSlash) : matchValue(safeUrl(path13), resolvedPath);
       });
       if (matchedMockDispatches.length === 0) {
         throw new MockNotMatchedError(`Mock dispatch not matched for path '${resolvedPath}'`);
@@ -291720,19 +291720,19 @@ var require_mock_utils = __commonJS({
         mockDispatches.splice(index2, 1);
       }
     }
-    function removeTrailingSlash(path12) {
-      while (path12.endsWith("/")) {
-        path12 = path12.slice(0, -1);
+    function removeTrailingSlash(path13) {
+      while (path13.endsWith("/")) {
+        path13 = path13.slice(0, -1);
       }
-      if (path12.length === 0) {
-        path12 = "/";
+      if (path13.length === 0) {
+        path13 = "/";
       }
-      return path12;
+      return path13;
     }
     function buildKey(opts) {
-      const { path: path12, method, body, headers, query } = opts;
+      const { path: path13, method, body, headers, query } = opts;
       return {
-        path: path12,
+        path: path13,
         method,
         body,
         headers,
@@ -292422,10 +292422,10 @@ var require_pending_interceptors_formatter = __commonJS({
       }
       format(pendingInterceptors) {
         const withPrettyHeaders = pendingInterceptors.map(
-          ({ method, path: path12, data: { statusCode }, persist, times, timesInvoked, origin: origin2 }) => ({
+          ({ method, path: path13, data: { statusCode }, persist, times, timesInvoked, origin: origin2 }) => ({
             Method: method,
             Origin: origin2,
-            Path: path12,
+            Path: path13,
             "Status code": statusCode,
             Persistent: persist ? PERSISTENT : NOT_PERSISTENT,
             Invocations: timesInvoked,
@@ -292507,9 +292507,9 @@ var require_mock_agent = __commonJS({
         const acceptNonStandardSearchParameters = this[kMockAgentAcceptsNonStandardSearchParameters];
         const dispatchOpts = { ...opts };
         if (acceptNonStandardSearchParameters && dispatchOpts.path) {
-          const [path12, searchParams] = dispatchOpts.path.split("?");
+          const [path13, searchParams] = dispatchOpts.path.split("?");
           const normalizedSearchParams = normalizeSearchParams(searchParams, acceptNonStandardSearchParameters);
-          dispatchOpts.path = `${path12}?${normalizedSearchParams}`;
+          dispatchOpts.path = `${path13}?${normalizedSearchParams}`;
         }
         return this[kAgent].dispatch(dispatchOpts, handler);
       }
@@ -292714,7 +292714,7 @@ var require_snapshot_recorder = __commonJS({
   "node_modules/undici/lib/mock/snapshot-recorder.js"(exports2, module2) {
     "use strict";
     var { writeFile, readFile, mkdir } = require("node:fs/promises");
-    var { dirname: dirname6, resolve: resolve6 } = require("node:path");
+    var { dirname: dirname5, resolve: resolve6 } = require("node:path");
     var { setTimeout: setTimeout2, clearTimeout: clearTimeout2 } = require("node:timers");
     var { InvalidArgumentError, UndiciError } = require_errors2();
     var { hashId, isUrlExcludedFactory, normalizeHeaders, createHeaderFilters } = require_snapshot_utils();
@@ -292910,12 +292910,12 @@ var require_snapshot_recorder = __commonJS({
        * @return {Promise<void>} - Resolves when snapshots are loaded
        */
       async loadSnapshots(filePath) {
-        const path12 = filePath || this.#snapshotPath;
-        if (!path12) {
+        const path13 = filePath || this.#snapshotPath;
+        if (!path13) {
           throw new InvalidArgumentError("Snapshot path is required");
         }
         try {
-          const data2 = await readFile(resolve6(path12), "utf8");
+          const data2 = await readFile(resolve6(path13), "utf8");
           const parsed = JSON.parse(data2);
           if (Array.isArray(parsed)) {
             this.#snapshots.clear();
@@ -292929,7 +292929,7 @@ var require_snapshot_recorder = __commonJS({
           if (error62.code === "ENOENT") {
             this.#snapshots.clear();
           } else {
-            throw new UndiciError(`Failed to load snapshots from ${path12}`, { cause: error62 });
+            throw new UndiciError(`Failed to load snapshots from ${path13}`, { cause: error62 });
           }
         }
       }
@@ -292940,12 +292940,12 @@ var require_snapshot_recorder = __commonJS({
        * @returns {Promise<void>} - Resolves when snapshots are saved
        */
       async saveSnapshots(filePath) {
-        const path12 = filePath || this.#snapshotPath;
-        if (!path12) {
+        const path13 = filePath || this.#snapshotPath;
+        if (!path13) {
           throw new InvalidArgumentError("Snapshot path is required");
         }
-        const resolvedPath = resolve6(path12);
-        await mkdir(dirname6(resolvedPath), { recursive: true });
+        const resolvedPath = resolve6(path13);
+        await mkdir(dirname5(resolvedPath), { recursive: true });
         const data2 = Array.from(this.#snapshots.entries()).map(([hash2, snapshot]) => ({
           hash: hash2,
           snapshot
@@ -293581,15 +293581,15 @@ var require_redirect_handler = __commonJS({
         }
         this.history[kRedirectCacheControl].push(headers["cache-control"]);
         const { origin: origin2, pathname, search } = util4.parseURL(new URL(this.location, this.opts.origin && new URL(this.opts.path, this.opts.origin)));
-        const path12 = search ? `${pathname}${search}` : pathname;
-        const redirectUrlString = `${origin2}${path12}`;
+        const path13 = search ? `${pathname}${search}` : pathname;
+        const redirectUrlString = `${origin2}${path13}`;
         for (const historyUrl of this.history) {
           if (historyUrl.toString() === redirectUrlString) {
             throw new InvalidArgumentError(`Redirect loop detected. Cannot redirect to ${origin2}. This typically happens when using a Client or Pool with cross-origin redirects. Use an Agent for cross-origin redirects.`);
           }
         }
         this.opts.headers = cleanRequestHeaders(this.opts.headers, statusCode === 303, this.opts.origin !== origin2);
-        this.opts.path = path12;
+        this.opts.path = path13;
         this.opts.origin = origin2;
         this.opts.query = null;
       }
@@ -295357,10 +295357,10 @@ var require_cache_handler = __commonJS({
       }
       return locationUrl.pathname + locationUrl.search;
     }
-    function deleteCachedUri(store, cacheKey2, path12) {
+    function deleteCachedUri(store, cacheKey2, path13) {
       deleteCachedValue(store, {
         ...cacheKey2,
-        path: path12
+        path: path13
       });
       for (let i = 0; i < util4.safeHTTPMethods.length; i++) {
         const method = util4.safeHTTPMethods[i];
@@ -295368,7 +295368,7 @@ var require_cache_handler = __commonJS({
           deleteCachedValue(store, {
             ...cacheKey2,
             method,
-            path: path12
+            path: path13
           });
         }
       }
@@ -295379,9 +295379,9 @@ var require_cache_handler = __commonJS({
       }
       const values = Array.isArray(headerValue) ? headerValue : [headerValue];
       for (let i = 0; i < values.length; i++) {
-        const path12 = getSameOriginPath(cacheKey2, values[i]);
-        if (path12 !== void 0) {
-          deleteCachedUri(store, cacheKey2, path12);
+        const path13 = getSameOriginPath(cacheKey2, values[i]);
+        if (path13 !== void 0) {
+          deleteCachedUri(store, cacheKey2, path13);
         }
       }
     }
@@ -300592,11 +300592,11 @@ var require_fetch = __commonJS({
       function dispatch({ body }) {
         const url3 = requestCurrentURL(request);
         const agent = fetchParams.controller.dispatcher;
-        const path12 = url3.pathname + url3.search;
+        const path13 = url3.pathname + url3.search;
         const hasTrailingQuestionMark = url3.search.length === 0 && url3.href[url3.href.length - url3.hash.length - 1] === "?";
         return new Promise((resolve6, reject) => agent.dispatch(
           {
-            path: hasTrailingQuestionMark ? `${path12}?` : path12,
+            path: hasTrailingQuestionMark ? `${path13}?` : path13,
             origin: url3.origin,
             method: request.method,
             body: agent.isMockActive ? request.body && (request.body.source || request.body.stream) : body,
@@ -301543,9 +301543,9 @@ var require_util5 = __commonJS({
         }
       }
     }
-    function validateCookiePath(path12) {
-      for (let i = 0; i < path12.length; ++i) {
-        const code = path12.charCodeAt(i);
+    function validateCookiePath(path13) {
+      for (let i = 0; i < path13.length; ++i) {
+        const code = path13.charCodeAt(i);
         if (code < 32 || // exclude CTLs (0-31)
         code > 126 || // exclude DEL and non-ascii
         code === 59) {
@@ -304981,11 +304981,11 @@ var require_undici = __commonJS({
           if (typeof opts.path !== "string") {
             throw new InvalidArgumentError("invalid opts.path");
           }
-          let path12 = opts.path;
+          let path13 = opts.path;
           if (!opts.path.startsWith("/")) {
-            path12 = `/${path12}`;
+            path13 = `/${path13}`;
           }
-          url3 = new URL(util4.parseOrigin(url3).origin + path12);
+          url3 = new URL(util4.parseOrigin(url3).origin + path13);
         } else {
           if (!opts) {
             opts = typeof url3 === "object" ? url3 : {};
@@ -311472,25 +311472,25 @@ var require_utils5 = __commonJS({
       }
       mkdirSync8(folder);
     };
-    Utils.prototype.writeFileTo = function(path12, content, overwrite, attr2) {
+    Utils.prototype.writeFileTo = function(path13, content, overwrite, attr2) {
       const self2 = this;
-      if (self2.fs.existsSync(path12)) {
+      if (self2.fs.existsSync(path13)) {
         if (!overwrite) return false;
-        var stat = self2.fs.statSync(path12);
+        var stat = self2.fs.statSync(path13);
         if (stat.isDirectory()) {
           return false;
         }
       }
-      var folder = pth.dirname(path12);
+      var folder = pth.dirname(path13);
       if (!self2.fs.existsSync(folder)) {
         self2.makeDir(folder);
       }
       var fd;
       try {
-        fd = self2.fs.openSync(path12, "w", 438);
+        fd = self2.fs.openSync(path13, "w", 438);
       } catch (e) {
-        self2.fs.chmodSync(path12, 438);
-        fd = self2.fs.openSync(path12, "w", 438);
+        self2.fs.chmodSync(path13, 438);
+        fd = self2.fs.openSync(path13, "w", 438);
       }
       if (fd) {
         try {
@@ -311499,22 +311499,22 @@ var require_utils5 = __commonJS({
           self2.fs.closeSync(fd);
         }
       }
-      self2.fs.chmodSync(path12, attr2 || 438);
+      self2.fs.chmodSync(path13, attr2 || 438);
       return true;
     };
-    Utils.prototype.writeFileToAsync = function(path12, content, overwrite, attr2, callback) {
+    Utils.prototype.writeFileToAsync = function(path13, content, overwrite, attr2, callback) {
       if (typeof attr2 === "function") {
         callback = attr2;
         attr2 = void 0;
       }
       const self2 = this;
-      self2.fs.exists(path12, function(exist) {
+      self2.fs.exists(path13, function(exist) {
         if (exist && !overwrite) return callback(false);
-        self2.fs.stat(path12, function(err, stat) {
+        self2.fs.stat(path13, function(err, stat) {
           if (exist && stat && stat.isDirectory()) {
             return callback(false);
           }
-          var folder = pth.dirname(path12);
+          var folder = pth.dirname(path13);
           self2.fs.exists(folder, function(exists) {
             if (!exists) {
               try {
@@ -311527,16 +311527,16 @@ var require_utils5 = __commonJS({
               self2.fs.write(fd, content, 0, content.length, 0, function(writeErr) {
                 self2.fs.close(fd, function() {
                   if (writeErr) return callback(false);
-                  self2.fs.chmod(path12, attr2 || 438, function() {
+                  self2.fs.chmod(path13, attr2 || 438, function() {
                     callback(true);
                   });
                 });
               });
             };
-            self2.fs.open(path12, "w", 438, function(err2, fd) {
+            self2.fs.open(path13, "w", 438, function(err2, fd) {
               if (err2) {
-                self2.fs.chmod(path12, 438, function() {
-                  self2.fs.open(path12, "w", 438, function(retryErr, fd2) {
+                self2.fs.chmod(path13, 438, function() {
+                  self2.fs.open(path13, "w", 438, function(retryErr, fd2) {
                     if (retryErr || !fd2) return callback(false);
                     writeToFd(fd2);
                   });
@@ -311572,10 +311572,10 @@ var require_utils5 = __commonJS({
         if (stat.isSymbolicLink()) throw Errors.FILE_IN_THE_WAY(`"${cur}"`);
       }
     };
-    Utils.prototype.findFiles = function(path12) {
+    Utils.prototype.findFiles = function(path13) {
       const self2 = this;
       const canLstat = typeof self2.fs.lstatSync === "function";
-      const rootReal = self2.fs.realpathSync(path12);
+      const rootReal = self2.fs.realpathSync(path13);
       function escapesRoot(p) {
         if (!canLstat) return false;
         if (!self2.fs.lstatSync(p).isSymbolicLink()) return false;
@@ -311594,23 +311594,23 @@ var require_utils5 = __commonJS({
         }
         let files = [];
         self2.fs.readdirSync(dir).forEach(function(file2) {
-          const path13 = pth.join(dir, file2);
-          if (escapesRoot(path13)) return;
-          const stat = self2.fs.statSync(path13);
-          if (!pattern || pattern.test(path13)) {
-            files.push(pth.normalize(path13) + (stat.isDirectory() ? self2.sep : ""));
+          const path14 = pth.join(dir, file2);
+          if (escapesRoot(path14)) return;
+          const stat = self2.fs.statSync(path14);
+          if (!pattern || pattern.test(path14)) {
+            files.push(pth.normalize(path14) + (stat.isDirectory() ? self2.sep : ""));
           }
           if (stat.isDirectory() && recursive2) {
-            const realDir = self2.fs.realpathSync(path13);
+            const realDir = self2.fs.realpathSync(path14);
             if (!visited.has(realDir)) {
               visited.add(realDir);
-              files = files.concat(findSync(path13, pattern, recursive2, visited));
+              files = files.concat(findSync(path14, pattern, recursive2, visited));
             }
           }
         });
         return files;
       }
-      return findSync(path12, void 0, true, /* @__PURE__ */ new Set([rootReal]));
+      return findSync(path13, void 0, true, /* @__PURE__ */ new Set([rootReal]));
     };
     Utils.prototype.findFilesAsync = function(dir, cb) {
       const self2 = this;
@@ -311707,14 +311707,14 @@ var require_utils5 = __commonJS({
           return "UNSUPPORTED (" + method + ")";
       }
     };
-    Utils.canonical = function(path12) {
-      if (!path12) return "";
-      const safeSuffix = pth.posix.normalize("/" + path12.split("\\").join("/"));
+    Utils.canonical = function(path13) {
+      if (!path13) return "";
+      const safeSuffix = pth.posix.normalize("/" + path13.split("\\").join("/"));
       return pth.join(".", safeSuffix);
     };
-    Utils.zipnamefix = function(path12) {
-      if (!path12) return "";
-      const safeSuffix = pth.posix.normalize("/" + path12.split("\\").join("/"));
+    Utils.zipnamefix = function(path13) {
+      if (!path13) return "";
+      const safeSuffix = pth.posix.normalize("/" + path13.split("\\").join("/"));
       return pth.posix.join(".", safeSuffix);
     };
     Utils.findLast = function(arr, callback) {
@@ -311731,9 +311731,9 @@ var require_utils5 = __commonJS({
       prefix = pth.resolve(pth.normalize(prefix));
       var parts = name.split("/");
       for (var i = 0, l = parts.length; i < l; i++) {
-        var path12 = pth.normalize(pth.join(prefix, parts.slice(i, l).join(pth.sep)));
-        if (path12 === prefix || path12.startsWith(prefix + pth.sep)) {
-          return path12;
+        var path13 = pth.normalize(pth.join(prefix, parts.slice(i, l).join(pth.sep)));
+        if (path13 === prefix || path13.startsWith(prefix + pth.sep)) {
+          return path13;
         }
       }
       return pth.normalize(pth.join(prefix, pth.basename(name)));
@@ -311783,8 +311783,8 @@ var require_utils5 = __commonJS({
 var require_fattr = __commonJS({
   "node_modules/adm-zip/util/fattr.js"(exports2, module2) {
     var pth = require("path");
-    module2.exports = function(path12, { fs: fs13 }) {
-      var _path = path12 || "", _obj = newAttr(), _stat = null;
+    module2.exports = function(path13, { fs: fs15 }) {
+      var _path = path13 || "", _obj = newAttr(), _stat = null;
       function newAttr() {
         return {
           directory: false,
@@ -311795,8 +311795,8 @@ var require_fattr = __commonJS({
           atime: 0
         };
       }
-      if (_path && fs13.existsSync(_path)) {
-        _stat = fs13.statSync(_path);
+      if (_path && fs15.existsSync(_path)) {
+        _stat = fs15.statSync(_path);
         _obj.directory = _stat.isDirectory();
         _obj.mtime = _stat.mtime;
         _obj.atime = _stat.atime;
@@ -313218,8 +313218,8 @@ var require_adm_zip = __commonJS({
         return null;
       }
       function fixPath(zipPath) {
-        const { join: join10, normalize, sep } = pth.posix;
-        return join10(pth.isAbsolute(zipPath) ? "/" : ".", normalize(sep + zipPath.split("\\").join(sep) + sep));
+        const { join: join11, normalize, sep } = pth.posix;
+        return join11(pth.isAbsolute(zipPath) ? "/" : ".", normalize(sep + zipPath.split("\\").join(sep) + sep));
       }
       function filenameFilter(filterfn) {
         if (filterfn instanceof RegExp) {
@@ -314522,10 +314522,10 @@ function mergeDefs(...defs) {
 function cloneDef(schema) {
   return mergeDefs(schema._zod.def);
 }
-function getElementAtPath(obj, path12) {
-  if (!path12)
+function getElementAtPath(obj, path13) {
+  if (!path13)
     return obj;
-  return path12.reduce((acc, key) => acc?.[key], obj);
+  return path13.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys = Object.keys(promisesObj);
@@ -314865,11 +314865,11 @@ function explicitlyAborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path12, issues) {
+function prefixIssues(path13, issues) {
   return issues.map((iss) => {
     var _a5;
     (_a5 = iss).path ?? (_a5.path = []);
-    iss.path.unshift(path12);
+    iss.path.unshift(path13);
     return iss;
   });
 }
@@ -315331,16 +315331,16 @@ function flattenError(error62, mapper = (issue2) => issue2.message) {
 }
 function formatError(error62, mapper = (issue2) => issue2.message) {
   const fieldErrors = { _errors: [] };
-  const processError = (error63, path12 = []) => {
+  const processError = (error63, path13 = []) => {
     for (const issue2 of error63.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path12, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path13, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path12, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path13, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path12, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path13, ...issue2.path]);
       } else {
-        const fullpath = [...path12, ...issue2.path];
+        const fullpath = [...path13, ...issue2.path];
         if (fullpath.length === 0) {
           fieldErrors._errors.push(mapper(issue2));
         } else {
@@ -315379,17 +315379,17 @@ function formatError(error62, mapper = (issue2) => issue2.message) {
 }
 function treeifyError(error62, mapper = (issue2) => issue2.message) {
   const result = { errors: [] };
-  const processError = (error63, path12 = []) => {
+  const processError = (error63, path13 = []) => {
     var _a5;
     for (const issue2 of error63.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path12, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path13, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path12, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path13, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path12, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path13, ...issue2.path]);
       } else {
-        const fullpath = [...path12, ...issue2.path];
+        const fullpath = [...path13, ...issue2.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue2));
           continue;
@@ -315428,8 +315428,8 @@ function treeifyError(error62, mapper = (issue2) => issue2.message) {
 }
 function toDotPath(_path) {
   const segs = [];
-  const path12 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path12) {
+  const path13 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path13) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -333048,13 +333048,13 @@ function resolveRef(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path12 = ref.slice(1).split("/").filter(Boolean);
-  if (path12.length === 0) {
+  const path13 = ref.slice(1).split("/").filter(Boolean);
+  if (path13.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path12[0] === defsKey) {
-    const key = path12[1] === void 0 ? void 0 : decodeJSONPointerSegment(path12[1]);
+  if (path13[0] === defsKey) {
+    const key = path13[1] === void 0 ? void 0 : decodeJSONPointerSegment(path13[1]);
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -337069,8 +337069,8 @@ var StdioServerTransport = class {
 
 // src/server.ts
 var dotenv = __toESM(require_main(), 1);
-var path11 = __toESM(require("node:path"), 1);
-var fs12 = __toESM(require("node:fs"), 1);
+var path12 = __toESM(require("node:path"), 1);
+var fs14 = __toESM(require("node:fs"), 1);
 var os = __toESM(require("node:os"), 1);
 var import_node_url = require("node:url");
 
@@ -356249,14 +356249,14 @@ var PublicAccessDiscovery = class {
         ...response ? this.pageDetails(response, candidateLimit.page) : {}
       }));
     }
-    const clean = observations.find((observation) => observation.page?.kind === "clean");
-    if (clean) {
-      const response = clean.response;
+    const clean2 = observations.find((observation) => observation.page?.kind === "clean");
+    if (clean2) {
+      const response = clean2.response;
       return this.outcome(this.status("not_found", {
         ...baseStatus,
         reason: "no_candidate",
         ...fallback,
-        ...response ? this.pageDetails(response, clean.page) : {}
+        ...response ? this.pageDetails(response, clean2.page) : {}
       }));
     }
     const last2 = observations[observations.length - 1];
@@ -357005,7 +357005,7 @@ var WebOfScienceRequestService = class {
   }
   async request(config3) {
     let lastError;
-    for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
+    for (let attempt2 = 0; attempt2 <= this.maxRetries; attempt2++) {
       await this.rateLimiter.waitForPermission();
       const quota = this.quotaManager.getStatus(this.quotaPlatform);
       const boundedReservation = Boolean(quota && quota.limit > 0);
@@ -357046,8 +357046,8 @@ var WebOfScienceRequestService = class {
           reservation = void 0;
         }
         lastError = error62;
-        if (attempt >= this.maxRetries || !ErrorHandler.isRetryable(error62)) throw error62;
-        const baseDelay = Math.min(3e4, 1e3 * Math.pow(2, attempt));
+        if (attempt2 >= this.maxRetries || !ErrorHandler.isRetryable(error62)) throw error62;
+        const baseDelay = Math.min(3e4, 1e3 * Math.pow(2, attempt2));
         await this.sleep(Math.floor(this.random() * baseDelay));
       }
     }
@@ -361725,20 +361725,20 @@ var SpringerSearcher = class extends PaperSource {
     if (!paper.pdfUrl) {
       throw new Error("PDF URL not available for this paper");
     }
-    const fs13 = await import("fs");
-    const path12 = await import("path");
+    const fs15 = await import("fs");
+    const path13 = await import("path");
     const savePath = options.savePath || "./downloads";
-    if (!fs13.existsSync(savePath)) {
-      fs13.mkdirSync(savePath, { recursive: true });
+    if (!fs15.existsSync(savePath)) {
+      fs15.mkdirSync(savePath, { recursive: true });
     }
     const fileName = `${doi.replace(/[\/\\:*?"<>|]/g, "_")}.pdf`;
-    const filePath = path12.join(savePath, fileName);
+    const filePath = path13.join(savePath, fileName);
     try {
       const response = await ErrorHandler.retryWithBackoff(
         () => axios_default.get(paper.pdfUrl, { responseType: "stream" }),
         { context: "Springer download" }
       );
-      const writer = fs13.createWriteStream(filePath);
+      const writer = fs15.createWriteStream(filePath);
       response.data.pipe(writer);
       return new Promise((resolve6, reject) => {
         writer.on("finish", () => resolve6(filePath));
@@ -361915,11 +361915,11 @@ var WileySearcher = class extends PaperSource {
       throw new Error(`Invalid DOI format: ${doi}. ${doiResult.error || ""}`);
     }
     const cleanDoi = doiResult.sanitized;
-    const fs13 = await import("fs");
-    const path12 = await import("path");
+    const fs15 = await import("fs");
+    const path13 = await import("path");
     const savePath = options.savePath || "./downloads";
-    if (!fs13.existsSync(savePath)) {
-      fs13.mkdirSync(savePath, { recursive: true });
+    if (!fs15.existsSync(savePath)) {
+      fs15.mkdirSync(savePath, { recursive: true });
     }
     const encodedDoi = encodeURIComponent(cleanDoi);
     const url3 = `/articles/${encodedDoi}`;
@@ -361936,8 +361936,8 @@ var WileySearcher = class extends PaperSource {
         { context: "Wiley download" }
       );
       const fileName = `${sanitizeFilename(cleanDoi)}.pdf`;
-      const filePath = path12.join(savePath, fileName);
-      const writer = fs13.createWriteStream(filePath);
+      const filePath = path13.join(savePath, fileName);
+      const writer = fs15.createWriteStream(filePath);
       response.data.pipe(writer);
       return new Promise((resolve6, reject) => {
         writer.on("finish", () => resolve6(filePath));
@@ -361995,13 +361995,13 @@ var WileySearcher = class extends PaperSource {
   async readPaper(paperId, options = {}) {
     try {
       const savePath = options.savePath || "./downloads";
-      const fs13 = await import("fs");
-      const path12 = await import("path");
+      const fs15 = await import("fs");
+      const path13 = await import("path");
       const doiResult = sanitizeDoi(paperId);
       const cleanDoi = doiResult.valid ? doiResult.sanitized : paperId;
       const fileName = `${sanitizeFilename(cleanDoi)}.pdf`;
-      const filePath = path12.join(savePath, fileName);
-      if (!fs13.existsSync(filePath)) {
+      const filePath = path13.join(savePath, fileName);
+      if (!fs15.existsSync(filePath)) {
         await this.downloadPdf(paperId, options);
       }
       const extractor = new PDFExtractor();
@@ -362496,13 +362496,13 @@ var OpenAlexSearcher = class extends PaperSource {
   constructor(apiKey, email3) {
     super("openalex", API_ENDPOINTS.OPENALEX, apiKey || process.env.OPENALEX_API_KEY);
     this.openAlexApiKey = firstConfigured3(apiKey, process.env.OPENALEX_API_KEY);
-    const contactEmail = firstConfigured3(email3, process.env.OPENALEX_EMAIL);
+    const contactEmail2 = firstConfigured3(email3, process.env.OPENALEX_EMAIL);
     this.client = axios_default.create({
       baseURL: API_ENDPOINTS.OPENALEX,
       timeout: TIMEOUTS.DEFAULT,
       headers: {
         Accept: "application/json",
-        "User-Agent": contactEmail ? `${USER_AGENT} (mailto:${contactEmail})` : USER_AGENT,
+        "User-Agent": contactEmail2 ? `${USER_AGENT} (mailto:${contactEmail2})` : USER_AGENT,
         ...this.openAlexApiKey ? { Authorization: `Bearer ${this.openAlexApiKey}` } : {}
       }
     });
@@ -362659,12 +362659,12 @@ var OpenAlexSearcher = class extends PaperSource {
     });
     return asArray2(response?.results).map(parseWork).filter((paper) => Boolean(paper));
   }
-  async getRawWork(path12, params) {
+  async getRawWork(path13, params) {
     try {
       const response = await ErrorHandler.retryWithBackoff(
         async () => {
           await this.rateLimiter.waitForPermission();
-          return this.client.get(path12, { params });
+          return this.client.get(path13, { params });
         },
         { context: "OpenAlex relation lookup" }
       );
@@ -364094,7 +364094,341 @@ function escapeBibtex(value) {
   return value.replace(/[{}]/g, "").replace(/\s+/g, " ").trim();
 }
 
-// src/literature/FullTextRouter.ts
+// src/literature/download/publisherProfiles.ts
+var PUBLISHER_PROFILES = [
+  {
+    name: "ACS",
+    aliases: ["acs", "american-chemical-society"],
+    doiPrefixes: ["10.1021"],
+    baseDomains: ["pubs.acs.org"],
+    articleUrlTemplate: "https://pubs.acs.org/doi/{doi}",
+    pdfUrlTemplates: ["https://pubs.acs.org/doi/pdf/{doi}?ref=article_openPDF", "https://pubs.acs.org/doi/pdf/{doi}", "https://pubs.acs.org/doi/epdf/{doi}"],
+    pdfUrlMarkers: ["/doi/pdf/", "/doi/epdf/", "/pdf/", "/pdf", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "AIP Publishing",
+    aliases: ["aip", "aip-publishing", "american-institute-of-physics"],
+    doiPrefixes: ["10.1063"],
+    baseDomains: ["pubs.aip.org"],
+    articleUrlTemplate: "https://pubs.aip.org/doi/{doi}",
+    pdfUrlTemplates: ["https://pubs.aip.org/doi/epdf/{doi}", "https://pubs.aip.org/doi/pdf/{doi}"],
+    pdfUrlMarkers: ["/doi/epdf/", "/doi/pdf/", "pdf"],
+    supplementaryUrlMarkers: ["supplementary", "supplemental", "supporting-information", "suppl_file"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "AMS",
+    aliases: ["ams", "ametsoc", "american-meteorological-society"],
+    doiPrefixes: ["10.1175"],
+    baseDomains: ["journals.ametsoc.org", "ametsoc.org"],
+    articleUrlTemplate: "https://journals.ametsoc.org/doi/{doi}",
+    pdfUrlTemplates: ["https://journals.ametsoc.org/doi/epdf/{doi}", "https://journals.ametsoc.org/doi/pdf/{doi}"],
+    pdfUrlMarkers: ["/doi/epdf/", "/doi/pdf/", "pdf"],
+    supplementaryUrlMarkers: ["supplementary", "supplemental", "supporting-information", "suppl_file"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "ACM",
+    aliases: ["acm", "association-for-computing-machinery"],
+    doiPrefixes: ["10.1145", "10.5555"],
+    baseDomains: ["dl.acm.org", "acm.org"],
+    articleUrlTemplate: "https://dl.acm.org/doi/{doi}",
+    pdfUrlTemplates: ["https://dl.acm.org/doi/pdf/{doi}"],
+    pdfUrlMarkers: ["/doi/pdf/", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "Annual Reviews",
+    aliases: ["annual-reviews", "annualreviews"],
+    doiPrefixes: ["10.1146"],
+    baseDomains: ["annualreviews.org"],
+    articleUrlTemplate: "https://annualreviews.org/doi/{doi}",
+    pdfUrlTemplates: ["https://annualreviews.org/doi/pdf/{doi}"],
+    pdfUrlMarkers: ["/doi/pdf/", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "APS",
+    aliases: ["aps", "american-physical-society"],
+    doiPrefixes: ["10.1103"],
+    baseDomains: ["journals.aps.org", "link.aps.org"],
+    articleUrlTemplate: "https://link.aps.org/doi/{doi}",
+    pdfUrlTemplates: ["https://link.aps.org/pdf/{doi}"],
+    pdfUrlMarkers: ["/pdf/", "/pdf", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "Copernicus",
+    aliases: ["copernicus", "copernicus-publications"],
+    doiPrefixes: ["10.5194"],
+    baseDomains: ["copernicus.org"],
+    articleUrlTemplate: "https://doi.org/{doi}",
+    pdfUrlTemplates: [],
+    pdfUrlMarkers: [".pdf", "/articles/", "pdf"],
+    supplementaryUrlMarkers: ["assets", "supplement", "supplementary"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "Wiley",
+    aliases: ["wiley", "wiley-online-library", "onlinelibrary"],
+    doiPrefixes: ["10.1002", "10.1111"],
+    baseDomains: ["onlinelibrary.wiley.com"],
+    articleUrlTemplate: "https://onlinelibrary.wiley.com/doi/{doi}",
+    pdfUrlTemplates: ["https://onlinelibrary.wiley.com/doi/pdfdirect/{doi}", "https://onlinelibrary.wiley.com/doi/pdf/{doi}", "https://onlinelibrary.wiley.com/doi/epdf/{doi}"],
+    pdfUrlMarkers: ["/doi/pdf/", "/doi/epdf/", "/doi/pdfdirect/", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary", "/pb-assets/", "wechat-wiley-chem"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "Elsevier",
+    aliases: ["elsevier", "sciencedirect", "science-direct"],
+    doiPrefixes: ["10.1016"],
+    baseDomains: ["www.sciencedirect.com", "sciencedirect.com", "linkinghub.elsevier.com"],
+    articleUrlTemplate: "https://doi.org/{doi}",
+    pdfUrlTemplates: [],
+    pdfUrlMarkers: ["/pdfft", "/pdf", "download", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary", "/content/image/", "-mmc", "_mmc"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "Frontiers",
+    aliases: ["frontiers"],
+    doiPrefixes: ["10.3389"],
+    baseDomains: ["www.frontiersin.org", "frontiersin.org"],
+    articleUrlTemplate: "https://doi.org/{doi}",
+    pdfUrlTemplates: ["https://www.frontiersin.org/articles/{doi}/pdf"],
+    pdfUrlMarkers: ["/pdf", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "IEEE",
+    aliases: ["ieee", "ieee-xplore"],
+    doiPrefixes: ["10.1109"],
+    baseDomains: ["ieeexplore.ieee.org", "ieee.org"],
+    articleUrlTemplate: "https://doi.org/{doi}",
+    pdfUrlTemplates: [],
+    pdfUrlMarkers: ["stampPDF", "getPDF", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "IOP",
+    aliases: ["iop", "iopscience"],
+    doiPrefixes: ["10.1088"],
+    baseDomains: ["iopscience.iop.org"],
+    articleUrlTemplate: "https://iopscience.iop.org/article/{doi}",
+    pdfUrlTemplates: ["https://iopscience.iop.org/article/{doi}/pdf"],
+    pdfUrlMarkers: ["/pdf", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "MDPI",
+    aliases: ["mdpi", "mdpi-ag"],
+    doiPrefixes: ["10.3390"],
+    baseDomains: ["www.mdpi.com", "mdpi.com"],
+    articleUrlTemplate: "https://doi.org/{doi}",
+    pdfUrlTemplates: [],
+    pdfUrlMarkers: ["/pdf", "pdf"],
+    supplementaryUrlMarkers: ["supplementary", "supplement", "/s1", "table-s", "figure-s"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "Optica",
+    aliases: ["optica", "osa", "opg", "optica-publishing-group", "optical-society-of-america"],
+    doiPrefixes: ["10.1364"],
+    baseDomains: ["opg.optica.org", "optica.org", "osapublishing.org"],
+    articleUrlTemplate: "https://doi.org/{doi}",
+    pdfUrlTemplates: ["https://opg.optica.org/viewmedia.cfm?r=1&uri={doi}", "https://opg.optica.org/viewmedia.cfm?r=1&uri={doi_quoted}"],
+    pdfUrlMarkers: ["viewmedia.cfm", "/pdf", "download", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "Oxford Academic",
+    aliases: ["oxfordacademic", "oxford-academic", "oup", "oxford-university-press"],
+    doiPrefixes: ["10.1093"],
+    baseDomains: ["academic.oup.com"],
+    articleUrlTemplate: "https://doi.org/{doi}",
+    pdfUrlTemplates: ["https://academic.oup.com/doi/pdf/{doi}", "https://academic.oup.com/doi/epdf/{doi}"],
+    pdfUrlMarkers: ["/doi/pdf/", "/doi/epdf/", "/article-pdf/", "pdf"],
+    supplementaryUrlMarkers: ["supplementary", "supplement", "suppl_file"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "PLOS",
+    aliases: ["plos", "public-library-of-science"],
+    doiPrefixes: ["10.1371"],
+    baseDomains: ["journals.plos.org", "plos.org"],
+    articleUrlTemplate: "https://doi.org/{doi}",
+    pdfUrlTemplates: [],
+    pdfUrlMarkers: ["type=printable", "/article/file", "pdf"],
+    supplementaryUrlMarkers: ["type=supplementary", "supplementary", "figure/image", "thumbnail"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "PNAS",
+    aliases: ["pnas", "proceedings-national-academy-sciences"],
+    doiPrefixes: ["10.1073"],
+    baseDomains: ["www.pnas.org", "pnas.org"],
+    articleUrlTemplate: "https://www.pnas.org/doi/{doi}",
+    pdfUrlTemplates: ["https://www.pnas.org/doi/epdf/{doi}", "https://www.pnas.org/doi/pdf/{doi}?download=true", "https://www.pnas.org/doi/pdf/{doi}"],
+    pdfUrlMarkers: ["/doi/epdf/", "/doi/pdf/", "download=true", "pdf"],
+    supplementaryUrlMarkers: ["supplementary", "suppl_file", "supporting-information"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "Royal Society Publishing",
+    aliases: ["royalsocietypublishing", "royal-society-publishing", "the-royal-society"],
+    doiPrefixes: ["10.1098"],
+    baseDomains: ["royalsocietypublishing.org"],
+    articleUrlTemplate: "https://royalsocietypublishing.org/doi/{doi}",
+    pdfUrlTemplates: ["https://royalsocietypublishing.org/doi/pdf/{doi}"],
+    pdfUrlMarkers: ["/doi/pdf/", "pdf"],
+    supplementaryUrlMarkers: ["supplementary", "supplement", "suppl_file"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "RSC",
+    aliases: ["rsc", "royal-society-of-chemistry"],
+    doiPrefixes: ["10.1039"],
+    baseDomains: ["pubs.rsc.org"],
+    articleUrlTemplate: "https://doi.org/{doi}",
+    pdfUrlTemplates: ["https://pubs.rsc.org/en/content/articlepdf/{doi}"],
+    pdfUrlMarkers: ["/content/articlepdf/", "/pdf", "download", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: [
+      {
+        domain: "pubs.rsc.org",
+        pathPrefix: "/en/content/articlelanding/",
+        pathTemplate: "/en/content/articlepdf/{source_path_after_prefix}"
+      }
+    ]
+  },
+  {
+    name: "Science",
+    aliases: ["science", "aaas", "american-association-for-the-advancement-of-science"],
+    doiPrefixes: ["10.1126"],
+    baseDomains: ["www.science.org", "science.org"],
+    articleUrlTemplate: "https://www.science.org/doi/{doi}",
+    pdfUrlTemplates: ["https://www.science.org/doi/epdf/{doi}", "https://www.science.org/doi/pdf/{doi}", "https://www.science.org/doi/pdf/{doi}?download=true"],
+    pdfUrlMarkers: ["/doi/epdf/", "/doi/pdf/", "download=true", "pdf"],
+    supplementaryUrlMarkers: ["supplementary", "supplement", "suppl_file"],
+    pdfSourcePathTemplates: []
+  },
+  {
+    name: "Springer Nature",
+    aliases: ["springer", "springer-nature", "nature"],
+    doiPrefixes: ["10.1007", "10.1038"],
+    baseDomains: ["link.springer.com", "www.nature.com", "nature.com"],
+    articleUrlTemplate: "https://doi.org/{doi}",
+    pdfUrlTemplates: ["https://link.springer.com/content/pdf/{doi_quoted}.pdf", "https://www.nature.com/articles/{doi_suffix}.pdf"],
+    pdfUrlMarkers: ["/content/pdf/", ".pdf", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: [
+      {
+        domain: "link.springer.com",
+        pathPrefix: "/article/",
+        pathTemplate: "/content/pdf/{doi_quoted}.pdf"
+      },
+      {
+        domain: "nature.com",
+        pathPrefix: "/articles/",
+        pathTemplate: "{source_path}.pdf"
+      }
+    ]
+  },
+  {
+    name: "World Scientific",
+    aliases: ["world-scientific", "worldscientific"],
+    doiPrefixes: ["10.1142"],
+    baseDomains: ["www.worldscientific.com", "worldscientific.com"],
+    articleUrlTemplate: "https://www.worldscientific.com/doi/{doi}",
+    pdfUrlTemplates: ["https://www.worldscientific.com/doi/pdf/{doi}"],
+    pdfUrlMarkers: ["/doi/pdf/", "pdf"],
+    supplementaryUrlMarkers: ["suppl_file", "suppdata", "supporting-information", "supplementary"],
+    pdfSourcePathTemplates: []
+  }
+];
+function inferPublisherProfile(doi) {
+  const normalized = doi.trim().toLowerCase();
+  let best;
+  let bestLength = 0;
+  for (const profile of PUBLISHER_PROFILES) {
+    for (const prefix of profile.doiPrefixes) {
+      if (!normalized.startsWith(`${prefix.toLowerCase()}/`) && normalized !== prefix.toLowerCase()) continue;
+      if (prefix.length > bestLength) {
+        best = profile;
+        bestLength = prefix.length;
+      }
+    }
+  }
+  return best;
+}
+function inferPublisherProfileFromUrl(rawUrl) {
+  let host = "";
+  try {
+    host = new URL(rawUrl).hostname.toLowerCase();
+  } catch {
+    return void 0;
+  }
+  return PUBLISHER_PROFILES.find(
+    (profile) => profile.baseDomains.some((domain2) => host === domain2.toLowerCase() || host.endsWith(`.${domain2.toLowerCase()}`))
+  );
+}
+function publisherPdfUrls(profile, doi) {
+  const suffix = doi.includes("/") ? doi.split("/").slice(1).join("/") : doi;
+  const values = {
+    doi,
+    doi_quoted: encodeURIComponent(doi),
+    doi_suffix: suffix,
+    doi_suffix_quoted: encodeURIComponent(suffix)
+  };
+  return profile.pdfUrlTemplates.map((template) => template.replace(/\{([a-z_]+)\}/g, (_, key) => values[key] ?? ""));
+}
+
+// src/literature/download/publisherPdfRouter.ts
+var PDF_LINK_TEXT_MARKERS = ["pdf", "download pdf", "full text pdf", "view pdf"];
+var PDF_URL_MARKERS = [".pdf", "/pdf", "/epdf", "/pdfdirect", "/pdfft", "download=true"];
+var PDF_JS_DEFAULT_URL_RE = /PDFViewerApplicationOptions\.set\(\s*['"]defaultUrl['"]\s*,\s*['"]([^'"]+)['"]/i;
+var PLOS_JOURNAL_PATHS = {
+  pbio: "plosbiology",
+  pcbi: "ploscompbiol",
+  pclm: "climate",
+  pdig: "digitalhealth",
+  pgen: "plosgenetics",
+  pgph: "globalpublichealth",
+  pmed: "plosmedicine",
+  pntd: "plosntds",
+  pone: "plosone",
+  ppat: "plospathogens",
+  pstr: "sustainabilitytransformation",
+  pwat: "water"
+};
+var PLOS_DOI_JOURNAL_RE = /^10\.1371\/journal\.([a-z0-9]+)\./i;
+var COPERNICUS_DOI_RE = /^10\.5194\/(?<journal>[a-z0-9]+)-(?<volume>\d+)-(?<page>.+)-(?<year>\d{4})$/i;
+var MDPI_ISSN_JOURNAL_CODES = {
+  "1424-8220": "s",
+  "1660-4601": "ijerph",
+  "1996-1073": "en",
+  "2071-1050": "su",
+  "2072-4292": "rs",
+  "2073-4441": "w",
+  "2075-5309": "buildings",
+  "2077-0375": "membranes",
+  "2227-7390": "math",
+  "2304-8158": "foods"
+};
+var MDPI_JOURNAL_CODE_ISSNS = Object.fromEntries(
+  Object.entries(MDPI_ISSN_JOURNAL_CODES).map(([issn, code]) => [code, issn])
+);
+var MDPI_NUMERIC_PATH_RE = /\/[0-9]{4}-[0-9Xx]{3,4}\/[0-9]+\/[0-9]+\/[0-9]+$/;
 var MDPI_SLUGS = {
   su: "sustainability",
   atmos: "atmosphere",
@@ -364113,13 +364447,405 @@ var MDPI_SLUGS = {
   ma: "materials",
   catal: "catalysts"
 };
+function extractElsevierPii(url3) {
+  for (const pattern of [
+    /\/pii\/([A-Z0-9]+)/i,
+    /\/retrieve\/pii\/([A-Z0-9]+)/i,
+    /[?&]pii=([A-Z0-9]+)/i,
+    /1-s2\.0-([A-Z0-9]+)/i
+  ]) {
+    const match = url3.match(pattern);
+    if (match) return match[1];
+  }
+  return "";
+}
+function extractIeeeArticleNumber(url3) {
+  for (const pattern of [/\/document\/(\d+)/i, /[?&]arnumber=(\d+)/i]) {
+    const match = url3.match(pattern);
+    if (match) return match[1];
+  }
+  return "";
+}
 function getMdpiCdnVariants(doi) {
-  const clean = normalizeDoi3(doi);
-  const m = clean.match(/^10\.3390\/([a-z]+)(\d{6,})$/i);
+  const normalized = doi.trim().toLowerCase();
+  const match = normalized.match(/^10\.3390\/([a-z]+)(\d{6,})$/i);
+  if (!match) return [];
+  const prefix = match[1].toLowerCase();
+  const digits = match[2];
+  const slug = MDPI_SLUGS[prefix] || prefix;
+  const variants = [];
+  const seen = /* @__PURE__ */ new Set();
+  for (const volumeTake of [2, 1]) {
+    if (digits.length <= volumeTake + 2) continue;
+    const volume = String(parseInt(digits.slice(0, volumeTake), 10)).padStart(2, "0");
+    const article = String(parseInt(digits.slice(volumeTake + 2), 10)).padStart(5, "0");
+    const base = `${slug}-${volume}-${article}`;
+    if (seen.has(base)) continue;
+    seen.add(base);
+    for (const suffix of ["", "-v2", "-v3", "-v4"]) {
+      variants.push(`https://mdpi-res.com/d_attachment/${slug}/${base}/article_deploy/${base}${suffix}.pdf`);
+    }
+  }
+  return variants;
+}
+function discoverPdfCandidatesFromHtml(html3, sourceUrl) {
+  const candidates = [];
+  const $2 = load(html3);
+  $2("meta").each((_, element) => {
+    const node2 = $2(element);
+    const key = clean(node2.attr("name") || node2.attr("property") || node2.attr("itemprop")).toLowerCase();
+    const content = clean(node2.attr("content"));
+    if (content && (key.includes("citation_pdf_url") || key.endsWith("pdf_url") || key === "pdf_url")) {
+      appendCandidate(candidates, content, sourceUrl);
+      appendQueryPdfCandidates(candidates, content, sourceUrl);
+    }
+  });
+  $2("a, link, iframe, embed, object").each((_, element) => {
+    const node2 = $2(element);
+    const target = clean(node2.attr("href") || node2.attr("src") || node2.attr("data"));
+    if (!target) return;
+    const label = clean([
+      node2.text(),
+      node2.attr("title"),
+      node2.attr("aria-label")
+    ].filter(Boolean).join(" ")).toLowerCase();
+    const contentType = clean(node2.attr("type")).toLowerCase();
+    const lowerTarget = target.toLowerCase();
+    if (PDF_URL_MARKERS.some((marker) => lowerTarget.includes(marker)) || PDF_LINK_TEXT_MARKERS.some((marker) => label.includes(marker)) || contentType.includes("pdf")) {
+      appendCandidate(candidates, target, sourceUrl);
+      appendQueryPdfCandidates(candidates, target, sourceUrl);
+    }
+  });
+  $2("script").each((_, element) => {
+    const text3 = $2(element).text();
+    for (const match of text3.matchAll(new RegExp(PDF_JS_DEFAULT_URL_RE.source, "gi"))) {
+      const target = decodeHtmlEntities(match[1]);
+      if (PDF_URL_MARKERS.some((marker) => target.toLowerCase().includes(marker))) {
+        appendCandidate(candidates, target, sourceUrl);
+        appendQueryPdfCandidates(candidates, target, sourceUrl);
+      }
+    }
+  });
+  return candidates;
+}
+function buildPdfCandidates(profile, doi, options = {}) {
+  const candidates = [];
+  const sourceUrl = options.sourceUrl || "";
+  const pii = extractElsevierPii(sourceUrl);
+  const profileName = profile.name.toLowerCase();
+  if (profileName === "elsevier" && pii) {
+    appendCandidate(candidates, `https://www.sciencedirect.com/science/article/pii/${pii}/pdfft`);
+  }
+  const arnumber = extractIeeeArticleNumber(sourceUrl);
+  if (profileName === "ieee" && arnumber) {
+    appendCandidate(candidates, `https://ieeexplore.ieee.org/stampPDF/getPDF.jsp?tp=&isnumber=&arnumber=${arnumber}`);
+    appendCandidate(candidates, `https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=${arnumber}`);
+  }
+  if (profileName === "aps") appendApsCandidates(candidates, sourceUrl);
+  if (profileName === "ams") appendAmsCandidates(candidates, sourceUrl);
+  if (profileName === "plos") appendPlosCandidates(candidates, doi, sourceUrl);
+  if (profileName === "copernicus") appendCopernicusCandidates(candidates, doi, sourceUrl);
+  if (profileName === "mdpi") appendMdpiCandidates(candidates, doi, sourceUrl);
+  if (profileName === "oxford academic") appendOxfordCandidates(candidates, doi, sourceUrl);
+  appendSourcePathCandidates(candidates, profile, doi, sourceUrl);
+  for (const url3 of publisherPdfUrls(profile, doi)) appendCandidate(candidates, url3);
+  for (const url3 of options.discoveredUrls || []) {
+    if (!clean(url3)) continue;
+    if (isSupplementaryUrl(profile, url3)) continue;
+    if (!isPdfCandidateUrl(profile, url3)) continue;
+    if (!belongsToCurrentArticle(profile, url3, doi, sourceUrl)) continue;
+    appendCandidate(candidates, url3, sourceUrl);
+  }
+  return candidates;
+}
+function publisherProfileFor(doi, sourceUrl) {
+  return (sourceUrl ? inferPublisherProfileFromUrl(sourceUrl) : void 0) || inferPublisherProfile(doi);
+}
+function isPdfCandidateUrl(profile, url3) {
+  const lower = url3.toLowerCase();
+  return lower.endsWith(".pdf") || profile.pdfUrlMarkers.some((marker) => lower.includes(marker.toLowerCase()));
+}
+function isSupplementaryUrl(profile, url3) {
+  const lower = url3.toLowerCase();
+  return profile.supplementaryUrlMarkers.some((marker) => lower.includes(marker.toLowerCase()));
+}
+function belongsToCurrentArticle(profile, url3, doi, sourceUrl = "") {
+  if (profile.name.toLowerCase() === "aps") {
+    const lower2 = url3.toLowerCase();
+    let host = "";
+    try {
+      host = new URL(url3).hostname.toLowerCase();
+    } catch {
+      host = "";
+    }
+    if (host.endsWith("journals.aps.org") || host.endsWith("link.aps.org")) {
+      if (lower2.includes("/accepted")) return false;
+      const doiLower2 = doi.toLowerCase();
+      const doiEscaped2 = doiLower2.replace("/", "%2f");
+      if (lower2.includes("/pdf/") || lower2.includes("/doi/")) {
+        return lower2.includes(doiLower2) || lower2.includes(doiEscaped2);
+      }
+    }
+    return true;
+  }
+  if (profile.name.toLowerCase() !== "elsevier") return true;
+  const sourcePii = extractElsevierPii(sourceUrl);
+  const candidatePii = extractElsevierPii(url3);
+  if (sourcePii && candidatePii) return sourcePii.toLowerCase() === candidatePii.toLowerCase();
+  const lower = url3.toLowerCase();
+  const doiLower = doi.toLowerCase();
+  const doiEscaped = doiLower.replace("/", "%2f");
+  if (sourcePii) return lower.includes(sourcePii.toLowerCase()) || lower.includes(doiLower) || lower.includes(doiEscaped);
+  return true;
+}
+function appendSourcePathCandidates(candidates, profile, doi, sourceUrl) {
+  const normalized = clean(sourceUrl);
+  if (!normalized) return;
+  let parsed;
+  try {
+    parsed = new URL(normalized);
+  } catch {
+    return;
+  }
+  const host = parsed.hostname.toLowerCase();
+  const sourcePath = parsed.pathname.replace(/\/+$/, "");
+  if (!/^https?:$/.test(parsed.protocol) || !host || !sourcePath) return;
+  for (const template of profile.pdfSourcePathTemplates) {
+    const domain2 = template.domain.toLowerCase();
+    if (host !== domain2 && !host.endsWith(`.${domain2}`)) continue;
+    const prefix = clean(template.pathPrefix);
+    if (prefix && !sourcePath.startsWith(prefix)) continue;
+    const afterPrefix = prefix ? sourcePath.slice(prefix.length).replace(/^\/+/, "") : sourcePath.replace(/^\/+/, "");
+    const candidatePath = formatTemplate(template.pathTemplate, {
+      doi,
+      doi_quoted: encodeURIComponent(doi),
+      doi_suffix: doi.includes("/") ? doi.split("/").slice(1).join("/") : doi,
+      doi_suffix_quoted: encodeURIComponent(doi.includes("/") ? doi.split("/").slice(1).join("/") : doi),
+      source_path: sourcePath,
+      source_path_quoted: encodeURIComponent(sourcePath).replace(/%2F/gi, "/"),
+      source_path_after_prefix: afterPrefix,
+      source_path_after_prefix_quoted: encodeURIComponent(afterPrefix).replace(/%2F/gi, "/")
+    });
+    if (!candidatePath) continue;
+    if (/^https?:\/\//i.test(candidatePath)) {
+      appendCandidate(candidates, candidatePath);
+    } else {
+      appendCandidate(candidates, candidatePath.startsWith("/") ? candidatePath : `/${candidatePath}`, `${parsed.protocol}//${parsed.host}`);
+    }
+  }
+}
+function appendApsCandidates(candidates, sourceUrl) {
+  let parsed;
+  try {
+    parsed = new URL(clean(sourceUrl));
+  } catch {
+    return;
+  }
+  const host = parsed.hostname.toLowerCase();
+  const sourcePath = parsed.pathname.replace(/\/+$/, "");
+  if (!/^https?:$/.test(parsed.protocol) || !host || !sourcePath) return;
+  if (host.endsWith("link.aps.org") && sourcePath.startsWith("/doi/")) {
+    appendCandidate(candidates, `${parsed.protocol}//${parsed.host}${sourcePath.replace("/doi/", "/pdf/")}`);
+    return;
+  }
+  if (!host.endsWith("journals.aps.org")) return;
+  if (sourcePath.includes("/abstract/")) {
+    appendCandidate(candidates, `${parsed.protocol}//${parsed.host}${sourcePath.replace("/abstract/", "/pdf/")}`);
+  } else if (sourcePath.endsWith("/pdf")) {
+    appendCandidate(candidates, parsed.toString());
+  }
+}
+function appendAmsCandidates(candidates, sourceUrl) {
+  let parsed;
+  try {
+    parsed = new URL(clean(sourceUrl));
+  } catch {
+    return;
+  }
+  const host = parsed.hostname.toLowerCase();
+  const sourcePath = parsed.pathname.replace(/\/+$/, "");
+  if (!/^https?:$/.test(parsed.protocol) || !host.endsWith("journals.ametsoc.org")) return;
+  if (!sourcePath.startsWith("/view/") || !sourcePath.toLowerCase().endsWith(".xml")) return;
+  const pdfPath = `/downloadpdf${sourcePath.slice(0, -4)}.pdf`;
+  appendCandidate(candidates, `${parsed.protocol}//${parsed.host}${pdfPath}`);
+}
+function appendPlosCandidates(candidates, doi, sourceUrl) {
+  const journalPath = plosJournalPathFromSource(sourceUrl) || plosJournalPathFromDoi(doi);
+  if (!journalPath) return;
+  appendCandidate(candidates, `https://journals.plos.org/${journalPath}/article/file?id=${doi}&type=printable`);
+}
+function plosJournalPathFromSource(sourceUrl) {
+  let parsed;
+  try {
+    parsed = new URL(clean(sourceUrl));
+  } catch {
+    return "";
+  }
+  if (parsed.hostname.toLowerCase() !== "journals.plos.org") return "";
+  const parts = parsed.pathname.split("/").filter(Boolean);
+  if (parts.length === 0 || parts[0] === "article") return "";
+  return parts[0];
+}
+function plosJournalPathFromDoi(doi) {
+  const match = doi.trim().match(PLOS_DOI_JOURNAL_RE);
+  return match ? PLOS_JOURNAL_PATHS[match[1].toLowerCase()] || "" : "";
+}
+function appendCopernicusCandidates(candidates, doi, sourceUrl) {
+  const match = doi.trim().toLowerCase().match(COPERNICUS_DOI_RE);
+  if (!match || !match.groups) return;
+  let host = "";
+  try {
+    host = new URL(clean(sourceUrl)).hostname.toLowerCase();
+  } catch {
+    host = "";
+  }
+  if (!host.endsWith("copernicus.org")) host = `${match.groups.journal.toLowerCase()}.copernicus.org`;
+  const suffix = doi.split("/").slice(1).join("/").toLowerCase();
+  const path13 = `/articles/${match.groups.volume}/${match.groups.page}/${match.groups.year}/${suffix}.pdf`;
+  appendCandidate(candidates, `https://${host}${path13}`);
+}
+function appendMdpiCandidates(candidates, doi, sourceUrl) {
+  for (const cdn of getMdpiCdnVariants(doi)) appendCandidate(candidates, cdn);
+  const sourcePdf = mdpiPdfUrlFromLandingUrl(sourceUrl);
+  if (sourcePdf) appendCandidate(candidates, sourcePdf);
+  const derivedLanding = mdpiLandingUrlFromDoi(doi);
+  const derivedPdf = mdpiPdfUrlFromLandingUrl(derivedLanding);
+  if (derivedPdf) appendCandidate(candidates, derivedPdf);
+}
+function mdpiPdfUrlFromLandingUrl(rawUrl) {
+  const candidate = clean(rawUrl);
+  if (!candidate) return "";
+  let parsed;
+  try {
+    parsed = new URL(candidate);
+  } catch {
+    return "";
+  }
+  const host = parsed.hostname.toLowerCase();
+  if (host !== "www.mdpi.com" && host !== "mdpi.com") return "";
+  const path13 = parsed.pathname.replace(/\/+$/, "");
+  if (!path13) return "";
+  if (path13.endsWith("/pdf") || path13.includes("/pdf/")) {
+    parsed.pathname = path13;
+    parsed.search = "";
+    return parsed.toString();
+  }
+  if (!MDPI_NUMERIC_PATH_RE.test(path13)) return "";
+  parsed.pathname = `${path13}/pdf`;
+  parsed.search = "";
+  return parsed.toString();
+}
+function mdpiLandingUrlFromDoi(doi) {
+  const normalized = doi.trim().toLowerCase();
+  if (!normalized.startsWith("10.3390/") || !normalized.includes("/")) return "";
+  const suffix = normalized.split("/").slice(1).join("/");
+  const journalCodes = Object.keys(MDPI_JOURNAL_CODE_ISSNS).sort((a, b) => b.length - a.length);
+  for (const journalCode of journalCodes) {
+    if (!suffix.startsWith(journalCode)) continue;
+    const encoded = suffix.slice(journalCode.length);
+    if (encoded.length < 7 || !/^\d+$/.test(encoded)) continue;
+    const volume = encoded.slice(0, -6);
+    const issue2 = encoded.slice(-6, -4);
+    const articleNumber = encoded.slice(-4);
+    if (!volume) continue;
+    return `https://www.mdpi.com/${MDPI_JOURNAL_CODE_ISSNS[journalCode]}/${Number(volume)}/${Number(issue2)}/${Number(articleNumber)}`;
+  }
+  return "";
+}
+function appendOxfordCandidates(candidates, doi, sourceUrl) {
+  let parsed;
+  try {
+    parsed = new URL(clean(sourceUrl));
+  } catch {
+    return;
+  }
+  const host = parsed.hostname.toLowerCase();
+  const sourcePath = parsed.pathname.replace(/\/+$/, "");
+  if (!/^https?:$/.test(parsed.protocol) || !host.endsWith("academic.oup.com")) return;
+  const match = sourcePath.match(/^\/(?<journal>[^/]+)\/article\/(?<rest>.+)$/i);
+  if (!match || !match.groups) return;
+  const suffix = doi.includes("/") ? doi.split("/").slice(1).join("/") : doi;
+  appendCandidate(
+    candidates,
+    `${parsed.protocol}//${parsed.host}/${match.groups.journal}/article-pdf/${match.groups.rest}/${suffix}.pdf`
+  );
+}
+function formatTemplate(template, values) {
+  return template.replace(/\{([a-z_]+)\}/g, (_, key) => values[key] ?? "");
+}
+function appendCandidate(candidates, candidate, sourceUrl = "") {
+  const normalized = clean(candidate);
+  if (!normalized) return;
+  let absolute = normalized;
+  if (sourceUrl) {
+    try {
+      absolute = new URL(normalized, sourceUrl).toString();
+    } catch {
+      return;
+    }
+  }
+  let parsed;
+  try {
+    parsed = new URL(absolute);
+  } catch {
+    return;
+  }
+  if (!/^https?:$/.test(parsed.protocol) || !parsed.hostname) return;
+  if (!candidates.includes(absolute)) candidates.push(absolute);
+}
+function appendQueryPdfCandidates(candidates, candidate, sourceUrl) {
+  let absolute;
+  try {
+    absolute = new URL(clean(candidate), sourceUrl).toString();
+  } catch {
+    return;
+  }
+  let parsed;
+  try {
+    parsed = new URL(absolute);
+  } catch {
+    return;
+  }
+  for (const [key, value] of parsed.searchParams.entries()) {
+    if (!["file", "pdf", "src", "url"].includes(key.toLowerCase())) continue;
+    if (PDF_URL_MARKERS.some((marker) => value.toLowerCase().includes(marker))) {
+      appendCandidate(candidates, value, absolute);
+    }
+  }
+}
+function clean(value) {
+  return String(value ?? "").replace(/\s+/g, " ").trim();
+}
+function decodeHtmlEntities(value) {
+  return value.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+}
+
+// src/literature/FullTextRouter.ts
+var MDPI_SLUGS2 = {
+  su: "sustainability",
+  atmos: "atmosphere",
+  w: "water",
+  f: "forests",
+  min: "minerals",
+  en: "energies",
+  polym: "polymers",
+  applbiosci: "appliedbiosciences",
+  app: "applsci",
+  educsci: "education",
+  tourhosp: "tourismhosp",
+  d: "diversity",
+  a: "algorithms",
+  dj: "dentistry",
+  ma: "materials",
+  catal: "catalysts"
+};
+function getMdpiCdnVariants2(doi) {
+  const clean2 = normalizeDoi3(doi);
+  const m = clean2.match(/^10\.3390\/([a-z]+)(\d{6,})$/i);
   if (!m) return [];
   const pref = m[1].toLowerCase();
   const digits = m[2];
-  const slug = MDPI_SLUGS[pref] || pref;
+  const slug = MDPI_SLUGS2[pref] || pref;
   const out = [];
   const seen = /* @__PURE__ */ new Set();
   for (const volTake of [2, 1]) {
@@ -364201,13 +364927,12 @@ var FullTextRouter = class {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: true,
-          recommendedMethod: "arXiv \u5F00\u653E\u83B7\u53D6\u76F4\u63A5\u4E0B\u8F7D",
-          scansciCommand: `scansci-pdf get ${arxivId}`
+          recommendedMethod: "arXiv \u5F00\u653E\u83B7\u53D6\u76F4\u63A5\u4E0B\u8F7D"
         }
       };
     }
     if (doiPrefix === "10.3390" && cleanDoi) {
-      const mdpiVariants = getMdpiCdnVariants(cleanDoi);
+      const mdpiVariants = getMdpiCdnVariants2(cleanDoi);
       const bestUrl = mdpiVariants[0] || (record2.pdfUrl && !record2.pdfUrl.includes("www.mdpi.com") ? record2.pdfUrl : `https://doi.org/${cleanDoi}`);
       return {
         recordId: record2.recordId,
@@ -364223,8 +364948,7 @@ var FullTextRouter = class {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: true,
-          recommendedMethod: "MDPI \u5F00\u653E CDN \u76F4\u8FDE (mdpi-res.com)",
-          scansciCommand: `scansci-pdf get ${cleanDoi}`
+          recommendedMethod: "MDPI \u5F00\u653E CDN \u76F4\u8FDE (mdpi-res.com)"
         }
       };
     }
@@ -364244,8 +364968,7 @@ var FullTextRouter = class {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: true,
-          recommendedMethod: "PLOS \u5B98\u65B9\u5F00\u653E\u83B7\u53D6\u76F4\u53D6",
-          scansciCommand: `scansci-pdf get ${cleanDoi}`
+          recommendedMethod: "PLOS \u5B98\u65B9\u5F00\u653E\u83B7\u53D6\u76F4\u53D6"
         }
       };
     }
@@ -364264,8 +364987,7 @@ var FullTextRouter = class {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: true,
-          recommendedMethod: "\u5DF2\u9A8C\u8BC1\u5F00\u653E\u83B7\u53D6 (Gold/Green OA) PDF \u76F4\u94FE",
-          scansciCommand: cleanDoi ? `scansci-pdf get ${cleanDoi}` : void 0
+          recommendedMethod: "\u5DF2\u9A8C\u8BC1\u5F00\u653E\u83B7\u53D6 (Gold/Green OA) PDF \u76F4\u94FE"
         }
       };
     }
@@ -364286,14 +365008,13 @@ var FullTextRouter = class {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: hasKey,
-          recommendedMethod: hasKey ? "Elsevier API \u6781\u901F\u901A\u9053 (\u914D\u5408\u6821\u56ED\u7F51/VPN\u51FA\u53E3\u53EF\u514D insttoken \u76F4\u63A5\u4E0B\u8F7D)" : "Elsevier ScienceDirect \u673A\u6784\u8BBF\u95EE (\u9700\u914D\u7F6E ELSEVIER_API_KEY \u6216\u6821\u56ED\u7F51)",
-          scansciCommand: `scansci-pdf get ${cleanDoi}`
+          recommendedMethod: hasKey ? "Elsevier API \u6781\u901F\u901A\u9053 (\u914D\u5408\u6821\u56ED\u7F51/VPN\u51FA\u53E3\u53EF\u514D insttoken \u76F4\u63A5\u4E0B\u8F7D)" : "Elsevier ScienceDirect \u673A\u6784\u8BBF\u95EE (\u9700\u914D\u7F6E ELSEVIER_API_KEY \u6216\u6821\u56ED\u7F51)"
         }
       };
     }
     if (doiPrefix === "10.1109") {
       const ieeeSourceId = record2.sources?.find((s) => s.source === "ieee")?.sourceId;
-      const articleNumber = record2.extra?.ieeeArticleNumber || (ieeeSourceId && /^\d+$/.test(ieeeSourceId) ? ieeeSourceId : "") || extractIeeeArticleNumber(record2.url);
+      const articleNumber = record2.extra?.ieeeArticleNumber || (ieeeSourceId && /^\d+$/.test(ieeeSourceId) ? ieeeSourceId : "") || extractIeeeArticleNumber2(record2.url);
       const ieeePdfUrl = articleNumber ? `https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=${articleNumber}` : void 0;
       const isOa = record2.openAccess || record2.extra?.isOa === true;
       return {
@@ -364310,8 +365031,7 @@ var FullTextRouter = class {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: Boolean(process.env.IEEE_XPLORE_API_KEY),
-          recommendedMethod: isOa ? "IEEE Xplore \u5F00\u653E\u83B7\u53D6\u76F4\u63A5\u8BBF\u95EE" : "IEEE \u673A\u6784\u8BA2\u9605\u901A\u9053 (\u9700\u6821\u56ED\u7F51/WebVPN/CARSI\u767B\u5F55)",
-          scansciCommand: cleanDoi ? `scansci-pdf get ${cleanDoi}` : void 0
+          recommendedMethod: isOa ? "IEEE Xplore \u5F00\u653E\u83B7\u53D6\u76F4\u63A5\u8BBF\u95EE" : "IEEE \u673A\u6784\u8BA2\u9605\u901A\u9053 (\u9700\u6821\u56ED\u7F51/WebVPN/CARSI\u767B\u5F55)"
         }
       };
     }
@@ -364332,8 +365052,31 @@ var FullTextRouter = class {
         channelDetails: {
           doiPrefix,
           hasConfiguredKey: hasKey,
-          recommendedMethod: isOa ? "Springer Nature \u5F00\u653E\u83B7\u53D6\u76F4\u8FBE" : hasKey ? "Springer TDM \u5B98\u65B9\u63A5\u53E3\u63D0\u53D6" : "SpringerLink \u673A\u6784\u8BBF\u95EE (\u6821\u56ED\u7F51 WebVPN)",
-          scansciCommand: `scansci-pdf get ${cleanDoi}`
+          recommendedMethod: isOa ? "Springer Nature \u5F00\u653E\u83B7\u53D6\u76F4\u8FBE" : hasKey ? "Springer TDM \u5B98\u65B9\u63A5\u53E3\u63D0\u53D6" : "SpringerLink \u673A\u6784\u8BBF\u95EE (\u6821\u56ED\u7F51 WebVPN)"
+        }
+      };
+    }
+    const profile = publisherProfileFor(cleanDoi, record2.url);
+    const profileCandidates = profile ? buildPdfCandidates(profile, cleanDoi, {
+      sourceUrl: record2.url,
+      discoveredUrls: record2.pdfUrl ? [record2.pdfUrl] : []
+    }) : [];
+    if (profileCandidates.length > 0) {
+      return {
+        recordId: record2.recordId,
+        title: record2.title,
+        doi: cleanDoi,
+        channel: "oa_direct",
+        publisher: profile.name,
+        accessStatus: "direct_pdf_ready",
+        isDirectDownloadable: true,
+        bestPdfUrl: profileCandidates[0],
+        candidatePdfUrls: profileCandidates,
+        landingUrl: record2.url || (cleanDoi ? `https://doi.org/${cleanDoi}` : void 0),
+        channelDetails: {
+          doiPrefix,
+          hasConfiguredKey: false,
+          recommendedMethod: `${profile.name} \u5B98\u65B9 PDF \u8DEF\u7531`
         }
       };
     }
@@ -364352,8 +365095,7 @@ var FullTextRouter = class {
       channelDetails: {
         doiPrefix,
         hasConfiguredKey: false,
-        recommendedMethod: record2.openAccess ? "\u516C\u5171\u5F00\u653E\u83B7\u53D6\u4ED3\u50A8" : `${publisherName} \u673A\u6784\u8BA2\u9605\u901A\u9053 (\u63A8\u8350\u6821\u56ED\u7F51\u51FA\u5165\u53E3\u6216\u901A\u8FC7 scansci-pdf \u83B7\u53D6)`,
-        scansciCommand: cleanDoi ? `scansci-pdf get ${cleanDoi}` : void 0
+        recommendedMethod: record2.openAccess ? "\u516C\u5171\u5F00\u653E\u83B7\u53D6\u4ED3\u50A8" : `${publisherName} \u673A\u6784\u8BA2\u9605\u901A\u9053 (\u9700\u6821\u56ED\u7F51/WebVPN/CARSI \u6216\u624B\u52A8\u5BFC\u5165 cookie)`
       }
     };
   }
@@ -364371,7 +365113,7 @@ function extractArxivId(url3) {
   const match = url3.match(/arxiv\.org\/(?:abs|pdf)\/([a-z\-]+(?:\.[a-z]{2})?\/\d{7}|\d{4}\.\d{4,5})/i);
   return match ? match[1] : void 0;
 }
-function extractIeeeArticleNumber(url3) {
+function extractIeeeArticleNumber2(url3) {
   if (!url3) return void 0;
   const match = url3.match(/\/document\/(\d+)/i) || url3.match(/[?&]arnumber=(\d+)/i);
   return match ? match[1] : void 0;
@@ -364648,10 +365390,670 @@ var CardFormatter = class {
 };
 
 // src/literature/MineruService.ts
-var fs9 = __toESM(require("node:fs"), 1);
-var path9 = __toESM(require("node:path"), 1);
+var fs11 = __toESM(require("node:fs"), 1);
+var path10 = __toESM(require("node:path"), 1);
 init_axios2();
 var import_adm_zip = __toESM(require_adm_zip(), 1);
+
+// src/literature/download/pdfFetcher.ts
+init_axios2();
+
+// src/literature/download/openAccess.ts
+init_axios2();
+
+// src/literature/download/pdfDownload.ts
+var fs9 = __toESM(require("node:fs"), 1);
+init_axios2();
+var DEFAULT_MIN_PDF_BYTES = 1e4;
+var DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+function validatePdfBuffer(buffer, url3, minBytes = DEFAULT_MIN_PDF_BYTES) {
+  if (!buffer || buffer.length < minBytes) {
+    throw new Error(`PDF too small (${buffer?.length || 0} bytes): ${url3}`);
+  }
+  if (buffer.subarray(0, 5).toString("ascii") !== "%PDF-") {
+    throw new Error(`Not a PDF response (possible login or challenge page): ${url3}`);
+  }
+}
+async function downloadPdfToFile(url3, destPath, options = {}) {
+  let originalHost = "";
+  try {
+    originalHost = new URL(url3).hostname;
+  } catch {
+    originalHost = "";
+  }
+  const response = await axios_default.get(url3, {
+    responseType: "arraybuffer",
+    timeout: options.timeoutMs ?? 3e4,
+    maxRedirects: options.maxRedirects ?? 5,
+    headers: {
+      "User-Agent": DEFAULT_USER_AGENT,
+      Accept: "application/pdf,application/octet-stream;q=0.9,*/*;q=0.8",
+      ...options.headers || {}
+    },
+    beforeRedirect: (redirect) => {
+      if (!options.headers?.Cookie || !redirect.href || !originalHost) return;
+      try {
+        const targetHost = new URL(redirect.href).hostname;
+        const base = (host) => host.split(".").slice(-2).join(".");
+        if (base(originalHost) !== base(targetHost)) {
+          delete redirect.headers?.Cookie;
+          delete redirect.headers?.cookie;
+        }
+      } catch {
+      }
+    },
+    validateStatus: (status) => status >= 200 && status < 300
+  });
+  const buffer = Buffer.from(response.data);
+  validatePdfBuffer(buffer, url3, options.minBytes ?? DEFAULT_MIN_PDF_BYTES);
+  fs9.writeFileSync(destPath, buffer);
+}
+async function fetchHtml(url3, options = {}) {
+  const response = await axios_default.get(url3, {
+    responseType: "text",
+    timeout: options.timeoutMs ?? 25e3,
+    maxRedirects: options.maxRedirects ?? 5,
+    headers: {
+      "User-Agent": DEFAULT_USER_AGENT,
+      Accept: "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
+      ...options.headers || {}
+    },
+    validateStatus: (status) => status >= 200 && status < 300
+  });
+  const finalUrl = String(
+    response.request?.res?.responseUrl || url3
+  );
+  return { html: String(response.data || ""), finalUrl };
+}
+
+// src/literature/download/openAccess.ts
+var ARXIV_DOI_RE = /^10\.48550\/arxiv\.(.+)$/i;
+var ARXIV_ID_RE = /(?:arxiv[:./]|abs\/|pdf\/)([a-z-]+(?:\.[a-z]{2})?\/\d{7}|\d{4}\.\d{4,5})(?:v\d+)?/i;
+function contactEmail(options) {
+  return options.email || process.env.OA_EMAIL || process.env.UNPAYWALL_EMAIL || process.env.CROSSREF_MAILTO || "twosci@example.com";
+}
+function normalizeArxivId(doiOrId) {
+  const trimmed = doiOrId.trim().replace(/^https?:\/\/(?:www\.)?arxiv\.org\/(?:abs|pdf)\//i, "");
+  const doiMatch = trimmed.match(ARXIV_DOI_RE);
+  if (doiMatch) return doiMatch[1].replace(/\.pdf$/i, "");
+  const idMatch = trimmed.match(ARXIV_ID_RE);
+  if (idMatch) return idMatch[1];
+  if (/^\d{4}\.\d{4,5}(?:v\d+)?$/.test(trimmed)) return trimmed.replace(/v\d+$/, "");
+  if (/^[a-z-]+(?:\.[a-z]{2})?\/\d{7}(?:v\d+)?$/i.test(trimmed)) return trimmed.replace(/v\d+$/, "");
+  return void 0;
+}
+async function tryCandidates(channel, candidates, destPath, options, attempts) {
+  const seen = /* @__PURE__ */ new Set();
+  for (const candidate of candidates) {
+    if (!candidate || seen.has(candidate)) continue;
+    seen.add(candidate);
+    try {
+      await downloadPdfToFile(candidate, destPath, {
+        timeoutMs: options.timeoutMs,
+        minBytes: options.minBytes
+      });
+      attempts.push({ channel, status: "success", url: candidate });
+      return { channel, url: candidate };
+    } catch (error62) {
+      attempts.push({
+        channel,
+        status: "miss",
+        url: candidate,
+        reason: error62 instanceof Error ? error62.message : String(error62)
+      });
+    }
+  }
+  return void 0;
+}
+async function tryArxiv(identifier, destPath, options, attempts) {
+  const arxivId = normalizeArxivId(identifier);
+  if (!arxivId) return void 0;
+  return tryCandidates("arxiv", [
+    `https://arxiv.org/pdf/${arxivId}.pdf`,
+    `https://export.arxiv.org/pdf/${arxivId}.pdf`
+  ], destPath, options, attempts);
+}
+async function tryUnpaywall(doi, destPath, options, attempts) {
+  try {
+    const response = await axios_default.get(`https://api.unpaywall.org/v2/${encodeURIComponent(doi)}`, {
+      params: { email: contactEmail(options) },
+      timeout: 2e4,
+      headers: { "User-Agent": "TwoSCI/0.3.0" }
+    });
+    const data2 = response.data;
+    const candidates = [];
+    const push = (value) => {
+      if (value && !candidates.includes(value)) candidates.push(value);
+    };
+    push(data2.best_oa_location?.url_for_pdf);
+    push(data2.best_oa_location?.url);
+    for (const location of data2.oa_locations || []) {
+      push(location.url_for_pdf);
+      push(location.url);
+    }
+    return tryCandidates("unpaywall", candidates, destPath, options, attempts);
+  } catch (error62) {
+    attempts.push({
+      channel: "unpaywall",
+      status: "miss",
+      reason: error62 instanceof Error ? error62.message : String(error62)
+    });
+    return void 0;
+  }
+}
+async function tryOpenAlex(doi, destPath, options, attempts) {
+  try {
+    const response = await axios_default.get(`https://api.openalex.org/works/doi:${encodeURIComponent(doi)}`, {
+      params: {
+        select: "open_access,best_oa_location",
+        ...contactEmail(options) ? { mailto: contactEmail(options) } : {}
+      },
+      timeout: 2e4,
+      headers: { "User-Agent": "TwoSCI/0.3.0" }
+    });
+    const data2 = response.data;
+    const candidates = [
+      data2.best_oa_location?.pdf_url,
+      data2.open_access?.oa_url,
+      data2.best_oa_location?.landing_page_url
+    ].filter((value) => Boolean(value));
+    return tryCandidates("openalex", candidates, destPath, options, attempts);
+  } catch (error62) {
+    attempts.push({
+      channel: "openalex",
+      status: "miss",
+      reason: error62 instanceof Error ? error62.message : String(error62)
+    });
+    return void 0;
+  }
+}
+async function trySemanticScholar(doi, destPath, options, attempts) {
+  try {
+    const response = await axios_default.get(
+      `https://api.semanticscholar.org/graph/v1/paper/DOI:${encodeURIComponent(doi)}`,
+      {
+        params: { fields: "openAccessPdf,isOpenAccess" },
+        timeout: 2e4,
+        headers: {
+          "User-Agent": "TwoSCI/0.3.0",
+          ...process.env.SEMANTIC_SCHOLAR_API_KEY ? { "x-api-key": process.env.SEMANTIC_SCHOLAR_API_KEY } : {}
+        }
+      }
+    );
+    const data2 = response.data;
+    const candidates = data2.openAccessPdf?.url ? [data2.openAccessPdf.url] : [];
+    return tryCandidates("semantic_scholar", candidates, destPath, options, attempts);
+  } catch (error62) {
+    attempts.push({
+      channel: "semantic_scholar",
+      status: "miss",
+      reason: error62 instanceof Error ? error62.message : String(error62)
+    });
+    return void 0;
+  }
+}
+async function tryEuropePmc(doi, destPath, options, attempts) {
+  try {
+    const response = await axios_default.get("https://www.ebi.ac.uk/europepmc/webservices/rest/search", {
+      params: {
+        query: `DOI:"${doi}"`,
+        format: "json",
+        resultType: "core",
+        pageSize: 1
+      },
+      timeout: 2e4,
+      headers: { "User-Agent": "TwoSCI/0.3.0" }
+    });
+    const result = response.data.resultList?.result?.[0];
+    const candidates = [];
+    const push = (value) => {
+      if (value && !candidates.includes(value)) candidates.push(value);
+    };
+    for (const entry of result?.fullTextUrlList?.fullTextUrl || []) {
+      if (/pdf/i.test(entry.documentStyle || "") || /^OA$/i.test(entry.availabilityCode || "")) {
+        push(entry.url);
+      }
+    }
+    if (result?.pmcid) {
+      push(`https://www.ebi.ac.uk/europepmc/webservices/rest/${result.pmcid}/fullTextPDF`);
+    }
+    return tryCandidates("europepmc", candidates, destPath, options, attempts);
+  } catch (error62) {
+    attempts.push({
+      channel: "europepmc",
+      status: "miss",
+      reason: error62 instanceof Error ? error62.message : String(error62)
+    });
+    return void 0;
+  }
+}
+async function tryPmc(doi, destPath, options, attempts) {
+  try {
+    const response = await axios_default.get("https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/", {
+      params: {
+        ids: doi,
+        format: "json",
+        tool: "twosci",
+        email: contactEmail(options)
+      },
+      timeout: 2e4,
+      headers: { "User-Agent": "TwoSCI/0.3.0" }
+    });
+    const record2 = response.data.records?.[0];
+    const pmcid = record2?.pmcid;
+    if (!pmcid) {
+      attempts.push({ channel: "pmc", status: "miss", reason: "no_pmcid" });
+      return void 0;
+    }
+    return tryCandidates("pmc", [
+      `https://europepmc.org/articles/${pmcid}?pdf=render`,
+      `https://pmc.ncbi.nlm.nih.gov/articles/${pmcid}/pdf/`
+    ], destPath, options, attempts);
+  } catch (error62) {
+    attempts.push({
+      channel: "pmc",
+      status: "miss",
+      reason: error62 instanceof Error ? error62.message : String(error62)
+    });
+    return void 0;
+  }
+}
+async function tryCrossref(doi, destPath, options, attempts) {
+  try {
+    const response = await axios_default.get(`https://api.crossref.org/works/${encodeURIComponent(doi)}`, {
+      timeout: 2e4,
+      headers: { "User-Agent": `TwoSCI/0.3.0 (mailto:${contactEmail(options)})` }
+    });
+    const links = response.data.message?.link || [];
+    const candidates = links.filter((link) => /pdf/i.test(link["content-type"] || "") || /\.pdf(?:$|[?#])/i.test(link.URL || "")).map((link) => link.URL).filter((value) => Boolean(value));
+    return tryCandidates("crossref", candidates, destPath, options, attempts);
+  } catch (error62) {
+    attempts.push({
+      channel: "crossref",
+      status: "miss",
+      reason: error62 instanceof Error ? error62.message : String(error62)
+    });
+    return void 0;
+  }
+}
+
+// src/literature/download/institutionalAccess.ts
+var fs10 = __toESM(require("node:fs"), 1);
+var path9 = __toESM(require("node:path"), 1);
+var import_node_crypto3 = require("node:crypto");
+var WEBVPN_KEY = Buffer.from("wrdvpnisthebest!", "utf8");
+var CARSI_PUBLISHER_BY_DOI_PREFIX = {
+  "10.1016": "sciencedirect",
+  "10.1109": "ieee",
+  "10.1088": "iop",
+  "10.1038": "nature",
+  "10.1177": "sage",
+  "10.1002": "wiley",
+  "10.1145": "acm"
+};
+function truthy(value) {
+  return value === true || value === "true" || value === "1";
+}
+function existingFile(candidate) {
+  if (!candidate) return "";
+  try {
+    return fs10.statSync(candidate).isFile() ? candidate : "";
+  } catch {
+    return "";
+  }
+}
+function existingDir(candidate) {
+  if (!candidate) return "";
+  try {
+    return fs10.statSync(candidate).isDirectory() ? candidate : "";
+  } catch {
+    return "";
+  }
+}
+function readScansciConfig() {
+  const explicit = process.env.TWOSCI_SCANSCI_CONFIG;
+  if (!explicit) return void 0;
+  try {
+    return JSON.parse(fs10.readFileSync(explicit, "utf8"));
+  } catch {
+    return void 0;
+  }
+}
+function loadInstitutionalConfig() {
+  const imported = readScansciConfig();
+  const webVpnBaseUrl = String(
+    process.env.TWOSCI_WEBVPN_BASE_URL || imported?.vpnsci_base_url || ""
+  ).replace(/\/+$/, "");
+  const webVpnCookieFile = existingFile(
+    process.env.TWOSCI_WEBVPN_COOKIE_FILE || String(imported?.vpnsci_cookie_file || "")
+  );
+  const carsiCookieDir = existingDir(
+    process.env.TWOSCI_CARSI_COOKIE_DIR || String(imported?.carsi_cookie_dir || "")
+  );
+  const webVpnEnabled = process.env.TWOSCI_WEBVPN_ENABLED !== void 0 ? truthy(process.env.TWOSCI_WEBVPN_ENABLED) : Boolean(webVpnBaseUrl && webVpnCookieFile) || truthy(imported?.vpnsci_enabled);
+  const carsiEnabled = process.env.TWOSCI_CARSI_ENABLED !== void 0 ? truthy(process.env.TWOSCI_CARSI_ENABLED) : truthy(imported?.carsi_enabled);
+  if (!webVpnEnabled && !carsiEnabled) return void 0;
+  return {
+    webVpnEnabled: Boolean(webVpnEnabled && webVpnBaseUrl),
+    webVpnBaseUrl,
+    webVpnCookieFile,
+    carsiEnabled: Boolean(carsiEnabled && carsiCookieDir),
+    carsiCookieDir,
+    carsiIdpName: String(process.env.TWOSCI_CARSI_IDP_NAME || imported?.carsi_idp_name || "")
+  };
+}
+function convertToWebVpnUrl(rawUrl, baseUrl) {
+  if (!baseUrl) return void 0;
+  let parsed;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    return void 0;
+  }
+  if (!/^https?:$/.test(parsed.protocol) || !parsed.hostname) return void 0;
+  const cipher = (0, import_node_crypto3.createCipheriv)("aes-128-cfb", WEBVPN_KEY, WEBVPN_KEY);
+  cipher.setAutoPadding(false);
+  const encrypted = Buffer.concat([
+    cipher.update(Buffer.from(parsed.hostname, "utf8")),
+    cipher.final()
+  ]);
+  const gatewayHost = WEBVPN_KEY.toString("hex") + encrypted.toString("hex");
+  const schemePart = parsed.port ? `${parsed.protocol.replace(":", "")}-${parsed.port}` : parsed.protocol.replace(":", "");
+  return `${baseUrl}/${schemePart}/${gatewayHost}${parsed.pathname}${parsed.search}`;
+}
+function parseCookieJar(content) {
+  const trimmed = content.trim();
+  if (!trimmed) return [];
+  if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      const list = Array.isArray(parsed) ? parsed : parsed && typeof parsed === "object" && Array.isArray(parsed.cookies) ? parsed.cookies : [];
+      return list.filter((item) => Boolean(item) && typeof item === "object").filter((item) => typeof item.name === "string" && typeof item.value === "string").map((item) => ({
+        name: String(item.name),
+        value: String(item.value),
+        domain: typeof item.domain === "string" ? item.domain : void 0,
+        path: typeof item.path === "string" ? item.path : "/",
+        expires: typeof item.expires === "number" ? item.expires : void 0,
+        secure: item.secure === true,
+        httpOnly: item.httpOnly === true
+      }));
+    } catch {
+      return [];
+    }
+  }
+  const cookies = [];
+  for (const line of trimmed.split(/\r?\n/)) {
+    const httpOnly = line.startsWith("#HttpOnly_");
+    const body = httpOnly ? line.slice("#HttpOnly_".length) : line;
+    if (!body || body.startsWith("#") && !httpOnly) continue;
+    const parts = body.split("	");
+    if (parts.length < 7) continue;
+    const expires = Number(parts[4]);
+    cookies.push({
+      domain: parts[0],
+      path: parts[2] || "/",
+      secure: parts[3].toUpperCase() === "TRUE",
+      expires: Number.isFinite(expires) ? expires : void 0,
+      name: parts[5],
+      value: parts[6],
+      httpOnly
+    });
+  }
+  return cookies;
+}
+function loadCookies(filePath) {
+  if (!filePath) return [];
+  try {
+    return parseCookieJar(fs10.readFileSync(filePath, "utf8"));
+  } catch {
+    return [];
+  }
+}
+function cookieHeaderForUrl(cookies, rawUrl) {
+  let parsed;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    return void 0;
+  }
+  const host = parsed.hostname.toLowerCase();
+  const now = Date.now() / 1e3;
+  const matches = cookies.filter((cookie) => {
+    if (cookie.expires !== void 0 && cookie.expires > 0 && cookie.expires < now) return false;
+    if (cookie.secure && parsed.protocol !== "https:") return false;
+    const domain2 = (cookie.domain || "").replace(/^\./, "").toLowerCase();
+    if (domain2 && host !== domain2 && !host.endsWith(`.${domain2}`)) return false;
+    const cookiePath = cookie.path || "/";
+    return cookiePath === "/" || parsed.pathname === cookiePath || parsed.pathname.startsWith(cookiePath.endsWith("/") ? cookiePath : `${cookiePath}/`);
+  });
+  if (matches.length === 0) return void 0;
+  return matches.sort((left, right) => (right.path || "/").length - (left.path || "/").length).map((cookie) => `${cookie.name}=${cookie.value}`).join("; ");
+}
+function carsiCookieFileForDoi(doi, config3) {
+  if (!config3.carsiEnabled || !config3.carsiCookieDir) return "";
+  const prefix = (doi.match(/^(10\.\d{4,9})/) || [])[1];
+  const publisher = prefix ? CARSI_PUBLISHER_BY_DOI_PREFIX[prefix] : void 0;
+  if (!publisher) return "";
+  return existingFile(path9.join(config3.carsiCookieDir, `${publisher}.json`));
+}
+function buildInstitutionalTargets(rawUrl, doi, config3) {
+  const targets = [];
+  const carsiFile = carsiCookieFileForDoi(doi, config3);
+  if (carsiFile) {
+    targets.push({
+      url: rawUrl,
+      cookieHeader: cookieHeaderForUrl(loadCookies(carsiFile), rawUrl),
+      channel: "carsi"
+    });
+  }
+  if (config3.webVpnEnabled && config3.webVpnBaseUrl) {
+    const webVpnUrl = convertToWebVpnUrl(rawUrl, config3.webVpnBaseUrl);
+    if (webVpnUrl) {
+      targets.push({
+        url: webVpnUrl,
+        cookieHeader: cookieHeaderForUrl(loadCookies(config3.webVpnCookieFile), webVpnUrl),
+        channel: "webvpn"
+      });
+    }
+  }
+  return targets;
+}
+
+// src/literature/download/pdfFetcher.ts
+function normalizeDoi4(value) {
+  const trimmed = value.trim().replace(/^doi:\s*/i, "");
+  if (/^10\.\d{4,9}\//i.test(trimmed)) return trimmed.replace(/[.,;)\s]+$/, "").toLowerCase();
+  const match = trimmed.match(/(10\.\d{4,9}\/[^\s&?#]+)/i);
+  return match ? match[1].replace(/[.,;)\s]+$/, "").toLowerCase() : void 0;
+}
+function isHttpUrl(value) {
+  return /^https?:\/\//i.test(value.trim());
+}
+function isLikelyPdfUrl2(value) {
+  return /\.pdf(?:$|[?#])/i.test(value) || /\/pdf(?:ft|direct)?(?:$|[?#/])/i.test(value) || /[?&](?:type|format)=pdf(?:&|$)/i.test(value);
+}
+function errorReason(error62) {
+  return error62 instanceof Error ? error62.message : String(error62);
+}
+async function attempt(channel, url3, destPath, options, attempts, headers) {
+  try {
+    await downloadPdfToFile(url3, destPath, {
+      headers,
+      timeoutMs: options.timeoutMs ?? 2e4,
+      minBytes: options.minBytes
+    });
+    attempts.push({ channel, status: "success", url: url3 });
+    return true;
+  } catch (error62) {
+    attempts.push({ channel, status: "miss", url: url3, reason: errorReason(error62) });
+    return false;
+  }
+}
+async function resolveDoiLanding(doi) {
+  try {
+    const response = await axios_default.get(`https://doi.org/${encodeURIComponent(doi)}`, {
+      maxRedirects: 5,
+      timeout: 15e3,
+      headers: { "User-Agent": "TwoSCI/0.3.0" },
+      validateStatus: (status) => status < 400
+    });
+    const finalUrl = String(
+      response.request?.res?.responseUrl || `https://doi.org/${doi}`
+    );
+    return finalUrl === `https://doi.org/${doi}` ? void 0 : finalUrl;
+  } catch {
+    return void 0;
+  }
+}
+async function tryElsevierApi(doi, destPath, options, attempts) {
+  if (!/^10\.1016\//i.test(doi) || !options.elsevierApiKey) return false;
+  const url3 = `https://api.elsevier.com/content/article/doi/${encodeURIComponent(doi)}?httpAccept=application/pdf`;
+  return attempt("elsevier_api", url3, destPath, options, attempts, {
+    "X-ELS-APIKey": options.elsevierApiKey
+  });
+}
+async function tryPublisherCandidate(candidate, doi, landingUrl, destPath, options, attempts, config3) {
+  if (config3 && doi) {
+    for (const target of buildInstitutionalTargets(candidate, doi, config3)) {
+      const ok = await attempt(
+        `publisher_${target.channel}`,
+        target.url,
+        destPath,
+        options,
+        attempts,
+        {
+          ...target.cookieHeader ? { Cookie: target.cookieHeader } : {},
+          ...landingUrl ? { Referer: landingUrl } : {}
+        }
+      );
+      if (ok) return true;
+    }
+  }
+  return attempt("publisher", candidate, destPath, options, attempts, {
+    ...landingUrl ? { Referer: landingUrl } : {}
+  });
+}
+async function tryPublisherCandidates(candidates, doi, landingUrl, destPath, options, attempts, config3) {
+  const seen = /* @__PURE__ */ new Set();
+  for (const candidate of candidates) {
+    if (!candidate || seen.has(candidate)) continue;
+    seen.add(candidate);
+    if (await tryPublisherCandidate(candidate, doi, landingUrl, destPath, options, attempts, config3)) {
+      return true;
+    }
+  }
+  return false;
+}
+async function discoverLandingCandidates(landingUrl, doi, destPath, options, attempts, config3) {
+  const profile = publisherProfileFor(doi, landingUrl);
+  const directCookieFile = config3 && doi ? carsiCookieFileForDoi(doi, config3) : "";
+  const directCookie = directCookieFile ? cookieHeaderForUrl(loadCookies(directCookieFile), landingUrl) : void 0;
+  const attemptsToFetch = [
+    { url: landingUrl, cookie: directCookie, channel: "landing" }
+  ];
+  if (config3?.webVpnEnabled && config3.webVpnBaseUrl) {
+    for (const target of buildInstitutionalTargets(landingUrl, doi, config3)) {
+      if (target.channel === "webvpn") {
+        attemptsToFetch.push({ url: target.url, cookie: target.cookieHeader, channel: "landing_webvpn" });
+      }
+    }
+  }
+  for (const entry of attemptsToFetch) {
+    try {
+      const page = await fetchHtml(entry.url, {
+        timeoutMs: options.timeoutMs,
+        headers: {
+          ...entry.cookie ? { Cookie: entry.cookie } : {},
+          ...landingUrl ? { Referer: landingUrl } : {}
+        }
+      });
+      attempts.push({ channel: entry.channel, status: "miss", url: entry.url, reason: "html_loaded" });
+      const discovered = discoverPdfCandidatesFromHtml(page.html, page.finalUrl);
+      const candidates = profile ? buildPdfCandidates(profile, doi, { sourceUrl: page.finalUrl, discoveredUrls: discovered }) : discovered;
+      if (await tryPublisherCandidates(candidates, doi, page.finalUrl, destPath, options, attempts, config3)) {
+        return true;
+      }
+      if (entry.cookie) {
+        for (const candidate of candidates) {
+          const ok = await attempt("landing_link", candidate, destPath, options, attempts, {
+            Cookie: entry.cookie,
+            Referer: page.finalUrl
+          });
+          if (ok) return true;
+        }
+      }
+    } catch (error62) {
+      attempts.push({
+        channel: entry.channel,
+        status: "miss",
+        url: entry.url,
+        reason: errorReason(error62)
+      });
+    }
+  }
+  return false;
+}
+async function fetchPdf(input2, destPath, options = {}) {
+  const attempts = [];
+  const doi = options.doi || normalizeDoi4(input2);
+  const inputUrl = isHttpUrl(input2) ? input2.trim() : void 0;
+  const landingUrl = options.landingUrl || options.record?.url || (inputUrl && !isLikelyPdfUrl2(inputUrl) ? inputUrl : void 0);
+  const directUrl = options.record?.pdfUrl || (inputUrl && isLikelyPdfUrl2(inputUrl) ? inputUrl : void 0);
+  if (directUrl && await attempt("record_pdf", directUrl, destPath, options, attempts)) {
+    return { success: true, channel: "record_pdf", url: directUrl, attempts };
+  }
+  if (doi) {
+    const arxiv = await tryArxiv(doi, destPath, options, attempts);
+    if (arxiv) return { success: true, channel: arxiv.channel, url: arxiv.url, attempts };
+    const unpaywall = await tryUnpaywall(doi, destPath, options, attempts);
+    if (unpaywall) return { success: true, channel: unpaywall.channel, url: unpaywall.url, attempts };
+    const openalex = await tryOpenAlex(doi, destPath, options, attempts);
+    if (openalex) return { success: true, channel: openalex.channel, url: openalex.url, attempts };
+    const semantic = await trySemanticScholar(doi, destPath, options, attempts);
+    if (semantic) return { success: true, channel: semantic.channel, url: semantic.url, attempts };
+    const europePmc = await tryEuropePmc(doi, destPath, options, attempts);
+    if (europePmc) return { success: true, channel: europePmc.channel, url: europePmc.url, attempts };
+    const pmc = await tryPmc(doi, destPath, options, attempts);
+    if (pmc) return { success: true, channel: pmc.channel, url: pmc.url, attempts };
+    const crossref = await tryCrossref(doi, destPath, options, attempts);
+    if (crossref) return { success: true, channel: crossref.channel, url: crossref.url, attempts };
+    if (await tryElsevierApi(doi, destPath, options, attempts)) {
+      return { success: true, channel: "elsevier_api", attempts };
+    }
+  }
+  const resolvedLanding = landingUrl || (doi ? await resolveDoiLanding(doi) : void 0);
+  const config3 = loadInstitutionalConfig();
+  const profile = doi ? publisherProfileFor(doi, resolvedLanding) : void 0;
+  if (profile) {
+    const constructed = buildPdfCandidates(profile, doi, { sourceUrl: resolvedLanding || "" });
+    if (await tryPublisherCandidates(constructed, doi, resolvedLanding, destPath, options, attempts, config3)) {
+      return { success: true, channel: "publisher_constructed", attempts };
+    }
+  }
+  if (resolvedLanding && isLikelyPdfUrl2(resolvedLanding)) {
+    if (await attempt("landing_pdf", resolvedLanding, destPath, options, attempts)) {
+      return { success: true, channel: "landing_pdf", url: resolvedLanding, attempts };
+    }
+  }
+  if (resolvedLanding && await discoverLandingCandidates(
+    resolvedLanding,
+    doi || "",
+    destPath,
+    options,
+    attempts,
+    config3
+  )) {
+    const success2 = attempts.find((item) => item.status === "success");
+    return { success: true, channel: success2?.channel, url: success2?.url, attempts };
+  }
+  return {
+    success: false,
+    attempts,
+    message: doi ? `No PDF acquired for DOI ${doi}. Tried OA sources, publisher routes and institutional access.` : "No PDF acquired. Provide a DOI or a direct PDF URL."
+  };
+}
+
+// src/literature/MineruService.ts
 function extractFirstAuthorSurname(authors) {
   if (!authors || authors.length === 0) return "UnknownAuthor";
   const raw = (authors[0] || "").trim();
@@ -364694,7 +366096,7 @@ var MineruService = class {
     try {
       const resp = await axios_default.get(`https://api.crossref.org/works/${encodeURIComponent(cleanDoi)}`, {
         timeout: 1e4,
-        headers: { "User-Agent": "TwoSCI/0.2.4 (mailto:research@twosci.org)" }
+        headers: { "User-Agent": "TwoSCI/0.3.0 (mailto:research@twosci.org)" }
       });
       const item = resp.data?.message;
       if (item) {
@@ -364749,11 +366151,11 @@ var MineruService = class {
     const firstAuthor = extractFirstAuthorSurname(authors);
     const year = record2?.year || (/* @__PURE__ */ new Date()).getFullYear();
     const folderName = this.buildDirectoryName({ authors, year, title, doi });
-    const targetDir = path9.resolve(workDir, "twosci", folderName);
-    const imgDir = path9.join(targetDir, "img");
+    const targetDir = path10.resolve(workDir, "twosci", folderName);
+    const imgDir = path10.join(targetDir, "img");
     const cleanTitle = this.sanitizeName(title, 60);
-    const pdfPath = path9.join(targetDir, `${cleanTitle}.pdf`);
-    const mdPath = path9.join(targetDir, `${cleanTitle}.md`);
+    const pdfPath = path10.join(targetDir, `${cleanTitle}.pdf`);
+    const mdPath = path10.join(targetDir, `${cleanTitle}.md`);
     let route;
     if (record2) {
       route = FullTextRouter.resolveRoute(record2);
@@ -364775,20 +366177,29 @@ var MineruService = class {
         references: []
       });
     }
-    const downloadUrl = input2.url || route?.bestPdfUrl || (doi ? `https://doi.org/${encodeURI(doi)}` : "");
-    const candidateUrls = route?.candidatePdfUrls || [];
-    const channel = route?.channel || "oa_direct";
+    const landingUrl = input2.url || route?.landingUrl || (doi ? `https://doi.org/${encodeURI(doi)}` : void 0);
+    let channel = route?.channel || "oa_direct";
     try {
-      if (!fs9.existsSync(pdfPath)) {
-        fs9.mkdirSync(imgDir, { recursive: true });
-        await this.acquirePdf(downloadUrl, pdfPath, {
-          candidateUrls,
+      if (!fs11.existsSync(pdfPath)) {
+        if (process.env.NODE_ENV === "test") {
+          throw new Error("PDF acquisition is disabled in the test environment");
+        }
+        fs11.mkdirSync(imgDir, { recursive: true });
+        const fetched = await fetchPdf(doi || input2.url || "", pdfPath, {
           doi,
-          targetDir,
-          elsevierApiKey: process.env.ELSEVIER_API_KEY
+          landingUrl,
+          record: record2 ? { pdfUrl: record2.pdfUrl, openAccess: record2.openAccess, url: record2.url } : void 0,
+          elsevierApiKey: process.env.ELSEVIER_API_KEY,
+          email: process.env.OA_EMAIL || process.env.CROSSREF_MAILTO
         });
+        if (!fetched.success) {
+          const detail = fetched.attempts.slice(0, 12).map((item) => `${item.channel}:${item.status}${item.reason ? ` (${item.reason})` : ""}`).join("; ");
+          throw new Error(`${fetched.message || "PDF acquisition failed"}${detail ? ` Attempts: ${detail}` : ""}`);
+        }
+        channel = fetched.channel || channel;
+        this.validatePdfFile(pdfPath);
       } else {
-        fs9.mkdirSync(imgDir, { recursive: true });
+        fs11.mkdirSync(imgDir, { recursive: true });
         this.validatePdfFile(pdfPath);
       }
       const conversion = await this.convertWithMineru(pdfPath, mdPath, imgDir, {
@@ -364814,8 +366225,8 @@ var MineruService = class {
       };
     } catch (err) {
       try {
-        if (fs9.existsSync(targetDir) && fs9.readdirSync(targetDir).length === 0) {
-          fs9.rmdirSync(targetDir);
+        if (fs11.existsSync(targetDir) && fs11.readdirSync(targetDir).length === 0) {
+          fs11.rmdirSync(targetDir);
         }
       } catch {
       }
@@ -364849,117 +366260,22 @@ var MineruService = class {
       totalRequested: items.length,
       successCount,
       failedCount: items.length - successCount,
-      outputDirectory: path9.resolve(workDir, "twosci"),
+      outputDirectory: path10.resolve(workDir, "twosci"),
       artifacts
     };
   }
-  static async acquirePdf(url3, destPath, options) {
-    const candidates = [];
-    const seen = /* @__PURE__ */ new Set();
-    const addUrl = (u) => {
-      if (!u || u.startsWith("#") || seen.has(u)) return;
-      seen.add(u);
-      candidates.push(u);
-    };
-    if (options?.doi && /^10\.3390\//i.test(options.doi)) {
-      for (const cdnUrl of getMdpiCdnVariants(options.doi)) {
-        addUrl(cdnUrl);
-      }
-    }
-    if (options?.candidateUrls) {
-      for (const u of options.candidateUrls) addUrl(u);
-    }
-    if (url3 && !url3.includes("www.mdpi.com/")) {
-      addUrl(url3);
-    }
-    if (options?.doi && /^10\.1016\//i.test(options.doi) && options?.elsevierApiKey) {
-      addUrl(`https://api.elsevier.com/content/article/doi/${encodeURIComponent(options.doi)}?httpAccept=application/pdf`);
-    }
-    let lastError;
-    for (const candidateUrl of candidates) {
-      try {
-        const headers = {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-          Accept: "application/pdf,application/octet-stream;q=0.9,*/*;q=0.8"
-        };
-        if (candidateUrl.includes("api.elsevier.com") && options?.elsevierApiKey) {
-          headers["X-ELS-APIKey"] = options.elsevierApiKey;
-        }
-        const response = await axios_default.get(candidateUrl, {
-          responseType: "arraybuffer",
-          timeout: 25e3,
-          headers
-        });
-        const buffer = Buffer.from(response.data);
-        this.validatePdfBuffer(buffer, candidateUrl);
-        fs9.writeFileSync(destPath, buffer);
-        return;
-      } catch (err) {
-        lastError = err;
-      }
-    }
-    if (options?.doi && process.env.NODE_ENV !== "test") {
-      const scansciOk = await this.tryScansciDownload(options.doi, destPath, options.targetDir);
-      if (scansciOk) return;
-    }
-    if (candidates.length === 0 && !url3) {
-      throw new Error("\u672A\u63D0\u4F9B\u6709\u6548\u7684 PDF \u4E0B\u8F7D\u94FE\u63A5");
-    }
-    if (lastError?.message && lastError.message.includes("\u975E PDF \u6570\u636E")) {
-      throw lastError;
-    }
-    throw new Error(`PDF \u4E0B\u8F7D\u5931\u8D25: \u672A\u80FD\u5728\u5F00\u653E\u83B7\u53D6\u6E20\u9053\u83B7\u53D6\u5230\u6709\u6548 PDF \u539F\u6587\u3002\u5DF2\u5C1D\u8BD5\u5F00\u653E CDN\u3001\u4ED3\u50A8\u76F4\u94FE\u4E0E scansci \u7EA7\u8054 (${options?.doi || url3})`);
-  }
-  static async tryScansciDownload(doi, destPath, targetDir) {
-    try {
-      const { exec } = await import("node:child_process");
-      const { promisify } = await import("node:util");
-      const execAsync = promisify(exec);
-      const outDir = targetDir || path9.dirname(destPath);
-      await execAsync(`python -m scansci_pdf get "${doi}" --output "${outDir}"`, {
-        timeout: 45e3
-      });
-      const files = fs9.readdirSync(outDir);
-      const pdfFiles = files.filter((f) => f.toLowerCase().endsWith(".pdf") && f !== path9.basename(destPath));
-      if (pdfFiles.length > 0) {
-        const downloadedPdf = path9.join(outDir, pdfFiles[0]);
-        const buf = fs9.readFileSync(downloadedPdf);
-        if (buf.length > 500 && buf.slice(0, 5).toString("ascii") === "%PDF-") {
-          fs9.renameSync(downloadedPdf, destPath);
-          return true;
-        }
-      }
-      if (fs9.existsSync(destPath)) {
-        const buf = fs9.readFileSync(destPath);
-        if (buf.length > 500 && buf.slice(0, 5).toString("ascii") === "%PDF-") {
-          return true;
-        }
-      }
-    } catch {
-    }
-    return false;
-  }
-  static validatePdfBuffer(buffer, url3) {
-    if (!buffer || buffer.length < 500) {
-      throw new Error(`\u4E0B\u8F7D\u5185\u5BB9\u5C3A\u5BF8\u8FC7\u5C0F (${buffer?.length || 0} bytes)\uFF0C\u975E\u6709\u6548 PDF \u6587\u4EF6`);
-    }
-    const header = buffer.slice(0, 5).toString("ascii");
-    if (header !== "%PDF-") {
-      throw new Error(`\u4E0B\u8F7D\u5185\u5BB9\u4E3A\u975E PDF \u6570\u636E (\u53EF\u80FD\u9047\u5230\u53CD\u722C\u9A8C\u8BC1\u9875\u6216\u767B\u5F55\u8DF3\u8F6C): ${url3 || ""}`);
-    }
-  }
   static validatePdfFile(filePath) {
-    if (!fs9.existsSync(filePath)) {
+    if (!fs11.existsSync(filePath)) {
       throw new Error(`\u6587\u4EF6\u4E0D\u5B58\u5728: ${filePath}`);
     }
-    const stat = fs9.statSync(filePath);
+    const stat = fs11.statSync(filePath);
     if (stat.size < 500) {
       throw new Error(`PDF \u6587\u4EF6\u5C3A\u5BF8\u5F02\u5E38 (${stat.size} bytes)\uFF0C\u7591\u4F3C\u7A7A\u58F3\u6216\u635F\u574F`);
     }
-    const fd = fs9.openSync(filePath, "r");
+    const fd = fs11.openSync(filePath, "r");
     const buf = Buffer.alloc(5);
-    fs9.readSync(fd, buf, 0, 5, 0);
-    fs9.closeSync(fd);
+    fs11.readSync(fd, buf, 0, 5, 0);
+    fs11.closeSync(fd);
     if (buf.toString("ascii") !== "%PDF-") {
       throw new Error(`\u6587\u4EF6\u4E0D\u662F\u6807\u51C6 PDF: ${filePath}`);
     }
@@ -364975,14 +366291,7 @@ var MineruService = class {
       } catch {
       }
     }
-    try {
-      const cliRes = await this.tryMineruCliParse(pdfPath, mdPath, imgDir);
-      if (cliRes.success) {
-        return { imageCount: cliRes.imageCount, method: "mineru_cloud" };
-      }
-    } catch {
-    }
-    const pdfBuffer = fs9.readFileSync(pdfPath);
+    const pdfBuffer = fs11.readFileSync(pdfPath);
     const extractor = new PDFExtractor();
     const parsed = await extractor.extractFromBuffer(pdfBuffer);
     const realText = (parsed?.text || "").trim();
@@ -365006,11 +366315,11 @@ ${meta3.abstract}
       "",
       realText || "*(PDF \u672A\u5305\u542B\u53EF\u63D0\u53D6\u7684\u7EAF\u6587\u672C\u56FE\u5C42)*"
     ].filter(Boolean).join("\n");
-    fs9.writeFileSync(mdPath, realMd, "utf8");
+    fs11.writeFileSync(mdPath, realMd, "utf8");
     return { imageCount: 0, method: "local_pdf_parse" };
   }
   static async callMineruCloudApi(pdfPath, mdPath, imgDir, token) {
-    const fileName = path9.basename(pdfPath);
+    const fileName = path10.basename(pdfPath);
     const batchRes = await axios_default.post(
       "https://mineru.net/api/v4/file-urls/batch",
       { files: [{ name: fileName, is_ocr: false }] },
@@ -365027,7 +366336,7 @@ ${meta3.abstract}
     if (!batchId || !uploadUrl) {
       return { success: false, imageCount: 0 };
     }
-    const pdfBuffer = fs9.readFileSync(pdfPath);
+    const pdfBuffer = fs11.readFileSync(pdfPath);
     await axios_default.put(uploadUrl, pdfBuffer, {
       headers: { "Content-Type": "" },
       timeout: 6e4
@@ -365065,31 +366374,14 @@ ${meta3.abstract}
       const lower = entry.entryName.toLowerCase();
       if (lower.endsWith(".md")) {
         const mdText = entry.getData().toString("utf8");
-        fs9.writeFileSync(mdPath, mdText, "utf8");
+        fs11.writeFileSync(mdPath, mdText, "utf8");
       } else if (/\.(png|jpe?g|webp|svg)$/i.test(lower)) {
-        const imgTarget = path9.join(imgDir, path9.basename(entry.entryName));
-        fs9.writeFileSync(imgTarget, entry.getData());
+        const imgTarget = path10.join(imgDir, path10.basename(entry.entryName));
+        fs11.writeFileSync(imgTarget, entry.getData());
         imageCount++;
       }
     }
     return { success: true, imageCount };
-  }
-  static async tryMineruCliParse(pdfPath, mdPath, imgDir) {
-    const { exec } = await import("node:child_process");
-    const { promisify } = await import("node:util");
-    const execAsync = promisify(exec);
-    await execAsync(`mineru parse "${pdfPath}" -o "${mdPath}" --no-marker`, {
-      timeout: 6e4
-    });
-    if (fs9.existsSync(mdPath) && fs9.statSync(mdPath).size > 100) {
-      let count = 0;
-      if (fs9.existsSync(imgDir)) {
-        const images = fs9.readdirSync(imgDir).filter((f) => /\.(png|jpe?g|webp)$/i.test(f));
-        count = images.length;
-      }
-      return { success: true, imageCount: count };
-    }
-    return { success: false, imageCount: 0 };
   }
 };
 
@@ -365214,19 +366506,19 @@ var CitationTopologyService = class {
 };
 
 // src/literature/AcademicLibraryService.ts
-var fs10 = __toESM(require("node:fs"), 1);
-var path10 = __toESM(require("node:path"), 1);
+var fs12 = __toESM(require("node:fs"), 1);
+var path11 = __toESM(require("node:path"), 1);
 var AcademicLibraryService = class {
   /**
    * Build and write ACADEMIC_LIBRARY.md into ./twosci directory.
    */
   static buildLibrary(records, options = {}) {
     const workDir = options.workDir || process.cwd();
-    const twosciDir = path10.resolve(workDir, "twosci");
-    fs10.mkdirSync(twosciDir, { recursive: true });
-    const libraryMdPath = options.outputPath || path10.join(twosciDir, "ACADEMIC_LIBRARY.md");
-    const bibtexPath = path10.join(twosciDir, "references.bib");
-    const auditJsonPath = path10.join(twosciDir, "screening_audit.json");
+    const twosciDir = path11.resolve(workDir, "twosci");
+    fs12.mkdirSync(twosciDir, { recursive: true });
+    const libraryMdPath = options.outputPath || path11.join(twosciDir, "ACADEMIC_LIBRARY.md");
+    const bibtexPath = path11.join(twosciDir, "references.bib");
+    const auditJsonPath = path11.join(twosciDir, "screening_audit.json");
     const nowStr = (/* @__PURE__ */ new Date()).toISOString().replace("T", " ").slice(0, 19) + " (UTC)";
     const topicStr = options.brief?.intent || "\u524D\u6CBF\u79D1\u5B66\u6587\u732E\u8C03\u7814\u4E0E\u6280\u672F\u8DEF\u7EBF\u8FFD\u8E2A";
     const seedStr = options.brief?.seed ? `${options.brief.seed.title} (DOI: ${options.brief.seed.doi || "\u65E0"})` : "\uFF08\u65E0\u521D\u59CB\u79CD\u5B50\u6587\u732E\uFF09";
@@ -365285,9 +366577,9 @@ var AcademicLibraryService = class {
     lines.push(`- **BibTeX \u683C\u5F0F\u5F15\u6587\u6587\u4EF6**: \`./twosci/references.bib\``);
     lines.push(`- **\u521D\u7B5B\u5BA1\u8BA1\u65E5\u5FD7**: \`./twosci/screening_audit.json\``);
     const markdownContent = lines.join("\n");
-    fs10.writeFileSync(libraryMdPath, markdownContent, "utf8");
+    fs12.writeFileSync(libraryMdPath, markdownContent, "utf8");
     const bibtexContent = this.generateBibtex(records);
-    fs10.writeFileSync(bibtexPath, bibtexContent, "utf8");
+    fs12.writeFileSync(bibtexPath, bibtexContent, "utf8");
     const auditJson = {
       generatedAt: nowStr,
       topic: topicStr,
@@ -365303,7 +366595,7 @@ var AcademicLibraryService = class {
         sources: r.sources.map((s) => s.source)
       }))
     };
-    fs10.writeFileSync(auditJsonPath, JSON.stringify(auditJson, null, 2), "utf8");
+    fs12.writeFileSync(auditJsonPath, JSON.stringify(auditJson, null, 2), "utf8");
     return {
       libraryMarkdownPath: libraryMdPath,
       bibtexPath,
@@ -365332,7 +366624,7 @@ var AcademicLibraryService = class {
 };
 
 // src/literature/normalize.ts
-var import_node_crypto3 = require("node:crypto");
+var import_node_crypto4 = require("node:crypto");
 var TITLE_STOPWORDS = /* @__PURE__ */ new Set([
   "about",
   "after",
@@ -365365,18 +366657,18 @@ var SOURCE_PRIORITY = {
   openalex: 2,
   crossref: 1
 };
-function normalizeDoi4(value) {
+function normalizeDoi5(value) {
   if (typeof value !== "string") return "";
   return value.trim().replace(/^doi:\s*/i, "").replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "").replace(/[.,;)\s]+$/, "").toLowerCase();
 }
 function recordFromPaper(paper, source, rank) {
-  const doi = normalizeDoi4(paper.doi);
+  const doi = normalizeDoi5(paper.doi);
   const extra = paper.extra || {};
   const wosUid = normalizeWosUid(extra.uid ?? (source === "webofscience" ? paper.paperId : void 0));
   const scopusEid = normalizeScopusEid(extra.eid ?? extra.scopusId ?? (source === "scopus" ? paper.paperId : void 0));
   const openalexId = normalizeOpenAlexId(extra.openalexId ?? (source === "openalex" ? paper.paperId : void 0));
   const pmid = normalizePmid(extra.pmid ?? extra.pubmedId);
-  const arxiv = normalizeArxivId(paper.paperId, extra);
+  const arxiv = normalizeArxivId2(paper.paperId, extra);
   const sourceId = sourceIdentifier(source, paper, doi, wosUid, scopusEid, openalexId);
   const citationCount = toNumber(paper.citationCount);
   const oaStatus = typeof extra.oaStatus === "string" ? extra.oaStatus.toLowerCase() : "";
@@ -365425,7 +366717,7 @@ function recordFromPaper(paper, source, rank) {
   return record2;
 }
 function recordFromWosReference(reference) {
-  const doi = normalizeDoi4(reference.doi);
+  const doi = normalizeDoi5(reference.doi);
   const wosUid = normalizeWosUid(reference.uid);
   const title = cleanText3(reference.citedTitle || reference.citedWork || "") || "Untitled reference";
   const year = toNumber(reference.year);
@@ -365567,7 +366859,7 @@ function toPublicRecord(record2, layer, abstractChars = 3e3) {
 }
 function recordsMatch(left, right) {
   if (left.doi && right.doi) {
-    if (normalizeDoi4(left.doi) !== normalizeDoi4(right.doi)) return false;
+    if (normalizeDoi5(left.doi) !== normalizeDoi5(right.doi)) return false;
     return true;
   }
   if (sharedIdentifier(left.identifiers, right.identifiers)) return true;
@@ -365650,8 +366942,8 @@ function sourceIdentifier(source, paper, doi, wosUid, scopusEid, openalexId) {
   return doi || paper.paperId;
 }
 function makeRecordId(input2) {
-  const key = input2.doi ? `doi:${normalizeDoi4(input2.doi)}` : input2.wosUid ? `wos:${input2.wosUid}` : input2.scopusEid ? `scopus:${input2.scopusEid}` : input2.openalexId ? `openalex:${input2.openalexId}` : `title:${[...titleTokens(input2.title)].sort().join(" ")}:${input2.year || ""}`;
-  return `lit_${(0, import_node_crypto3.createHash)("sha256").update(key).digest("hex").slice(0, 16)}`;
+  const key = input2.doi ? `doi:${normalizeDoi5(input2.doi)}` : input2.wosUid ? `wos:${input2.wosUid}` : input2.scopusEid ? `scopus:${input2.scopusEid}` : input2.openalexId ? `openalex:${input2.openalexId}` : `title:${[...titleTokens(input2.title)].sort().join(" ")}:${input2.year || ""}`;
+  return `lit_${(0, import_node_crypto4.createHash)("sha256").update(key).digest("hex").slice(0, 16)}`;
 }
 function normalizeWosUid(value) {
   if (typeof value !== "string") return "";
@@ -365673,7 +366965,7 @@ function normalizePmid(value) {
   const text3 = String(value).trim();
   return /^\d+$/.test(text3) ? text3 : "";
 }
-function normalizeArxivId(paperId, extra) {
+function normalizeArxivId2(paperId, extra) {
   const candidate = String(extra.arxivId || paperId || "").trim();
   return /^\d{4}\.\d{4,5}(?:v\d+)?$/.test(candidate) ? candidate : "";
 }
@@ -365707,7 +366999,7 @@ function toNumber(value) {
 }
 
 // src/literature/ResearchStore.ts
-var import_node_crypto4 = require("node:crypto");
+var import_node_crypto5 = require("node:crypto");
 var DEFAULT_TTL_MS = 4 * 60 * 60 * 1e3;
 var DEFAULT_MAX_BRIEFS = 30;
 var DEFAULT_MAX_SEARCHES = 50;
@@ -365734,7 +367026,7 @@ var ResearchStore = class {
     this.prune();
     const brief = {
       ...value,
-      briefId: `brf_${(0, import_node_crypto4.randomUUID)().replace(/-/g, "").slice(0, 12)}`,
+      briefId: `brf_${(0, import_node_crypto5.randomUUID)().replace(/-/g, "").slice(0, 12)}`,
       createdAt: (/* @__PURE__ */ new Date()).toISOString()
     };
     this.briefs.set(brief.briefId, { value: brief, expiresAt: Date.now() + this.ttlMs });
@@ -365749,7 +367041,7 @@ var ResearchStore = class {
     this.prune();
     const search = {
       ...value,
-      searchId: `srch_${(0, import_node_crypto4.randomUUID)().replace(/-/g, "").slice(0, 12)}`,
+      searchId: `srch_${(0, import_node_crypto5.randomUUID)().replace(/-/g, "").slice(0, 12)}`,
       createdAt: (/* @__PURE__ */ new Date()).toISOString(),
       screening: {}
     };
@@ -365776,16 +367068,16 @@ var ResearchStore = class {
   }
   findRecordByDoi(doi) {
     this.prune();
-    const clean = doi.trim().toLowerCase();
+    const clean2 = doi.trim().toLowerCase();
     for (const entry of this.records.values()) {
-      if ((entry.value.doi || "").trim().toLowerCase() === clean) return entry.value;
+      if ((entry.value.doi || "").trim().toLowerCase() === clean2) return entry.value;
     }
     for (const entry of this.searches.values()) {
-      const record2 = entry.value.records.find((item) => (item.doi || "").trim().toLowerCase() === clean);
+      const record2 = entry.value.records.find((item) => (item.doi || "").trim().toLowerCase() === clean2);
       if (record2) return record2;
     }
     for (const entry of this.briefs.values()) {
-      if ((entry.value.seed.doi || "").trim().toLowerCase() === clean) return entry.value.seed;
+      if ((entry.value.seed.doi || "").trim().toLowerCase() === clean2) return entry.value.seed;
     }
     return void 0;
   }
@@ -366408,7 +367700,7 @@ var LiteratureService = class {
         warnings.push(`OpenAlex ID lookup failed: ${sanitizeSensitiveText(error62?.message || "unknown error")}`);
       }
     }
-    const doi = normalizeDoi4(seed.doi || records.find((record2) => record2.doi)?.doi);
+    const doi = normalizeDoi5(seed.doi || records.find((record2) => record2.doi)?.doi);
     if (doi) {
       const existingSources = new Set(records.flatMap((record2) => record2.sources.map((source) => source.source)));
       records.push(...await this.resolveByDoi(doi, warnings, existingSources));
@@ -366587,7 +367879,7 @@ var LiteratureService = class {
     }
     const resolved = [...selected];
     for (const doi of input2.dois || []) {
-      resolved.push(...await this.resolveByDoi(normalizeDoi4(doi), []));
+      resolved.push(...await this.resolveByDoi(normalizeDoi5(doi), []));
     }
     return dedupeRecords(resolved);
   }
@@ -366642,7 +367934,7 @@ var LiteratureService = class {
         continue;
       }
       if (/^10\.\d{4,}\//.test(seed)) {
-        resolved.push(...await this.resolveByDoi(normalizeDoi4(seed), []));
+        resolved.push(...await this.resolveByDoi(normalizeDoi5(seed), []));
         continue;
       }
       throw new Error(`Unsupported seed identifier: ${seed}`);
@@ -366689,9 +367981,9 @@ var LiteratureService = class {
       throw new Error(`No citation provider is available for seed ${seed.recordId}`);
     }
     let lastError;
-    for (const attempt of attempts) {
+    for (const attempt2 of attempts) {
       try {
-        const result = await attempt();
+        const result = await attempt2();
         if (result.records.length > 0) return result;
         lastError = new Error(`No ${direction} records returned`);
       } catch (error62) {
@@ -367590,7 +368882,7 @@ var CitationService = class {
 // src/mcp/handleToolCall.ts
 init_SecurityUtils();
 init_Logger();
-var fs11 = __toESM(require("node:fs"), 1);
+var fs13 = __toESM(require("node:fs"), 1);
 var citationService = new CitationService();
 function jsonTextResponse(text3) {
   return {
@@ -367724,7 +369016,7 @@ function sanitizePublicSaveDirectory(savePath) {
 }
 async function pathExists(filePath) {
   try {
-    await fs11.promises.lstat(filePath);
+    await fs13.promises.lstat(filePath);
     return true;
   } catch (error62) {
     if (error62?.code === "ENOENT") return false;
@@ -368757,7 +370049,7 @@ function registerMcpHandlers(server2, searcherFactory = initializeSearchers) {
       },
       serverInfo: {
         name: "twosci",
-        version: "0.2.4"
+        version: "0.3.0"
       }
     };
   });
@@ -368783,20 +370075,20 @@ init_Logger();
 var import_meta = {};
 function loadEnvironment() {
   try {
-    const homeEnv = path11.resolve(os.homedir(), ".twosci", ".env");
-    if (fs12.existsSync(homeEnv)) {
+    const homeEnv = path12.resolve(os.homedir(), ".twosci", ".env");
+    if (fs14.existsSync(homeEnv)) {
       dotenv.config({ path: homeEnv });
     }
   } catch {
   }
-  const cwdEnv = path11.resolve(process.cwd(), ".env");
-  if (fs12.existsSync(cwdEnv)) {
+  const cwdEnv = path12.resolve(process.cwd(), ".env");
+  if (fs14.existsSync(cwdEnv)) {
     dotenv.config({ path: cwdEnv });
   }
   try {
-    const currentDir = typeof __dirname !== "undefined" ? __dirname : path11.dirname((0, import_node_url.fileURLToPath)(import_meta.url));
-    const pluginEnv = path11.resolve(currentDir, "..", ".env");
-    if (fs12.existsSync(pluginEnv)) {
+    const currentDir = typeof __dirname !== "undefined" ? __dirname : path12.dirname((0, import_node_url.fileURLToPath)(import_meta.url));
+    const pluginEnv = path12.resolve(currentDir, "..", ".env");
+    if (fs14.existsSync(pluginEnv)) {
       dotenv.config({ path: pluginEnv });
     }
   } catch {
@@ -368809,14 +370101,14 @@ function loadClaudeDesktopConfig() {
     const platform = process.platform;
     let configPath = "";
     if (platform === "win32") {
-      configPath = path11.join(process.env.APPDATA || "", "Claude", "claude_desktop_config.json");
+      configPath = path12.join(process.env.APPDATA || "", "Claude", "claude_desktop_config.json");
     } else if (platform === "darwin") {
-      configPath = path11.join(process.env.HOME || "", "Library", "Application Support", "Claude", "claude_desktop_config.json");
+      configPath = path12.join(process.env.HOME || "", "Library", "Application Support", "Claude", "claude_desktop_config.json");
     } else {
-      configPath = path11.join(process.env.HOME || "", ".config", "Claude", "claude_desktop_config.json");
+      configPath = path12.join(process.env.HOME || "", ".config", "Claude", "claude_desktop_config.json");
     }
-    if (configPath && fs12.existsSync(configPath)) {
-      const raw = fs12.readFileSync(configPath, "utf8");
+    if (configPath && fs14.existsSync(configPath)) {
+      const raw = fs14.readFileSync(configPath, "utf8");
       const parsed = JSON.parse(raw);
       const mcpServers = parsed?.mcpServers || {};
       const envSource = mcpServers.twosci?.env || mcpServers["paper-search"]?.env;
@@ -368835,7 +370127,7 @@ loadEnvironment();
 var server = new Server(
   {
     name: "twosci",
-    version: "0.2.4"
+    version: "0.3.0"
   },
   {
     capabilities: {
