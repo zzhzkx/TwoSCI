@@ -86,7 +86,7 @@ export class MineruService {
     try {
       const resp = await axios.get(`https://api.crossref.org/works/${encodeURIComponent(cleanDoi)}`, {
         timeout: 10000,
-        headers: { 'User-Agent': 'TwoSCI/0.3.0 (mailto:research@twosci.org)' }
+        headers: { 'User-Agent': 'TwoSCI/0.3.1 (mailto:research@twosci.org)' }
       });
       const item = resp.data?.message;
       if (item) {

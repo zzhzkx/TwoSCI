@@ -7,6 +7,7 @@ import { FullTextRouter, type FullTextResolutionResult, type FullTextRoute } fro
 import { ReadingCardService, type ReadingPacketResult } from './ReadingCardService.js';
 import { CardFormatter } from './CardFormatter.js';
 import { MineruService, type MineruBatchResult } from './MineruService.js';
+import { getBrowserResolver, isPatchrightAvailable } from './download/browserResolver.js';
 import { CitationTopologyService, type CitationTopologyResult } from './CitationTopologyService.js';
 import { AcademicLibraryService, type AcademicLibraryResult } from './AcademicLibraryService.js';
 import {
@@ -533,6 +534,10 @@ export class LiteratureService {
           : {})
       },
       mode_defaults: MODE_CONFIG,
+      browser: {
+        patchright_available: await isPatchrightAvailable(),
+        ...(await getBrowserResolver().status())
+      },
       session_store: this.store.stats()
     };
   }

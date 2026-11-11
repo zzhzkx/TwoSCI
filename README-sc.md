@@ -71,9 +71,28 @@ PDF 获取逻辑已从 scansci-pdf 移植为 TypeScript，默认不调用 `scans
 - `TWOSCI_WEBVPN_*`、`TWOSCI_CARSI_*`：机构访问；也可用
   `TWOSCI_SCANSCI_CONFIG` 显式导入一次已有的 scansci 配置（只读）。
 
-边界：插件不捆绑浏览器，也不集成 Sci-Hub。Cloudflare/Akamai 强验证或交互式
-SSO 登录无法用纯 HTTP 复刻；这类情况会诚实返回失败原因，可用机构 cookie
-或后续可选的浏览器模块处理。
+边界：插件不捆绑 Chromium，也不集成 Sci-Hub。Cloudflare/Akamai 强验证或
+交互式 SSO 登录无法用纯 HTTP 复刻；这类情况会诚实返回失败原因，并交给
+Patchright 浏览器兜底或机构 cookie 处理。
+
+## 浏览器兜底：Patchright + 本机 Chrome/Edge
+
+HTTP/API 路由全部失败后，才启动 Patchright 浏览器。它修补了常见的 Playwright
+自动化特征，并优先驱动本机 Google Chrome（`channel=chrome`），没有 Chrome 时
+尝试 Edge；不随插件捆绑 Chromium。
+
+- `TWOSCI_BROWSER_HEADLESS=auto`：先无头运行；遇到 Akamai/Cloudflare 挑战
+  自动关闭并以有头模式重启（实测 MDPI 无头 403，有头可正常加载）。
+- 使用持久 profile（默认 `~/.twosci/browser-profile`），挑战 cookie 可复用。
+- 资源控制：图片/字体/媒体拦截、单浏览器实例、单页串行、空闲 5 分钟自动关闭。
+- 浏览器只负责落地页、挑战和 PDF 链接/响应；PDF 字节仍优先走 CDN/API/HTTP。
+- `TWOSCI_BROWSER_TURNSTILE_CLICK=true` 可尝试点击 Turnstile checkbox；
+  Turnstile 不保证通过。
+- 未实现自动 SSO 登录；遇到 CAS/机构登录页会返回 `auth_required`，可在
+  `TWOSCI_BROWSER_HEADLESS=false` 下人工登录一次，profile 会保留会话。
+
+如果本机没有 Chrome/Edge，可在插件目录运行 `npx patchright install chromium`
+安装 Patchright 自带 Chromium（约 150 MB）。
 
 ## 结果三层
 

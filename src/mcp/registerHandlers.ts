@@ -9,6 +9,7 @@ import { TOOLS } from './tools.js';
 import { initializeSearchers, type Searchers } from './searchers.js';
 import { createCallToolHandler } from './callToolHandler.js';
 import { logDebug } from '../utils/Logger.js';
+import { getBrowserResolver } from '../literature/download/browserResolver.js';
 
 /** Register the complete MCP request surface on a server instance. */
 export function registerMcpHandlers(
@@ -26,7 +27,7 @@ export function registerMcpHandlers(
       },
       serverInfo: {
         name: 'twosci',
-        version: '0.3.0'
+        version: '0.3.1'
       }
     };
   });
@@ -46,6 +47,7 @@ export function registerMcpHandlers(
   const previousOnClose = server.onclose;
   server.onclose = () => {
     callToolHandler.dispose();
+    void getBrowserResolver().close();
     previousOnClose?.();
   };
 }

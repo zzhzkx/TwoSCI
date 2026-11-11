@@ -1,5 +1,5 @@
 import { build } from 'esbuild';
-import { cpSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve, sep } from 'node:path';
 
 const root = process.cwd();
@@ -22,18 +22,23 @@ await build({
   outfile: join(outDir, 'dist', 'server.cjs'),
   sourcemap: false,
   minify: false,
-  legalComments: 'none'
+  legalComments: 'none',
+  external: ['patchright']
 });
 
 cpSync(join(root, 'skills'), join(outDir, 'skills'), { recursive: true });
 cpSync(join(root, 'LICENSE'), join(outDir, 'LICENSE'));
 cpSync(join(root, '.env.example'), join(outDir, '.env.example'));
+copyRuntimeDependencies(root, outDir);
 
 const packageJson = {
   name: 'twosci',
-  version: '0.3.0',
+  version: '0.3.1',
   private: true,
-  type: 'commonjs'
+  type: 'commonjs',
+  dependencies: {
+    patchright: '1.64.3'
+  }
 };
 
 const interfaceMetadata = {
@@ -54,7 +59,7 @@ const interfaceMetadata = {
 
 const baseManifest = {
   name: 'twosci',
-  version: '0.3.0',
+  version: '0.3.1',
   description:
     'Seed-paper-driven literature discovery, abstract screening, citation expansion, and evidence export across Web of Science, Scopus, OpenAlex, Crossref, and IEEE Xplore.',
   author: { name: 'zzhzkx' },
@@ -126,6 +131,15 @@ function writeJson(path, value) {
   writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
+function copyRuntimeDependencies(root, outDir) {
+  const targetRoot = join(outDir, 'node_modules');
+  for (const packageName of ['patchright', 'patchright-core']) {
+    const source = join(root, 'node_modules', packageName);
+    if (!existsSync(source)) continue;
+    cpSync(source, join(targetRoot, packageName), { recursive: true });
+  }
+}
+
 function pluginReadme() {
   return `# TwoSCI
 
@@ -161,6 +175,11 @@ variables in the host application:
 - \`OPENALEX_EMAIL\`: polite-pool contact email.
 
 If \`WOS_EXPANDED_API_KEY\` is present, all WoS calls use Expanded by default.
+
+PDF acquisition is native (Unpaywall/OpenAlex/Europe PMC/publisher routes).
+The optional browser fallback uses Patchright with the locally installed
+Chrome or Edge; Chromium is not bundled. Set \`TWOSCI_BROWSER_HEADLESS=auto\`
+to try headless first and relaunch headed only when a challenge persists.
 
 ## Local test
 

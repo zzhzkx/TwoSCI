@@ -32,3 +32,12 @@ description: >
 2. **通道探测**：调用 `resolve_fulltext_access` 探测最优获取路径（Tier 1 OA直链 / Tier 2 出版商 API / Tier 3 校园网）。
 3. **下载与解析**：调用 `download_and_parse_mineru`，传入 `dois` 或 `urls`。系统自动下载 PDF、调用 MinerU 转换为结构化 Markdown 并将插图提取到 `img/` 子目录。
 4. **交付反馈**：向用户汇报成功解析的文献篇数、本地文件夹路径与图片资产数量。
+
+## 3. 浏览器兜底
+
+- 默认顺序：记录直链 → arXiv/Unpaywall/OpenAlex/Semantic Scholar/Europe PMC/PMC/Crossref → Elsevier API → 出版商 PDF 路由 → 落地页 HTML → Patchright 浏览器。
+- Patchright 优先驱动本机 Chrome，其次 Edge；不捆绑 Chromium。
+- `TWOSCI_BROWSER_HEADLESS=auto` 先无头运行，遇到 Akamai/Cloudflare 挑战自动切换有头模式。
+- 浏览器共享单实例、持久 profile、拦截图片/字体/媒体，空闲 5 分钟关闭。
+- 遇到 CAS/机构登录页会返回 `auth_required`；可让用户用有头模式人工登录一次，profile 会保留会话。
+- Turnstile 不保证通过；不要向用户承诺绕过所有验证。

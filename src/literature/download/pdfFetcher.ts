@@ -1,3 +1,4 @@
+import * as fs from 'node:fs';
 import axios from 'axios';
 import {
   buildPdfCandidates,
@@ -22,6 +23,7 @@ import {
   type InstitutionalConfig
 } from './institutionalAccess.js';
 import { downloadPdfToFile, fetchHtml } from './pdfDownload.js';
+import { getBrowserResolver, type BrowserResolveResult } from './browserResolver.js';
 import type { DownloadAttempt, PdfFetchOptions, PdfFetchResult } from './types.js';
 
 /**
@@ -82,7 +84,7 @@ async function resolveDoiLanding(doi: string): Promise<string | undefined> {
     const response = await axios.get(`https://doi.org/${encodeURIComponent(doi)}`, {
       maxRedirects: 5,
       timeout: 15_000,
-      headers: { 'User-Agent': 'TwoSCI/0.3.0' },
+      headers: { 'User-Agent': 'TwoSCI/0.3.1' },
       validateStatus: status => status < 400
     });
     const finalUrl = String(
@@ -266,7 +268,9 @@ export async function fetchPdf(
     }
   }
 
-  const resolvedLanding = landingUrl || (doi ? await resolveDoiLanding(doi) : undefined);
+  const resolvedLanding = landingUrl
+    || (doi ? await resolveDoiLanding(doi) : undefined)
+    || (doi ? `https://doi.org/${doi}` : undefined);
   const config = loadInstitutionalConfig();
   const profile = doi ? publisherProfileFor(doi, resolvedLanding) : undefined;
 
@@ -293,6 +297,46 @@ export async function fetchPdf(
   )) {
     const success = attempts.find(item => item.status === 'success');
     return { success: true, channel: success?.channel, url: success?.url, attempts };
+  }
+
+  if (resolvedLanding
+    && process.env.NODE_ENV !== 'test'
+    && process.env.TWOSCI_BROWSER_ENABLED !== 'false') {
+    let browser: BrowserResolveResult | undefined;
+    try {
+      browser = await getBrowserResolver().resolve(resolvedLanding, { doi });
+    } catch (error) {
+      attempts.push({
+        channel: 'browser',
+        status: 'error',
+        reason: error instanceof Error ? error.message : String(error)
+      });
+    }
+    if (!browser) {
+      return { success: false, attempts, message: 'Browser fallback failed to start.' };
+    }
+    if (browser.pdf) {
+      fs.writeFileSync(destPath, browser.pdf);
+      attempts.push({ channel: 'browser', status: 'success', url: browser.pdfUrl });
+      return { success: true, channel: 'browser', url: browser.pdfUrl, attempts };
+    }
+    const cookieHeader = browser.cookies.length > 0
+      ? cookieHeaderForUrl(browser.cookies, browser.finalUrl || resolvedLanding)
+      : undefined;
+    for (const pdfUrl of browser.pdfUrls || []) {
+      const ok = await attempt('browser_cookie', pdfUrl, destPath, options, attempts, {
+        ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+        ...(browser.finalUrl ? { Referer: browser.finalUrl } : {})
+      });
+      if (ok) return { success: true, channel: 'browser_cookie', url: pdfUrl, attempts };
+    }
+    if (browser.authRequired) {
+      attempts.push({ channel: 'browser', status: 'blocked', reason: 'auth_required' });
+    } else if (browser.challenge) {
+      attempts.push({ channel: 'browser', status: 'blocked', reason: 'challenge_not_solved' });
+    } else if (browser.attempts.length > 0) {
+      attempts.push({ channel: 'browser', status: 'miss', reason: browser.attempts.slice(-3).join(' | ') });
+    }
   }
 
   return {

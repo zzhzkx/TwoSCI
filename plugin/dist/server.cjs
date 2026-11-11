@@ -6,10 +6,10 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __glob = (map3) => (path13) => {
-  var fn = map3[path13];
+var __glob = (map3) => (path14) => {
+  var fn = map3[path14];
   if (fn) return fn();
-  throw new Error("Module not found in bundle: " + path13);
+  throw new Error("Module not found in bundle: " + path14);
 };
 var __esm = (fn, res, err) => function __init() {
   if (err) throw err[0];
@@ -3276,8 +3276,8 @@ var require_utils = __commonJS({
       }
       return ind;
     }
-    function removeDotSegments(path13) {
-      let input2 = path13;
+    function removeDotSegments(path14) {
+      let input2 = path14;
       const output2 = [];
       let nextSlash = -1;
       let len = 0;
@@ -3351,11 +3351,11 @@ var require_utils = __commonJS({
       }
       return output2.join("");
     }
-    function removeDotSegmentsRelative(path13) {
-      if (path13 === "" || path13[0] === "/") {
-        return removeDotSegments(path13);
+    function removeDotSegmentsRelative(path14) {
+      if (path14 === "" || path14[0] === "/") {
+        return removeDotSegments(path14);
       }
-      const segments = path13.split("/");
+      const segments = path14.split("/");
       const last2 = segments.length - 1;
       const output2 = [];
       let trailingDirectory = false;
@@ -3718,8 +3718,8 @@ var require_schemes = __commonJS({
       }
       if (wsComponent.resourceName) {
         const queryIndex = wsComponent.resourceName.indexOf("?");
-        const path13 = queryIndex === -1 ? wsComponent.resourceName : wsComponent.resourceName.slice(0, queryIndex);
-        wsComponent.path = path13 && path13 !== "/" ? path13 : void 0;
+        const path14 = queryIndex === -1 ? wsComponent.resourceName : wsComponent.resourceName.slice(0, queryIndex);
+        wsComponent.path = path14 && path14 !== "/" ? path14 : void 0;
         wsComponent.query = queryIndex === -1 ? void 0 : wsComponent.resourceName.slice(queryIndex + 1);
         wsComponent.resourceName = void 0;
       }
@@ -7256,12 +7256,12 @@ var require_dist = __commonJS({
         throw new Error(`Unknown format "${name}"`);
       return f;
     };
-    function addFormats(ajv, list, fs15, exportName) {
+    function addFormats(ajv, list, fs17, exportName) {
       var _a5;
       var _b;
       (_a5 = (_b = ajv.opts.code).formats) !== null && _a5 !== void 0 ? _a5 : _b.formats = (0, codegen_1._)`require("ajv-formats/dist/formats").${exportName}`;
       for (const f of list)
-        ajv.addFormat(f, fs15[f]);
+        ajv.addFormat(f, fs17[f]);
     }
     module2.exports = exports2 = formatsPlugin;
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -7340,9 +7340,9 @@ var require_package = __commonJS({
 // node_modules/dotenv/lib/main.js
 var require_main = __commonJS({
   "node_modules/dotenv/lib/main.js"(exports2, module2) {
-    var fs15 = require("fs");
-    var path13 = require("path");
-    var os2 = require("os");
+    var fs17 = require("fs");
+    var path14 = require("path");
+    var os3 = require("os");
     var crypto2 = require("crypto");
     var packageJson = require_package();
     var version2 = packageJson.version;
@@ -7449,7 +7449,7 @@ var require_main = __commonJS({
       if (options && options.path && options.path.length > 0) {
         if (Array.isArray(options.path)) {
           for (const filepath of options.path) {
-            if (fs15.existsSync(filepath)) {
+            if (fs17.existsSync(filepath)) {
               possibleVaultPath = filepath.endsWith(".vault") ? filepath : `${filepath}.vault`;
             }
           }
@@ -7457,15 +7457,15 @@ var require_main = __commonJS({
           possibleVaultPath = options.path.endsWith(".vault") ? options.path : `${options.path}.vault`;
         }
       } else {
-        possibleVaultPath = path13.resolve(process.cwd(), ".env.vault");
+        possibleVaultPath = path14.resolve(process.cwd(), ".env.vault");
       }
-      if (fs15.existsSync(possibleVaultPath)) {
+      if (fs17.existsSync(possibleVaultPath)) {
         return possibleVaultPath;
       }
       return null;
     }
     function _resolveHome(envPath) {
-      return envPath[0] === "~" ? path13.join(os2.homedir(), envPath.slice(1)) : envPath;
+      return envPath[0] === "~" ? path14.join(os3.homedir(), envPath.slice(1)) : envPath;
     }
     function _configVault(options) {
       const debug = Boolean(options && options.debug);
@@ -7482,7 +7482,7 @@ var require_main = __commonJS({
       return { parsed };
     }
     function configDotenv(options) {
-      const dotenvPath = path13.resolve(process.cwd(), ".env");
+      const dotenvPath = path14.resolve(process.cwd(), ".env");
       let encoding = "utf8";
       const debug = Boolean(options && options.debug);
       const quiet = options && "quiet" in options ? options.quiet : true;
@@ -7506,13 +7506,13 @@ var require_main = __commonJS({
       }
       let lastError;
       const parsedAll = {};
-      for (const path14 of optionPaths) {
+      for (const path15 of optionPaths) {
         try {
-          const parsed = DotenvModule.parse(fs15.readFileSync(path14, { encoding }));
+          const parsed = DotenvModule.parse(fs17.readFileSync(path15, { encoding }));
           DotenvModule.populate(parsedAll, parsed, options);
         } catch (e) {
           if (debug) {
-            _debug(`Failed to load ${path14} ${e.message}`);
+            _debug(`Failed to load ${path15} ${e.message}`);
           }
           lastError = e;
         }
@@ -7527,7 +7527,7 @@ var require_main = __commonJS({
         const shortPaths = [];
         for (const filePath of optionPaths) {
           try {
-            const relative3 = path13.relative(process.cwd(), filePath);
+            const relative3 = path14.relative(process.cwd(), filePath);
             shortPaths.push(relative3);
           } catch (e) {
             if (debug) {
@@ -17709,11 +17709,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path13) {
-      if (!path13 || typeof path13 !== "string") {
+    function lookup(path14) {
+      if (!path14 || typeof path14 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path13).toLowerCase().substr(1);
+      var extension2 = extname("x." + path14).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -18818,11 +18818,11 @@ var require_form_data = __commonJS({
     "use strict";
     var CombinedStream = require_combined_stream();
     var util4 = require("util");
-    var path13 = require("path");
+    var path14 = require("path");
     var http3 = require("http");
     var https2 = require("https");
     var parseUrl2 = require("url").parse;
-    var fs15 = require("fs");
+    var fs17 = require("fs");
     var Stream = require("stream").Stream;
     var crypto2 = require("crypto");
     var mime = require_mime_types();
@@ -18892,7 +18892,7 @@ var require_form_data = __commonJS({
         if (value.end != void 0 && value.end != Infinity && value.start != void 0) {
           callback(null, value.end + 1 - (value.start ? value.start : 0));
         } else {
-          fs15.stat(value.path, function(err, stat) {
+          fs17.stat(value.path, function(err, stat) {
             if (err) {
               callback(err);
               return;
@@ -18949,11 +18949,11 @@ var require_form_data = __commonJS({
     FormData3.prototype._getContentDisposition = function(value, options) {
       var filename;
       if (typeof options.filepath === "string") {
-        filename = path13.normalize(options.filepath).replace(/\\/g, "/");
+        filename = path14.normalize(options.filepath).replace(/\\/g, "/");
       } else if (options.filename || value && (value.name || value.path)) {
-        filename = path13.basename(options.filename || value && (value.name || value.path));
+        filename = path14.basename(options.filename || value && (value.name || value.path));
       } else if (value && value.readable && hasOwn2(value, "httpVersion")) {
-        filename = path13.basename(value.client._httpMessage.path || "");
+        filename = path14.basename(value.client._httpMessage.path || "");
       }
       if (filename) {
         return 'filename="' + escapeHeaderParam(filename) + '"';
@@ -19166,9 +19166,9 @@ function isVisitable(thing) {
 function removeBrackets(key) {
   return utils_default.endsWith(key, "[]") ? key.slice(0, -2) : key;
 }
-function renderKey(path13, key, dots) {
-  if (!path13) return key;
-  return path13.concat(key).map(function each2(token, i) {
+function renderKey(path14, key, dots) {
+  if (!path14) return key;
+  return path14.concat(key).map(function each2(token, i) {
     token = removeBrackets(token);
     return !dots && i ? "[" + token + "]" : token;
   }).join(dots ? "." : "");
@@ -19246,13 +19246,13 @@ function toFormData(obj, formData, options) {
       return currentValue;
     });
   }
-  function defaultVisitor(value, key, path13) {
+  function defaultVisitor(value, key, path14) {
     let arr = value;
     if (utils_default.isReactNative(formData) && utils_default.isReactNativeBlob(value)) {
-      formData.append(renderKey(path13, key, dots), convertValue(value));
+      formData.append(renderKey(path14, key, dots), convertValue(value));
       return false;
     }
-    if (value && !path13 && typeof value === "object") {
+    if (value && !path14 && typeof value === "object") {
       if (utils_default.endsWith(key, "{}")) {
         key = metaTokens ? key : key.slice(0, -2);
         value = stringifyWithDepthLimit(value, 1);
@@ -19271,7 +19271,7 @@ function toFormData(obj, formData, options) {
     if (isVisitable(value)) {
       return true;
     }
-    formData.append(renderKey(path13, key, dots), convertValue(value));
+    formData.append(renderKey(path14, key, dots), convertValue(value));
     return false;
   }
   const exposedHelpers = Object.assign(predicates, {
@@ -19279,17 +19279,17 @@ function toFormData(obj, formData, options) {
     convertValue,
     isVisitable
   });
-  function build(value, path13, depth = 0) {
+  function build(value, path14, depth = 0) {
     if (utils_default.isUndefined(value)) return;
     throwIfMaxDepthExceeded(depth);
     if (stack.indexOf(value) !== -1) {
-      throw new Error("Circular reference detected in " + path13.join("."));
+      throw new Error("Circular reference detected in " + path14.join("."));
     }
     stack.push(value);
     utils_default.forEach(value, function each2(el, key) {
-      const result = !(utils_default.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default.isString(key) ? key.trim() : key, path13, exposedHelpers);
+      const result = !(utils_default.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default.isString(key) ? key.trim() : key, path14, exposedHelpers);
       if (result === true) {
-        build(el, path13 ? path13.concat(key) : [key], depth + 1);
+        build(el, path14 ? path14.concat(key) : [key], depth + 1);
       }
     });
     stack.pop();
@@ -19646,7 +19646,7 @@ var init_platform = __esm({
 // node_modules/axios/lib/helpers/toURLEncodedForm.js
 function toURLEncodedForm(data2, options) {
   return toFormData_default(data2, new platform_default.classes.URLSearchParams(), {
-    visitor: function(value, key, path13, helpers) {
+    visitor: function(value, key, path14, helpers) {
       if (platform_default.isNode && utils_default.isBuffer(value)) {
         this.append(key, value.toString("base64"));
         return false;
@@ -19675,14 +19675,14 @@ function throwIfDepthExceeded(index2) {
   }
 }
 function parsePropPath(name) {
-  const path13 = [];
+  const path14 = [];
   const pattern = /[^.[\]]+|\[([^.[\]]*)]/g;
   let match;
   while ((match = pattern.exec(name)) !== null) {
-    throwIfDepthExceeded(path13.length);
-    path13.push(match[0] === "[]" ? "" : match[1] || match[0]);
+    throwIfDepthExceeded(path14.length);
+    path14.push(match[0] === "[]" ? "" : match[1] || match[0]);
   }
-  return path13;
+  return path14;
 }
 function arrayToObject(arr) {
   const obj = {};
@@ -19715,12 +19715,12 @@ function normalizeArrays(obj) {
   return obj;
 }
 function formDataToJSON(formData) {
-  function buildPath(path13, value, target, index2) {
+  function buildPath(path14, value, target, index2) {
     throwIfDepthExceeded(index2);
-    let name = path13[index2++];
+    let name = path14[index2++];
     if (name === "__proto__") return true;
     const isNumericKey = Number.isFinite(+name);
-    const isLast = index2 >= path13.length;
+    const isLast = index2 >= path14.length;
     name = !name && utils_default.isArray(target) ? target.length : name;
     if (isLast) {
       if (utils_default.hasOwnProp(target, name)) {
@@ -19734,7 +19734,7 @@ function formDataToJSON(formData) {
     if (!utils_default.hasOwnProp(target, name) || !utils_default.isObject(target[name])) {
       target[name] = [];
     }
-    const result = buildPath(path13, value, target[name], index2);
+    const result = buildPath(path14, value, target[name], index2);
     if (result && utils_default.isArray(target[name])) {
       target[name] = arrayToObject(target[name]);
     }
@@ -20650,7 +20650,7 @@ var require_has_flag = __commonJS({
 var require_supports_color = __commonJS({
   "node_modules/supports-color/index.js"(exports2, module2) {
     "use strict";
-    var os2 = require("os");
+    var os3 = require("os");
     var tty = require("tty");
     var hasFlag = require_has_flag();
     var { env } = process;
@@ -20698,7 +20698,7 @@ var require_supports_color = __commonJS({
         return min;
       }
       if (process.platform === "win32") {
-        const osRelease = os2.release().split(".");
+        const osRelease = os3.release().split(".");
         if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
           return Number(osRelease[2]) >= 14931 ? 3 : 2;
         }
@@ -23702,9 +23702,9 @@ var init_http = __esm({
           auth = urlUsername + ":" + urlPassword;
         }
         auth && headers.delete("authorization");
-        let path13;
+        let path14;
         try {
-          path13 = buildURL(
+          path14 = buildURL(
             parsed.pathname + parsed.search,
             own3("params"),
             own3("paramsSerializer")
@@ -23726,7 +23726,7 @@ var init_http = __esm({
           http2Options = Object.assign(/* @__PURE__ */ Object.create(null), http2Options, { lookup });
         }
         const options = Object.assign(/* @__PURE__ */ Object.create(null), {
-          path: path13,
+          path: path14,
           method,
           headers: toByteStringHeaderObject(headers),
           agents: { http: httpAgent, https: httpsAgent },
@@ -24150,14 +24150,14 @@ var init_cookies = __esm({
     cookies_default = platform_default.hasStandardBrowserEnv ? (
       // Standard browser envs support document.cookie
       {
-        write(name, value, expires, path13, domain2, secure, sameSite) {
+        write(name, value, expires, path14, domain2, secure, sameSite) {
           if (typeof document === "undefined") return;
           const cookie = [`${name}=${encodeURIComponent(value)}`];
           if (utils_default.isNumber(expires)) {
             cookie.push(`expires=${new Date(expires).toUTCString()}`);
           }
-          if (utils_default.isString(path13)) {
-            cookie.push(`path=${path13}`);
+          if (utils_default.isString(path14)) {
+            cookie.push(`path=${path14}`);
           }
           if (utils_default.isString(domain2)) {
             cookie.push(`domain=${domain2}`);
@@ -33221,7 +33221,7 @@ var init_constants = __esm({
       OPENALEX: "https://api.openalex.org",
       IEEE_XPLORE: "https://ieeexploreapi.ieee.org/api/v1"
     };
-    USER_AGENT = "TwoSCI/0.3.0 (Academic Research Tool)";
+    USER_AGENT = "TwoSCI/0.3.1 (Academic Research Tool)";
     DEFAULT_MAILTO = process.env.CROSSREF_MAILTO || "twosci@example.com";
   }
 });
@@ -46110,11 +46110,11 @@ var require_pdf_worker = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs15 = new FileSpec(names[name], xref);
+                      var fs17 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs15.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs17.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -51414,8 +51414,8 @@ var require_pdf_worker = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace)) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path13 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path13]);
+                        var path14 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path14]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -61137,7 +61137,7 @@ var require_pdf_worker = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join11(separator) {
+                join: function join12(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -70521,8 +70521,8 @@ var require_pdf_worker = __commonJS({
                 }
                 return cmap + "\0" + string16(format314.length + 4) + format314 + header31012 + format31012;
               }
-              function validateOS2Table(os2) {
-                var stream4 = new _stream.Stream(os2.data);
+              function validateOS2Table(os22) {
+                var stream4 = new _stream.Stream(os22.data);
                 var version2 = stream4.getUint16();
                 stream4.getBytes(60);
                 var selection = stream4.getUint16();
@@ -70539,7 +70539,7 @@ var require_pdf_worker = __commonJS({
                 if (usWinAscent === 0) {
                   return false;
                 }
-                os2.data[8] = os2.data[9] = 0;
+                os22.data[8] = os22.data[9] = 0;
                 return true;
               }
               function createOS2Table(properties, charstrings, override) {
@@ -88180,7 +88180,7 @@ var require_pdf = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join11(separator) {
+                join: function join12(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -94103,10 +94103,10 @@ var require_pdf = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path13 = paths[i];
-                    ctx.setTransform.apply(ctx, path13.transform);
-                    ctx.translate(path13.x, path13.y);
-                    path13.addToPath(ctx, path13.fontSize);
+                    var path14 = paths[i];
+                    ctx.setTransform.apply(ctx, path14.transform);
+                    ctx.translate(path14.x, path14.y);
+                    path14.addToPath(ctx, path14.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -95966,7 +95966,7 @@ var require_pdf = __commonJS({
                 throw new TypeError("Cannot call a class as a function");
               }
             }
-            var fs15 = require("fs");
+            var fs17 = require("fs");
             var http3 = require("http");
             var https2 = require("https");
             var url3 = require("url");
@@ -96299,8 +96299,8 @@ var require_pdf = __commonJS({
               function PDFNodeStreamFsFullReader2(stream4) {
                 _classCallCheck(this, PDFNodeStreamFsFullReader2);
                 var _this7 = _possibleConstructorReturn(this, (PDFNodeStreamFsFullReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsFullReader2)).call(this, stream4));
-                var path13 = decodeURI(_this7._url.path);
-                fs15.lstat(path13, function(error62, stat) {
+                var path14 = decodeURI(_this7._url.path);
+                fs17.lstat(path14, function(error62, stat) {
                   if (error62) {
                     _this7._errored = true;
                     _this7._reason = error62;
@@ -96308,7 +96308,7 @@ var require_pdf = __commonJS({
                     return;
                   }
                   _this7._contentLength = stat.size;
-                  _this7._setReadableStream(fs15.createReadStream(path13));
+                  _this7._setReadableStream(fs17.createReadStream(path14));
                   _this7._headersCapability.resolve();
                 });
                 return _this7;
@@ -96320,7 +96320,7 @@ var require_pdf = __commonJS({
               function PDFNodeStreamFsRangeReader2(stream4, start, end2) {
                 _classCallCheck(this, PDFNodeStreamFsRangeReader2);
                 var _this8 = _possibleConstructorReturn(this, (PDFNodeStreamFsRangeReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsRangeReader2)).call(this, stream4));
-                _this8._setReadableStream(fs15.createReadStream(decodeURI(_this8._url.path), {
+                _this8._setReadableStream(fs17.createReadStream(decodeURI(_this8._url.path), {
                   start,
                   end: end2 - 1
                 }));
@@ -108314,11 +108314,11 @@ var require_pdf_worker2 = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs15 = new FileSpec(names[name], xref);
+                      var fs17 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs15.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs17.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -113618,8 +113618,8 @@ var require_pdf_worker2 = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace)) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path13 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path13]);
+                        var path14 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path14]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -123352,7 +123352,7 @@ var require_pdf_worker2 = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join11(separator) {
+                join: function join12(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -132725,8 +132725,8 @@ var require_pdf_worker2 = __commonJS({
                 }
                 return cmap + "\0" + string16(format314.length + 4) + format314 + header31012 + format31012;
               }
-              function validateOS2Table(os2) {
-                var stream4 = new _stream.Stream(os2.data);
+              function validateOS2Table(os22) {
+                var stream4 = new _stream.Stream(os22.data);
                 var version2 = stream4.getUint16();
                 stream4.getBytes(60);
                 var selection = stream4.getUint16();
@@ -132743,7 +132743,7 @@ var require_pdf_worker2 = __commonJS({
                 if (usWinAscent === 0) {
                   return false;
                 }
-                os2.data[8] = os2.data[9] = 0;
+                os22.data[8] = os22.data[9] = 0;
                 return true;
               }
               function createOS2Table(properties, charstrings, override) {
@@ -150499,7 +150499,7 @@ var require_pdf2 = __commonJS({
                 includes: function includes(searchElement) {
                   return arrayIncludes(validate2(this), searchElement, arguments.length > 1 ? arguments[1] : void 0);
                 },
-                join: function join11(separator) {
+                join: function join12(separator) {
                   return arrayJoin.apply(validate2(this), arguments);
                 },
                 lastIndexOf: function lastIndexOf(searchElement) {
@@ -156415,10 +156415,10 @@ var require_pdf2 = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path13 = paths[i];
-                    ctx.setTransform.apply(ctx, path13.transform);
-                    ctx.translate(path13.x, path13.y);
-                    path13.addToPath(ctx, path13.fontSize);
+                    var path14 = paths[i];
+                    ctx.setTransform.apply(ctx, path14.transform);
+                    ctx.translate(path14.x, path14.y);
+                    path14.addToPath(ctx, path14.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -157802,7 +157802,7 @@ var require_pdf2 = __commonJS({
                 throw new TypeError("Cannot call a class as a function");
               }
             }
-            var fs15 = require("fs");
+            var fs17 = require("fs");
             var http3 = require("http");
             var https2 = require("https");
             var url3 = require("url");
@@ -158135,8 +158135,8 @@ var require_pdf2 = __commonJS({
               function PDFNodeStreamFsFullReader2(stream4) {
                 _classCallCheck(this, PDFNodeStreamFsFullReader2);
                 var _this7 = _possibleConstructorReturn(this, (PDFNodeStreamFsFullReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsFullReader2)).call(this, stream4));
-                var path13 = decodeURI(_this7._url.path);
-                fs15.lstat(path13, function(error62, stat) {
+                var path14 = decodeURI(_this7._url.path);
+                fs17.lstat(path14, function(error62, stat) {
                   if (error62) {
                     _this7._errored = true;
                     _this7._reason = error62;
@@ -158144,7 +158144,7 @@ var require_pdf2 = __commonJS({
                     return;
                   }
                   _this7._contentLength = stat.size;
-                  _this7._setReadableStream(fs15.createReadStream(path13));
+                  _this7._setReadableStream(fs17.createReadStream(path14));
                   _this7._headersCapability.resolve();
                 });
                 return _this7;
@@ -158156,7 +158156,7 @@ var require_pdf2 = __commonJS({
               function PDFNodeStreamFsRangeReader2(stream4, start, end2) {
                 _classCallCheck(this, PDFNodeStreamFsRangeReader2);
                 var _this8 = _possibleConstructorReturn(this, (PDFNodeStreamFsRangeReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsRangeReader2)).call(this, stream4));
-                _this8._setReadableStream(fs15.createReadStream(decodeURI(_this8._url.path), {
+                _this8._setReadableStream(fs17.createReadStream(decodeURI(_this8._url.path), {
                   start,
                   end: end2 - 1
                 }));
@@ -175721,8 +175721,8 @@ var require_pdf_worker3 = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace)) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path13 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path13]);
+                        var path14 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path14]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -180540,11 +180540,11 @@ var require_pdf_worker3 = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs15 = new FileSpec(names[name], xref);
+                      var fs17 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs15.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs17.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -189352,8 +189352,8 @@ var require_pdf_worker3 = __commonJS({
                 }
                 return cmap + "\0" + string16(format314.length + 4) + format314 + header31012 + format31012;
               }
-              function validateOS2Table(os2) {
-                var stream4 = new _stream.Stream(os2.data);
+              function validateOS2Table(os22) {
+                var stream4 = new _stream.Stream(os22.data);
                 var version2 = stream4.getUint16();
                 stream4.getBytes(60);
                 var selection = stream4.getUint16();
@@ -189370,7 +189370,7 @@ var require_pdf_worker3 = __commonJS({
                 if (usWinAscent === 0) {
                   return false;
                 }
-                os2.data[8] = os2.data[9] = 0;
+                os22.data[8] = os22.data[9] = 0;
                 return true;
               }
               function createOS2Table(properties, charstrings, override) {
@@ -210177,10 +210177,10 @@ var require_pdf3 = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path13 = paths[i];
-                    ctx.setTransform.apply(ctx, path13.transform);
-                    ctx.translate(path13.x, path13.y);
-                    path13.addToPath(ctx, path13.fontSize);
+                    var path14 = paths[i];
+                    ctx.setTransform.apply(ctx, path14.transform);
+                    ctx.translate(path14.x, path14.y);
+                    path14.addToPath(ctx, path14.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -222425,11 +222425,11 @@ var require_pdf_worker4 = __commonJS({
                     var nameTree = new NameTree(nameTreeRef, xref);
                     var names = nameTree.getAll();
                     for (var name in names) {
-                      var fs15 = new FileSpec(names[name], xref);
+                      var fs17 = new FileSpec(names[name], xref);
                       if (!attachments) {
                         attachments = /* @__PURE__ */ Object.create(null);
                       }
-                      attachments[(0, _util.stringToPDFString)(name)] = fs15.serializable;
+                      attachments[(0, _util.stringToPDFString)(name)] = fs17.serializable;
                     }
                   }
                   return (0, _util.shadow)(this, "attachments", attachments);
@@ -235575,8 +235575,8 @@ var require_pdf_worker4 = __commonJS({
                   if (font.data && (isAddToPathSet || this.options.disableFontFace || state.fillColorSpace.name === "Pattern")) {
                     var buildPath = function buildPath2(fontChar) {
                       if (!font.renderer.hasBuiltPath(fontChar)) {
-                        var path13 = font.renderer.getPathJs(fontChar);
-                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path13]);
+                        var path14 = font.renderer.getPathJs(fontChar);
+                        _this5.handler.send("commonobj", [font.loadedName + "_path_" + fontChar, "FontPath", path14]);
                       }
                     };
                     for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -239156,8 +239156,8 @@ var require_pdf_worker4 = __commonJS({
                 }
                 return cmap + "\0" + string16(format314.length + 4) + format314 + header31012 + format31012;
               }
-              function validateOS2Table(os2) {
-                var stream4 = new _stream.Stream(os2.data);
+              function validateOS2Table(os22) {
+                var stream4 = new _stream.Stream(os22.data);
                 var version2 = stream4.getUint16();
                 stream4.getBytes(60);
                 var selection = stream4.getUint16();
@@ -239174,7 +239174,7 @@ var require_pdf_worker4 = __commonJS({
                 if (usWinAscent === 0) {
                   return false;
                 }
-                os2.data[8] = os2.data[9] = 0;
+                os22.data[8] = os22.data[9] = 0;
                 return true;
               }
               function createOS2Table(properties, charstrings, override) {
@@ -267540,10 +267540,10 @@ var require_pdf4 = __commonJS({
                   ctx.save();
                   ctx.beginPath();
                   for (var i = 0; i < paths.length; i++) {
-                    var path13 = paths[i];
-                    ctx.setTransform.apply(ctx, path13.transform);
-                    ctx.translate(path13.x, path13.y);
-                    path13.addToPath(ctx, path13.fontSize);
+                    var path14 = paths[i];
+                    ctx.setTransform.apply(ctx, path14.transform);
+                    ctx.translate(path14.x, path14.y);
+                    path14.addToPath(ctx, path14.fontSize);
                   }
                   ctx.restore();
                   ctx.clip();
@@ -272812,7 +272812,7 @@ var require_pdf4 = __commonJS({
                 throw new TypeError("Cannot call a class as a function");
               }
             }
-            var fs15 = require("fs");
+            var fs17 = require("fs");
             var http3 = require("http");
             var https2 = require("https");
             var url3 = require("url");
@@ -273166,11 +273166,11 @@ var require_pdf4 = __commonJS({
               function PDFNodeStreamFsFullReader2(stream4) {
                 _classCallCheck(this, PDFNodeStreamFsFullReader2);
                 var _this7 = _possibleConstructorReturn(this, (PDFNodeStreamFsFullReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsFullReader2)).call(this, stream4));
-                var path13 = decodeURIComponent(_this7._url.path);
+                var path14 = decodeURIComponent(_this7._url.path);
                 if (fileUriRegex.test(_this7._url.href)) {
-                  path13 = path13.replace(/^\//, "");
+                  path14 = path14.replace(/^\//, "");
                 }
-                fs15.lstat(path13, function(error62, stat) {
+                fs17.lstat(path14, function(error62, stat) {
                   if (error62) {
                     _this7._errored = true;
                     _this7._reason = error62;
@@ -273178,7 +273178,7 @@ var require_pdf4 = __commonJS({
                     return;
                   }
                   _this7._contentLength = stat.size;
-                  _this7._setReadableStream(fs15.createReadStream(path13));
+                  _this7._setReadableStream(fs17.createReadStream(path14));
                   _this7._headersCapability.resolve();
                 });
                 return _this7;
@@ -273190,11 +273190,11 @@ var require_pdf4 = __commonJS({
               function PDFNodeStreamFsRangeReader2(stream4, start, end2) {
                 _classCallCheck(this, PDFNodeStreamFsRangeReader2);
                 var _this8 = _possibleConstructorReturn(this, (PDFNodeStreamFsRangeReader2.__proto__ || Object.getPrototypeOf(PDFNodeStreamFsRangeReader2)).call(this, stream4));
-                var path13 = decodeURIComponent(_this8._url.path);
+                var path14 = decodeURIComponent(_this8._url.path);
                 if (fileUriRegex.test(_this8._url.href)) {
-                  path13 = path13.replace(/^\//, "");
+                  path14 = path14.replace(/^\//, "");
                 }
-                _this8._setReadableStream(fs15.createReadStream(path13, {
+                _this8._setReadableStream(fs17.createReadStream(path14, {
                   start,
                   end: end2 - 1
                 }));
@@ -279931,14 +279931,14 @@ var require_util2 = __commonJS({
         }
         const port = url3.port != null ? url3.port : url3.protocol === "https:" ? 443 : 80;
         let origin2 = url3.origin != null ? url3.origin : `${url3.protocol || ""}//${url3.hostname || ""}:${port}`;
-        let path13 = url3.path != null ? url3.path : `${url3.pathname || ""}${url3.search || ""}`;
+        let path14 = url3.path != null ? url3.path : `${url3.pathname || ""}${url3.search || ""}`;
         if (origin2[origin2.length - 1] === "/") {
           origin2 = origin2.slice(0, origin2.length - 1);
         }
-        if (path13 && path13[0] !== "/") {
-          path13 = `/${path13}`;
+        if (path14 && path14[0] !== "/") {
+          path14 = `/${path14}`;
         }
-        return new URL(`${origin2}${path13}`);
+        return new URL(`${origin2}${path14}`);
       }
       if (!isHttpOrHttpsPrefixed(url3.origin || url3.protocol)) {
         throw new InvalidArgumentError("Invalid URL protocol: the URL must start with `http:` or `https:`.");
@@ -280759,9 +280759,9 @@ var require_diagnostics = __commonJS({
         "undici:client:sendHeaders",
         (evt) => {
           const {
-            request: { method, path: path13, origin: origin2 }
+            request: { method, path: path14, origin: origin2 }
           } = evt;
-          debugLog("sending request to %s %s%s", method, origin2, path13);
+          debugLog("sending request to %s %s%s", method, origin2, path14);
         }
       );
     }
@@ -280779,14 +280779,14 @@ var require_diagnostics = __commonJS({
         "undici:request:headers",
         (evt) => {
           const {
-            request: { method, path: path13, origin: origin2 },
+            request: { method, path: path14, origin: origin2 },
             response: { statusCode }
           } = evt;
           debugLog(
             "received response to %s %s%s - HTTP %d",
             method,
             origin2,
-            path13,
+            path14,
             statusCode
           );
         }
@@ -280795,23 +280795,23 @@ var require_diagnostics = __commonJS({
         "undici:request:trailers",
         (evt) => {
           const {
-            request: { method, path: path13, origin: origin2 }
+            request: { method, path: path14, origin: origin2 }
           } = evt;
-          debugLog("trailers received from %s %s%s", method, origin2, path13);
+          debugLog("trailers received from %s %s%s", method, origin2, path14);
         }
       );
       diagnosticsChannel.subscribe(
         "undici:request:error",
         (evt) => {
           const {
-            request: { method, path: path13, origin: origin2 },
+            request: { method, path: path14, origin: origin2 },
             error: error62
           } = evt;
           debugLog(
             "request to %s %s%s errored - %s",
             method,
             origin2,
-            path13,
+            path14,
             error62.message
           );
         }
@@ -280926,7 +280926,7 @@ var require_request = __commonJS({
     var kHandler = /* @__PURE__ */ Symbol("handler");
     var Request = class {
       constructor(origin2, {
-        path: path13,
+        path: path14,
         method,
         body,
         headers,
@@ -280943,11 +280943,11 @@ var require_request = __commonJS({
         maxRedirections,
         typeOfService
       }, handler) {
-        if (typeof path13 !== "string") {
+        if (typeof path14 !== "string") {
           throw new InvalidArgumentError("path must be a string");
-        } else if (path13[0] !== "/" && !(path13.startsWith("http://") || path13.startsWith("https://")) && method !== "CONNECT") {
+        } else if (path14[0] !== "/" && !(path14.startsWith("http://") || path14.startsWith("https://")) && method !== "CONNECT") {
           throw new InvalidArgumentError("path must be an absolute URL or start with a slash");
-        } else if (invalidPathRegex.test(path13)) {
+        } else if (invalidPathRegex.test(path14)) {
           throw new InvalidArgumentError("invalid request path");
         }
         if (typeof method !== "string") {
@@ -281022,7 +281022,7 @@ var require_request = __commonJS({
         this.completed = false;
         this.aborted = false;
         this.upgrade = upgrade || null;
-        this.path = query ? serializePathWithQuery(path13, query) : path13;
+        this.path = query ? serializePathWithQuery(path14, query) : path14;
         this.origin = origin2;
         this.protocol = getProtocolFromUrlString(origin2);
         this.idempotent = idempotent == null ? method === "HEAD" || method === "GET" : idempotent;
@@ -286247,7 +286247,7 @@ var require_client_h1 = __commonJS({
       return method !== "GET" && method !== "HEAD" && method !== "OPTIONS" && method !== "TRACE" && method !== "CONNECT";
     }
     function writeH1(client, request) {
-      const { method, path: path13, host, upgrade, blocking, reset } = request;
+      const { method, path: path14, host, upgrade, blocking, reset } = request;
       let { body, headers, contentLength } = request;
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH" || method === "QUERY" || method === "PROPFIND" || method === "PROPPATCH";
       if (util4.isFormDataLike(body)) {
@@ -286325,7 +286325,7 @@ var require_client_h1 = __commonJS({
       if (socket.setTypeOfService) {
         socket.setTypeOfService(request.typeOfService);
       }
-      let header = `${method} ${path13} HTTP/1.1\r
+      let header = `${method} ${path14} HTTP/1.1\r
 `;
       if (typeof host === "string") {
         header += `host: ${host}\r
@@ -287002,7 +287002,7 @@ var require_client_h2 = __commonJS({
       const headersTimeout = request.headersTimeout ?? client[kHeadersTimeout];
       const bodyTimeout = request.bodyTimeout ?? client[kBodyTimeout];
       const session = client[kHTTP2Session];
-      const { method, path: path13, host, upgrade, expectContinue, signal, protocol, headers: reqHeaders } = request;
+      const { method, path: path14, host, upgrade, expectContinue, signal, protocol, headers: reqHeaders } = request;
       let { body } = request;
       if (upgrade != null && upgrade !== "websocket") {
         util4.errorRequest(client, request, new InvalidArgumentError(`Custom upgrade "${upgrade}" not supported over HTTP/2`));
@@ -287071,7 +287071,7 @@ var require_client_h2 = __commonJS({
           }
           headers[HTTP2_HEADER_METHOD] = "CONNECT";
           headers[HTTP2_HEADER_PROTOCOL] = "websocket";
-          headers[HTTP2_HEADER_PATH] = path13;
+          headers[HTTP2_HEADER_PATH] = path14;
           if (protocol === "ws:" || protocol === "wss:") {
             headers[HTTP2_HEADER_SCHEME] = protocol === "ws:" ? "http" : "https";
           } else {
@@ -287123,7 +287123,7 @@ var require_client_h2 = __commonJS({
         stream4.setTimeout(headersTimeout);
         return true;
       }
-      headers[HTTP2_HEADER_PATH] = path13;
+      headers[HTTP2_HEADER_PATH] = path14;
       headers[HTTP2_HEADER_SCHEME] = protocol === "http:" ? "http" : "https";
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH";
       if (body && typeof body.read === "function") {
@@ -289479,10 +289479,10 @@ var require_proxy_agent = __commonJS({
         };
         const {
           origin: origin2,
-          path: path13 = "/",
+          path: path14 = "/",
           headers = {}
         } = opts;
-        opts.path = origin2 + path13;
+        opts.path = origin2 + path14;
         if (!("host" in headers) && !("Host" in headers)) {
           const { host } = new URL(origin2);
           headers.host = host;
@@ -291642,20 +291642,20 @@ var require_mock_utils = __commonJS({
       }
       return normalizedQp;
     }
-    function safeUrl(path13) {
-      if (typeof path13 !== "string") {
-        return path13;
+    function safeUrl(path14) {
+      if (typeof path14 !== "string") {
+        return path14;
       }
-      const pathSegments = path13.split("?", 3);
+      const pathSegments = path14.split("?", 3);
       if (pathSegments.length !== 2) {
-        return path13;
+        return path14;
       }
       const qp = new URLSearchParams(pathSegments.pop());
       qp.sort();
       return [...pathSegments, qp.toString()].join("?");
     }
-    function matchKey(mockDispatch2, { path: path13, method, body, headers }) {
-      const pathMatch = matchValue(mockDispatch2.path, path13);
+    function matchKey(mockDispatch2, { path: path14, method, body, headers }) {
+      const pathMatch = matchValue(mockDispatch2.path, path14);
       const methodMatch = matchValue(mockDispatch2.method, method);
       const bodyMatch = typeof mockDispatch2.body !== "undefined" ? matchValue(mockDispatch2.body, body) : true;
       const headersMatch = matchHeaders(mockDispatch2, headers);
@@ -291680,8 +291680,8 @@ var require_mock_utils = __commonJS({
       const basePath = key.query ? serializePathWithQuery(key.path, key.query) : key.path;
       const resolvedPath = typeof basePath === "string" ? safeUrl(basePath) : basePath;
       const resolvedPathWithoutTrailingSlash = removeTrailingSlash(resolvedPath);
-      let matchedMockDispatches = mockDispatches.filter(({ consumed }) => !consumed).filter(({ path: path13, ignoreTrailingSlash }) => {
-        return ignoreTrailingSlash ? matchValue(removeTrailingSlash(safeUrl(path13)), resolvedPathWithoutTrailingSlash) : matchValue(safeUrl(path13), resolvedPath);
+      let matchedMockDispatches = mockDispatches.filter(({ consumed }) => !consumed).filter(({ path: path14, ignoreTrailingSlash }) => {
+        return ignoreTrailingSlash ? matchValue(removeTrailingSlash(safeUrl(path14)), resolvedPathWithoutTrailingSlash) : matchValue(safeUrl(path14), resolvedPath);
       });
       if (matchedMockDispatches.length === 0) {
         throw new MockNotMatchedError(`Mock dispatch not matched for path '${resolvedPath}'`);
@@ -291720,19 +291720,19 @@ var require_mock_utils = __commonJS({
         mockDispatches.splice(index2, 1);
       }
     }
-    function removeTrailingSlash(path13) {
-      while (path13.endsWith("/")) {
-        path13 = path13.slice(0, -1);
+    function removeTrailingSlash(path14) {
+      while (path14.endsWith("/")) {
+        path14 = path14.slice(0, -1);
       }
-      if (path13.length === 0) {
-        path13 = "/";
+      if (path14.length === 0) {
+        path14 = "/";
       }
-      return path13;
+      return path14;
     }
     function buildKey(opts) {
-      const { path: path13, method, body, headers, query } = opts;
+      const { path: path14, method, body, headers, query } = opts;
       return {
-        path: path13,
+        path: path14,
         method,
         body,
         headers,
@@ -292422,10 +292422,10 @@ var require_pending_interceptors_formatter = __commonJS({
       }
       format(pendingInterceptors) {
         const withPrettyHeaders = pendingInterceptors.map(
-          ({ method, path: path13, data: { statusCode }, persist, times, timesInvoked, origin: origin2 }) => ({
+          ({ method, path: path14, data: { statusCode }, persist, times, timesInvoked, origin: origin2 }) => ({
             Method: method,
             Origin: origin2,
-            Path: path13,
+            Path: path14,
             "Status code": statusCode,
             Persistent: persist ? PERSISTENT : NOT_PERSISTENT,
             Invocations: timesInvoked,
@@ -292507,9 +292507,9 @@ var require_mock_agent = __commonJS({
         const acceptNonStandardSearchParameters = this[kMockAgentAcceptsNonStandardSearchParameters];
         const dispatchOpts = { ...opts };
         if (acceptNonStandardSearchParameters && dispatchOpts.path) {
-          const [path13, searchParams] = dispatchOpts.path.split("?");
+          const [path14, searchParams] = dispatchOpts.path.split("?");
           const normalizedSearchParams = normalizeSearchParams(searchParams, acceptNonStandardSearchParameters);
-          dispatchOpts.path = `${path13}?${normalizedSearchParams}`;
+          dispatchOpts.path = `${path14}?${normalizedSearchParams}`;
         }
         return this[kAgent].dispatch(dispatchOpts, handler);
       }
@@ -292910,12 +292910,12 @@ var require_snapshot_recorder = __commonJS({
        * @return {Promise<void>} - Resolves when snapshots are loaded
        */
       async loadSnapshots(filePath) {
-        const path13 = filePath || this.#snapshotPath;
-        if (!path13) {
+        const path14 = filePath || this.#snapshotPath;
+        if (!path14) {
           throw new InvalidArgumentError("Snapshot path is required");
         }
         try {
-          const data2 = await readFile(resolve6(path13), "utf8");
+          const data2 = await readFile(resolve6(path14), "utf8");
           const parsed = JSON.parse(data2);
           if (Array.isArray(parsed)) {
             this.#snapshots.clear();
@@ -292929,7 +292929,7 @@ var require_snapshot_recorder = __commonJS({
           if (error62.code === "ENOENT") {
             this.#snapshots.clear();
           } else {
-            throw new UndiciError(`Failed to load snapshots from ${path13}`, { cause: error62 });
+            throw new UndiciError(`Failed to load snapshots from ${path14}`, { cause: error62 });
           }
         }
       }
@@ -292940,11 +292940,11 @@ var require_snapshot_recorder = __commonJS({
        * @returns {Promise<void>} - Resolves when snapshots are saved
        */
       async saveSnapshots(filePath) {
-        const path13 = filePath || this.#snapshotPath;
-        if (!path13) {
+        const path14 = filePath || this.#snapshotPath;
+        if (!path14) {
           throw new InvalidArgumentError("Snapshot path is required");
         }
-        const resolvedPath = resolve6(path13);
+        const resolvedPath = resolve6(path14);
         await mkdir(dirname5(resolvedPath), { recursive: true });
         const data2 = Array.from(this.#snapshots.entries()).map(([hash2, snapshot]) => ({
           hash: hash2,
@@ -293581,15 +293581,15 @@ var require_redirect_handler = __commonJS({
         }
         this.history[kRedirectCacheControl].push(headers["cache-control"]);
         const { origin: origin2, pathname, search } = util4.parseURL(new URL(this.location, this.opts.origin && new URL(this.opts.path, this.opts.origin)));
-        const path13 = search ? `${pathname}${search}` : pathname;
-        const redirectUrlString = `${origin2}${path13}`;
+        const path14 = search ? `${pathname}${search}` : pathname;
+        const redirectUrlString = `${origin2}${path14}`;
         for (const historyUrl of this.history) {
           if (historyUrl.toString() === redirectUrlString) {
             throw new InvalidArgumentError(`Redirect loop detected. Cannot redirect to ${origin2}. This typically happens when using a Client or Pool with cross-origin redirects. Use an Agent for cross-origin redirects.`);
           }
         }
         this.opts.headers = cleanRequestHeaders(this.opts.headers, statusCode === 303, this.opts.origin !== origin2);
-        this.opts.path = path13;
+        this.opts.path = path14;
         this.opts.origin = origin2;
         this.opts.query = null;
       }
@@ -295357,10 +295357,10 @@ var require_cache_handler = __commonJS({
       }
       return locationUrl.pathname + locationUrl.search;
     }
-    function deleteCachedUri(store, cacheKey2, path13) {
+    function deleteCachedUri(store, cacheKey2, path14) {
       deleteCachedValue(store, {
         ...cacheKey2,
-        path: path13
+        path: path14
       });
       for (let i = 0; i < util4.safeHTTPMethods.length; i++) {
         const method = util4.safeHTTPMethods[i];
@@ -295368,7 +295368,7 @@ var require_cache_handler = __commonJS({
           deleteCachedValue(store, {
             ...cacheKey2,
             method,
-            path: path13
+            path: path14
           });
         }
       }
@@ -295379,9 +295379,9 @@ var require_cache_handler = __commonJS({
       }
       const values = Array.isArray(headerValue) ? headerValue : [headerValue];
       for (let i = 0; i < values.length; i++) {
-        const path13 = getSameOriginPath(cacheKey2, values[i]);
-        if (path13 !== void 0) {
-          deleteCachedUri(store, cacheKey2, path13);
+        const path14 = getSameOriginPath(cacheKey2, values[i]);
+        if (path14 !== void 0) {
+          deleteCachedUri(store, cacheKey2, path14);
         }
       }
     }
@@ -300592,11 +300592,11 @@ var require_fetch = __commonJS({
       function dispatch({ body }) {
         const url3 = requestCurrentURL(request);
         const agent = fetchParams.controller.dispatcher;
-        const path13 = url3.pathname + url3.search;
+        const path14 = url3.pathname + url3.search;
         const hasTrailingQuestionMark = url3.search.length === 0 && url3.href[url3.href.length - url3.hash.length - 1] === "?";
         return new Promise((resolve6, reject) => agent.dispatch(
           {
-            path: hasTrailingQuestionMark ? `${path13}?` : path13,
+            path: hasTrailingQuestionMark ? `${path14}?` : path14,
             origin: url3.origin,
             method: request.method,
             body: agent.isMockActive ? request.body && (request.body.source || request.body.stream) : body,
@@ -301543,9 +301543,9 @@ var require_util5 = __commonJS({
         }
       }
     }
-    function validateCookiePath(path13) {
-      for (let i = 0; i < path13.length; ++i) {
-        const code = path13.charCodeAt(i);
+    function validateCookiePath(path14) {
+      for (let i = 0; i < path14.length; ++i) {
+        const code = path14.charCodeAt(i);
         if (code < 32 || // exclude CTLs (0-31)
         code > 126 || // exclude DEL and non-ascii
         code === 59) {
@@ -304981,11 +304981,11 @@ var require_undici = __commonJS({
           if (typeof opts.path !== "string") {
             throw new InvalidArgumentError("invalid opts.path");
           }
-          let path13 = opts.path;
+          let path14 = opts.path;
           if (!opts.path.startsWith("/")) {
-            path13 = `/${path13}`;
+            path14 = `/${path14}`;
           }
-          url3 = new URL(util4.parseOrigin(url3).origin + path13);
+          url3 = new URL(util4.parseOrigin(url3).origin + path14);
         } else {
           if (!opts) {
             opts = typeof url3 === "object" ? url3 : {};
@@ -311472,25 +311472,25 @@ var require_utils5 = __commonJS({
       }
       mkdirSync8(folder);
     };
-    Utils.prototype.writeFileTo = function(path13, content, overwrite, attr2) {
+    Utils.prototype.writeFileTo = function(path14, content, overwrite, attr2) {
       const self2 = this;
-      if (self2.fs.existsSync(path13)) {
+      if (self2.fs.existsSync(path14)) {
         if (!overwrite) return false;
-        var stat = self2.fs.statSync(path13);
+        var stat = self2.fs.statSync(path14);
         if (stat.isDirectory()) {
           return false;
         }
       }
-      var folder = pth.dirname(path13);
+      var folder = pth.dirname(path14);
       if (!self2.fs.existsSync(folder)) {
         self2.makeDir(folder);
       }
       var fd;
       try {
-        fd = self2.fs.openSync(path13, "w", 438);
+        fd = self2.fs.openSync(path14, "w", 438);
       } catch (e) {
-        self2.fs.chmodSync(path13, 438);
-        fd = self2.fs.openSync(path13, "w", 438);
+        self2.fs.chmodSync(path14, 438);
+        fd = self2.fs.openSync(path14, "w", 438);
       }
       if (fd) {
         try {
@@ -311499,22 +311499,22 @@ var require_utils5 = __commonJS({
           self2.fs.closeSync(fd);
         }
       }
-      self2.fs.chmodSync(path13, attr2 || 438);
+      self2.fs.chmodSync(path14, attr2 || 438);
       return true;
     };
-    Utils.prototype.writeFileToAsync = function(path13, content, overwrite, attr2, callback) {
+    Utils.prototype.writeFileToAsync = function(path14, content, overwrite, attr2, callback) {
       if (typeof attr2 === "function") {
         callback = attr2;
         attr2 = void 0;
       }
       const self2 = this;
-      self2.fs.exists(path13, function(exist) {
+      self2.fs.exists(path14, function(exist) {
         if (exist && !overwrite) return callback(false);
-        self2.fs.stat(path13, function(err, stat) {
+        self2.fs.stat(path14, function(err, stat) {
           if (exist && stat && stat.isDirectory()) {
             return callback(false);
           }
-          var folder = pth.dirname(path13);
+          var folder = pth.dirname(path14);
           self2.fs.exists(folder, function(exists) {
             if (!exists) {
               try {
@@ -311527,16 +311527,16 @@ var require_utils5 = __commonJS({
               self2.fs.write(fd, content, 0, content.length, 0, function(writeErr) {
                 self2.fs.close(fd, function() {
                   if (writeErr) return callback(false);
-                  self2.fs.chmod(path13, attr2 || 438, function() {
+                  self2.fs.chmod(path14, attr2 || 438, function() {
                     callback(true);
                   });
                 });
               });
             };
-            self2.fs.open(path13, "w", 438, function(err2, fd) {
+            self2.fs.open(path14, "w", 438, function(err2, fd) {
               if (err2) {
-                self2.fs.chmod(path13, 438, function() {
-                  self2.fs.open(path13, "w", 438, function(retryErr, fd2) {
+                self2.fs.chmod(path14, 438, function() {
+                  self2.fs.open(path14, "w", 438, function(retryErr, fd2) {
                     if (retryErr || !fd2) return callback(false);
                     writeToFd(fd2);
                   });
@@ -311572,10 +311572,10 @@ var require_utils5 = __commonJS({
         if (stat.isSymbolicLink()) throw Errors.FILE_IN_THE_WAY(`"${cur}"`);
       }
     };
-    Utils.prototype.findFiles = function(path13) {
+    Utils.prototype.findFiles = function(path14) {
       const self2 = this;
       const canLstat = typeof self2.fs.lstatSync === "function";
-      const rootReal = self2.fs.realpathSync(path13);
+      const rootReal = self2.fs.realpathSync(path14);
       function escapesRoot(p) {
         if (!canLstat) return false;
         if (!self2.fs.lstatSync(p).isSymbolicLink()) return false;
@@ -311594,23 +311594,23 @@ var require_utils5 = __commonJS({
         }
         let files = [];
         self2.fs.readdirSync(dir).forEach(function(file2) {
-          const path14 = pth.join(dir, file2);
-          if (escapesRoot(path14)) return;
-          const stat = self2.fs.statSync(path14);
-          if (!pattern || pattern.test(path14)) {
-            files.push(pth.normalize(path14) + (stat.isDirectory() ? self2.sep : ""));
+          const path15 = pth.join(dir, file2);
+          if (escapesRoot(path15)) return;
+          const stat = self2.fs.statSync(path15);
+          if (!pattern || pattern.test(path15)) {
+            files.push(pth.normalize(path15) + (stat.isDirectory() ? self2.sep : ""));
           }
           if (stat.isDirectory() && recursive2) {
-            const realDir = self2.fs.realpathSync(path14);
+            const realDir = self2.fs.realpathSync(path15);
             if (!visited.has(realDir)) {
               visited.add(realDir);
-              files = files.concat(findSync(path14, pattern, recursive2, visited));
+              files = files.concat(findSync(path15, pattern, recursive2, visited));
             }
           }
         });
         return files;
       }
-      return findSync(path13, void 0, true, /* @__PURE__ */ new Set([rootReal]));
+      return findSync(path14, void 0, true, /* @__PURE__ */ new Set([rootReal]));
     };
     Utils.prototype.findFilesAsync = function(dir, cb) {
       const self2 = this;
@@ -311707,14 +311707,14 @@ var require_utils5 = __commonJS({
           return "UNSUPPORTED (" + method + ")";
       }
     };
-    Utils.canonical = function(path13) {
-      if (!path13) return "";
-      const safeSuffix = pth.posix.normalize("/" + path13.split("\\").join("/"));
+    Utils.canonical = function(path14) {
+      if (!path14) return "";
+      const safeSuffix = pth.posix.normalize("/" + path14.split("\\").join("/"));
       return pth.join(".", safeSuffix);
     };
-    Utils.zipnamefix = function(path13) {
-      if (!path13) return "";
-      const safeSuffix = pth.posix.normalize("/" + path13.split("\\").join("/"));
+    Utils.zipnamefix = function(path14) {
+      if (!path14) return "";
+      const safeSuffix = pth.posix.normalize("/" + path14.split("\\").join("/"));
       return pth.posix.join(".", safeSuffix);
     };
     Utils.findLast = function(arr, callback) {
@@ -311731,9 +311731,9 @@ var require_utils5 = __commonJS({
       prefix = pth.resolve(pth.normalize(prefix));
       var parts = name.split("/");
       for (var i = 0, l = parts.length; i < l; i++) {
-        var path13 = pth.normalize(pth.join(prefix, parts.slice(i, l).join(pth.sep)));
-        if (path13 === prefix || path13.startsWith(prefix + pth.sep)) {
-          return path13;
+        var path14 = pth.normalize(pth.join(prefix, parts.slice(i, l).join(pth.sep)));
+        if (path14 === prefix || path14.startsWith(prefix + pth.sep)) {
+          return path14;
         }
       }
       return pth.normalize(pth.join(prefix, pth.basename(name)));
@@ -311783,8 +311783,8 @@ var require_utils5 = __commonJS({
 var require_fattr = __commonJS({
   "node_modules/adm-zip/util/fattr.js"(exports2, module2) {
     var pth = require("path");
-    module2.exports = function(path13, { fs: fs15 }) {
-      var _path = path13 || "", _obj = newAttr(), _stat = null;
+    module2.exports = function(path14, { fs: fs17 }) {
+      var _path = path14 || "", _obj = newAttr(), _stat = null;
       function newAttr() {
         return {
           directory: false,
@@ -311795,8 +311795,8 @@ var require_fattr = __commonJS({
           atime: 0
         };
       }
-      if (_path && fs15.existsSync(_path)) {
-        _stat = fs15.statSync(_path);
+      if (_path && fs17.existsSync(_path)) {
+        _stat = fs17.statSync(_path);
         _obj.directory = _stat.isDirectory();
         _obj.mtime = _stat.mtime;
         _obj.atime = _stat.atime;
@@ -313218,8 +313218,8 @@ var require_adm_zip = __commonJS({
         return null;
       }
       function fixPath(zipPath) {
-        const { join: join11, normalize, sep } = pth.posix;
-        return join11(pth.isAbsolute(zipPath) ? "/" : ".", normalize(sep + zipPath.split("\\").join(sep) + sep));
+        const { join: join12, normalize, sep } = pth.posix;
+        return join12(pth.isAbsolute(zipPath) ? "/" : ".", normalize(sep + zipPath.split("\\").join(sep) + sep));
       }
       function filenameFilter(filterfn) {
         if (filterfn instanceof RegExp) {
@@ -314522,10 +314522,10 @@ function mergeDefs(...defs) {
 function cloneDef(schema) {
   return mergeDefs(schema._zod.def);
 }
-function getElementAtPath(obj, path13) {
-  if (!path13)
+function getElementAtPath(obj, path14) {
+  if (!path14)
     return obj;
-  return path13.reduce((acc, key) => acc?.[key], obj);
+  return path14.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys = Object.keys(promisesObj);
@@ -314865,11 +314865,11 @@ function explicitlyAborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path13, issues) {
+function prefixIssues(path14, issues) {
   return issues.map((iss) => {
     var _a5;
     (_a5 = iss).path ?? (_a5.path = []);
-    iss.path.unshift(path13);
+    iss.path.unshift(path14);
     return iss;
   });
 }
@@ -315331,16 +315331,16 @@ function flattenError(error62, mapper = (issue2) => issue2.message) {
 }
 function formatError(error62, mapper = (issue2) => issue2.message) {
   const fieldErrors = { _errors: [] };
-  const processError = (error63, path13 = []) => {
+  const processError = (error63, path14 = []) => {
     for (const issue2 of error63.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path13, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path14, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path13, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path14, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path13, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path14, ...issue2.path]);
       } else {
-        const fullpath = [...path13, ...issue2.path];
+        const fullpath = [...path14, ...issue2.path];
         if (fullpath.length === 0) {
           fieldErrors._errors.push(mapper(issue2));
         } else {
@@ -315379,17 +315379,17 @@ function formatError(error62, mapper = (issue2) => issue2.message) {
 }
 function treeifyError(error62, mapper = (issue2) => issue2.message) {
   const result = { errors: [] };
-  const processError = (error63, path13 = []) => {
+  const processError = (error63, path14 = []) => {
     var _a5;
     for (const issue2 of error63.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path13, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path14, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path13, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path14, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path13, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path14, ...issue2.path]);
       } else {
-        const fullpath = [...path13, ...issue2.path];
+        const fullpath = [...path14, ...issue2.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue2));
           continue;
@@ -315428,8 +315428,8 @@ function treeifyError(error62, mapper = (issue2) => issue2.message) {
 }
 function toDotPath(_path) {
   const segs = [];
-  const path13 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path13) {
+  const path14 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path14) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -333048,13 +333048,13 @@ function resolveRef(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path13 = ref.slice(1).split("/").filter(Boolean);
-  if (path13.length === 0) {
+  const path14 = ref.slice(1).split("/").filter(Boolean);
+  if (path14.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path13[0] === defsKey) {
-    const key = path13[1] === void 0 ? void 0 : decodeJSONPointerSegment(path13[1]);
+  if (path14[0] === defsKey) {
+    const key = path14[1] === void 0 ? void 0 : decodeJSONPointerSegment(path14[1]);
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -337069,9 +337069,9 @@ var StdioServerTransport = class {
 
 // src/server.ts
 var dotenv = __toESM(require_main(), 1);
-var path12 = __toESM(require("node:path"), 1);
-var fs14 = __toESM(require("node:fs"), 1);
-var os = __toESM(require("node:os"), 1);
+var path13 = __toESM(require("node:path"), 1);
+var fs16 = __toESM(require("node:fs"), 1);
+var os2 = __toESM(require("node:os"), 1);
 var import_node_url = require("node:url");
 
 // src/mcp/tools.ts
@@ -361725,20 +361725,20 @@ var SpringerSearcher = class extends PaperSource {
     if (!paper.pdfUrl) {
       throw new Error("PDF URL not available for this paper");
     }
-    const fs15 = await import("fs");
-    const path13 = await import("path");
+    const fs17 = await import("fs");
+    const path14 = await import("path");
     const savePath = options.savePath || "./downloads";
-    if (!fs15.existsSync(savePath)) {
-      fs15.mkdirSync(savePath, { recursive: true });
+    if (!fs17.existsSync(savePath)) {
+      fs17.mkdirSync(savePath, { recursive: true });
     }
     const fileName = `${doi.replace(/[\/\\:*?"<>|]/g, "_")}.pdf`;
-    const filePath = path13.join(savePath, fileName);
+    const filePath = path14.join(savePath, fileName);
     try {
       const response = await ErrorHandler.retryWithBackoff(
         () => axios_default.get(paper.pdfUrl, { responseType: "stream" }),
         { context: "Springer download" }
       );
-      const writer = fs15.createWriteStream(filePath);
+      const writer = fs17.createWriteStream(filePath);
       response.data.pipe(writer);
       return new Promise((resolve6, reject) => {
         writer.on("finish", () => resolve6(filePath));
@@ -361915,11 +361915,11 @@ var WileySearcher = class extends PaperSource {
       throw new Error(`Invalid DOI format: ${doi}. ${doiResult.error || ""}`);
     }
     const cleanDoi = doiResult.sanitized;
-    const fs15 = await import("fs");
-    const path13 = await import("path");
+    const fs17 = await import("fs");
+    const path14 = await import("path");
     const savePath = options.savePath || "./downloads";
-    if (!fs15.existsSync(savePath)) {
-      fs15.mkdirSync(savePath, { recursive: true });
+    if (!fs17.existsSync(savePath)) {
+      fs17.mkdirSync(savePath, { recursive: true });
     }
     const encodedDoi = encodeURIComponent(cleanDoi);
     const url3 = `/articles/${encodedDoi}`;
@@ -361936,8 +361936,8 @@ var WileySearcher = class extends PaperSource {
         { context: "Wiley download" }
       );
       const fileName = `${sanitizeFilename(cleanDoi)}.pdf`;
-      const filePath = path13.join(savePath, fileName);
-      const writer = fs15.createWriteStream(filePath);
+      const filePath = path14.join(savePath, fileName);
+      const writer = fs17.createWriteStream(filePath);
       response.data.pipe(writer);
       return new Promise((resolve6, reject) => {
         writer.on("finish", () => resolve6(filePath));
@@ -361995,13 +361995,13 @@ var WileySearcher = class extends PaperSource {
   async readPaper(paperId, options = {}) {
     try {
       const savePath = options.savePath || "./downloads";
-      const fs15 = await import("fs");
-      const path13 = await import("path");
+      const fs17 = await import("fs");
+      const path14 = await import("path");
       const doiResult = sanitizeDoi(paperId);
       const cleanDoi = doiResult.valid ? doiResult.sanitized : paperId;
       const fileName = `${sanitizeFilename(cleanDoi)}.pdf`;
-      const filePath = path13.join(savePath, fileName);
-      if (!fs15.existsSync(filePath)) {
+      const filePath = path14.join(savePath, fileName);
+      if (!fs17.existsSync(filePath)) {
         await this.downloadPdf(paperId, options);
       }
       const extractor = new PDFExtractor();
@@ -362659,12 +362659,12 @@ var OpenAlexSearcher = class extends PaperSource {
     });
     return asArray2(response?.results).map(parseWork).filter((paper) => Boolean(paper));
   }
-  async getRawWork(path13, params) {
+  async getRawWork(path14, params) {
     try {
       const response = await ErrorHandler.retryWithBackoff(
         async () => {
           await this.rateLimiter.waitForPermission();
-          return this.client.get(path13, { params });
+          return this.client.get(path14, { params });
         },
         { context: "OpenAlex relation lookup" }
       );
@@ -364701,8 +364701,8 @@ function appendCopernicusCandidates(candidates, doi, sourceUrl) {
   }
   if (!host.endsWith("copernicus.org")) host = `${match.groups.journal.toLowerCase()}.copernicus.org`;
   const suffix = doi.split("/").slice(1).join("/").toLowerCase();
-  const path13 = `/articles/${match.groups.volume}/${match.groups.page}/${match.groups.year}/${suffix}.pdf`;
-  appendCandidate(candidates, `https://${host}${path13}`);
+  const path14 = `/articles/${match.groups.volume}/${match.groups.page}/${match.groups.year}/${suffix}.pdf`;
+  appendCandidate(candidates, `https://${host}${path14}`);
 }
 function appendMdpiCandidates(candidates, doi, sourceUrl) {
   for (const cdn of getMdpiCdnVariants(doi)) appendCandidate(candidates, cdn);
@@ -364723,15 +364723,15 @@ function mdpiPdfUrlFromLandingUrl(rawUrl) {
   }
   const host = parsed.hostname.toLowerCase();
   if (host !== "www.mdpi.com" && host !== "mdpi.com") return "";
-  const path13 = parsed.pathname.replace(/\/+$/, "");
-  if (!path13) return "";
-  if (path13.endsWith("/pdf") || path13.includes("/pdf/")) {
-    parsed.pathname = path13;
+  const path14 = parsed.pathname.replace(/\/+$/, "");
+  if (!path14) return "";
+  if (path14.endsWith("/pdf") || path14.includes("/pdf/")) {
+    parsed.pathname = path14;
     parsed.search = "";
     return parsed.toString();
   }
-  if (!MDPI_NUMERIC_PATH_RE.test(path13)) return "";
-  parsed.pathname = `${path13}/pdf`;
+  if (!MDPI_NUMERIC_PATH_RE.test(path14)) return "";
+  parsed.pathname = `${path14}/pdf`;
   parsed.search = "";
   return parsed.toString();
 }
@@ -365390,12 +365390,13 @@ var CardFormatter = class {
 };
 
 // src/literature/MineruService.ts
-var fs11 = __toESM(require("node:fs"), 1);
-var path10 = __toESM(require("node:path"), 1);
+var fs13 = __toESM(require("node:fs"), 1);
+var path11 = __toESM(require("node:path"), 1);
 init_axios2();
 var import_adm_zip = __toESM(require_adm_zip(), 1);
 
 // src/literature/download/pdfFetcher.ts
+var fs12 = __toESM(require("node:fs"), 1);
 init_axios2();
 
 // src/literature/download/openAccess.ts
@@ -365518,7 +365519,7 @@ async function tryUnpaywall(doi, destPath, options, attempts) {
     const response = await axios_default.get(`https://api.unpaywall.org/v2/${encodeURIComponent(doi)}`, {
       params: { email: contactEmail(options) },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.0" }
+      headers: { "User-Agent": "TwoSCI/0.3.1" }
     });
     const data2 = response.data;
     const candidates = [];
@@ -365549,7 +365550,7 @@ async function tryOpenAlex(doi, destPath, options, attempts) {
         ...contactEmail(options) ? { mailto: contactEmail(options) } : {}
       },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.0" }
+      headers: { "User-Agent": "TwoSCI/0.3.1" }
     });
     const data2 = response.data;
     const candidates = [
@@ -365575,7 +365576,7 @@ async function trySemanticScholar(doi, destPath, options, attempts) {
         params: { fields: "openAccessPdf,isOpenAccess" },
         timeout: 2e4,
         headers: {
-          "User-Agent": "TwoSCI/0.3.0",
+          "User-Agent": "TwoSCI/0.3.1",
           ...process.env.SEMANTIC_SCHOLAR_API_KEY ? { "x-api-key": process.env.SEMANTIC_SCHOLAR_API_KEY } : {}
         }
       }
@@ -365602,7 +365603,7 @@ async function tryEuropePmc(doi, destPath, options, attempts) {
         pageSize: 1
       },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.0" }
+      headers: { "User-Agent": "TwoSCI/0.3.1" }
     });
     const result = response.data.resultList?.result?.[0];
     const candidates = [];
@@ -365637,7 +365638,7 @@ async function tryPmc(doi, destPath, options, attempts) {
         email: contactEmail(options)
       },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.0" }
+      headers: { "User-Agent": "TwoSCI/0.3.1" }
     });
     const record2 = response.data.records?.[0];
     const pmcid = record2?.pmcid;
@@ -365662,7 +365663,7 @@ async function tryCrossref(doi, destPath, options, attempts) {
   try {
     const response = await axios_default.get(`https://api.crossref.org/works/${encodeURIComponent(doi)}`, {
       timeout: 2e4,
-      headers: { "User-Agent": `TwoSCI/0.3.0 (mailto:${contactEmail(options)})` }
+      headers: { "User-Agent": `TwoSCI/0.3.1 (mailto:${contactEmail(options)})` }
     });
     const links = response.data.message?.link || [];
     const candidates = links.filter((link) => /pdf/i.test(link["content-type"] || "") || /\.pdf(?:$|[?#])/i.test(link.URL || "")).map((link) => link.URL).filter((value) => Boolean(value));
@@ -365859,6 +365860,466 @@ function buildInstitutionalTargets(rawUrl, doi, config3) {
   return targets;
 }
 
+// src/literature/download/browserResolver.ts
+var fs11 = __toESM(require("node:fs"), 1);
+var os = __toESM(require("node:os"), 1);
+var path10 = __toESM(require("node:path"), 1);
+var CHALLENGE_MARKERS = [
+  "just a moment",
+  "checking your browser",
+  "verify you are human",
+  "enable javascript and cookies",
+  "access denied",
+  "attention required",
+  "please wait",
+  "\u8BF7\u7A0D\u5019",
+  "\u6B63\u5728\u8FDB\u884C\u5B89\u5168\u9A8C\u8BC1",
+  "\u5B89\u5168\u9A8C\u8BC1",
+  "\u4EBA\u673A\u9A8C\u8BC1",
+  "captcha",
+  "robot"
+];
+var LOGIN_MARKERS = [
+  "\u7EDF\u4E00\u8EAB\u4EFD\u8BA4\u8BC1",
+  "\u8EAB\u4EFD\u8BA4\u8BC1",
+  "\u8BF7\u767B\u5F55",
+  "sign in to continue",
+  "log in to continue"
+];
+var patchrightModule;
+async function loadPatchright() {
+  if (patchrightModule) return patchrightModule;
+  try {
+    patchrightModule = await import("patchright");
+    return patchrightModule;
+  } catch {
+    return void 0;
+  }
+}
+async function isPatchrightAvailable() {
+  return Boolean(await loadPatchright());
+}
+function isChallengePage2(title, body, url3) {
+  const text3 = `${title} ${body} ${url3}`.toLowerCase();
+  return CHALLENGE_MARKERS.some((marker) => text3.includes(marker));
+}
+function isLoginPage(title, body, url3) {
+  const text3 = `${title} ${body}`.toLowerCase();
+  const lowerUrl = url3.toLowerCase();
+  if (/(?:^|\/)(?:cas|login|sso|auth)(?:\/|$|\?)/i.test(lowerUrl)) return true;
+  if (LOGIN_MARKERS.some((marker) => text3.includes(marker))) return true;
+  return text3.length < 3e3 && /(?:^|\s)(?:login|sign in|log in)(?:\s|$)/i.test(text3) && !/citation_pdf_url|download pdf|full text/i.test(text3);
+}
+function buildBrowserPdfPaths(doi, currentUrl) {
+  let host = "";
+  try {
+    host = new URL(currentUrl).hostname.toLowerCase();
+  } catch {
+    host = "";
+  }
+  const paths = [];
+  if (host.includes("sciencedirect") || host.includes("elsevier")) {
+    const pii = currentUrl.match(/pii\/([A-Z0-9]+)/i);
+    if (pii) paths.push(`/science/article/pii/${pii[1]}/pdfft`);
+    if (doi) paths.push(`/doi/pdfdirect/${doi}`);
+  } else if (host.includes("springer")) {
+    if (doi) paths.push(`/content/pdf/${doi}.pdf`);
+  } else if (host.includes("wiley")) {
+    if (doi) {
+      paths.push(`/doi/pdfdirect/${doi}`);
+      paths.push(`/doi/pdf/${doi}`);
+    }
+  }
+  if (doi) paths.push(`/doi/pdf/${doi}`);
+  return paths;
+}
+function describeError(error62) {
+  return error62 instanceof Error ? error62.message : String(error62);
+}
+var BrowserResolver = class {
+  context;
+  headless = resolveHeadless();
+  idleTimer;
+  queue = Promise.resolve();
+  async resolve(landingUrl, options = {}) {
+    return this.withLock(() => this.resolveLocked(landingUrl, options, false));
+  }
+  async close() {
+    if (this.idleTimer) clearTimeout(this.idleTimer);
+    this.idleTimer = void 0;
+    const context = this.context;
+    this.context = void 0;
+    if (context) {
+      try {
+        await context.close();
+      } catch {
+      }
+    }
+  }
+  async status() {
+    return {
+      available: await isPatchrightAvailable(),
+      channel: process.env.TWOSCI_BROWSER_CHANNEL || "auto",
+      headless_mode: process.env.TWOSCI_BROWSER_HEADLESS || "auto",
+      effective_headless: this.headless,
+      profile_dir: profileDir()
+    };
+  }
+  async resolveLocked(landingUrl, options, escalated) {
+    const attempts = [];
+    let context;
+    try {
+      context = await this.ensureContext();
+    } catch (error62) {
+      return {
+        success: false,
+        cookies: [],
+        attempts: [`launch_error:${describeError(error62)}`]
+      };
+    }
+    if (!context) {
+      return { success: false, cookies: [], attempts: ["patchright unavailable"] };
+    }
+    const page = await context.newPage();
+    const cookies = [];
+    try {
+      page.setDefaultTimeout(options.timeoutMs ?? 3e4);
+      attempts.push(`navigate:${landingUrl}`);
+      let navigationStatus;
+      try {
+        const navigation = await page.goto(landingUrl, {
+          waitUntil: "domcontentloaded",
+          timeout: options.timeoutMs ?? 45e3
+        });
+        navigationStatus = navigation?.status();
+      } catch (error62) {
+        attempts.push(`navigate_error:${describeError(error62)}`);
+      }
+      const challengeTimeout = navigationStatus === 403 ? Math.min(4e3, options.challengeTimeoutMs ?? 3e4) : options.challengeTimeoutMs ?? 3e4;
+      const cleared = await this.waitForChallenge(page, challengeTimeout);
+      if (!cleared && !escalated && this.headless && allowHeadedEscalation()) {
+        attempts.push("challenge:headless_failed_relaunch_headed");
+        await this.close();
+        this.headless = false;
+        return this.resolveLocked(landingUrl, options, true);
+      }
+      if (!cleared) {
+        return {
+          success: false,
+          cookies: await this.readCookies(context),
+          finalUrl: page.url(),
+          title: await page.title().catch(() => ""),
+          challenge: true,
+          attempts
+        };
+      }
+      await this.handleLinkingHub(page, options.doi || "", attempts);
+      const pdfLink = await this.extractPdfLink(page);
+      const title = await page.title().catch(() => "");
+      const body = await page.locator("body").innerText({ timeout: 2e3 }).catch(() => "");
+      if (!pdfLink && isLoginPage(title, body, page.url())) {
+        attempts.push("login_required");
+        return {
+          success: false,
+          authRequired: true,
+          cookies: await this.readCookies(context),
+          finalUrl: page.url(),
+          title,
+          attempts
+        };
+      }
+      if (pdfLink) attempts.push(`pdf_link:${pdfLink}`);
+      const currentUrl = page.url();
+      const origin2 = safeOrigin3(currentUrl);
+      const allUrls = uniqueUrls2([
+        ...pdfLink ? [pdfLink] : [],
+        ...buildBrowserPdfPaths(options.doi || "", currentUrl).map(
+          (candidate) => candidate.startsWith("/") ? `${origin2}${candidate}` : candidate
+        )
+      ]);
+      const captured = await this.capturePdfs(page, context, allUrls, currentUrl, attempts);
+      const pdf2 = captured.pdf;
+      return {
+        success: Boolean(pdf2),
+        ...pdf2 ? { pdf: pdf2 } : {},
+        ...captured.pdfUrl ? { pdfUrl: captured.pdfUrl } : {},
+        pdfUrls: allUrls,
+        cookies: await this.readCookies(context),
+        finalUrl: page.url(),
+        title,
+        attempts
+      };
+    } catch (error62) {
+      attempts.push(`error:${describeError(error62)}`);
+      return {
+        success: false,
+        cookies,
+        finalUrl: page.url(),
+        title: await page.title().catch(() => ""),
+        attempts
+      };
+    } finally {
+      try {
+        await page.close();
+      } catch {
+      }
+      this.touch();
+    }
+  }
+  async ensureContext() {
+    if (this.context) return this.context;
+    const patchright = await loadPatchright();
+    if (!patchright) return void 0;
+    const channels = configuredChannels();
+    let lastError;
+    for (const channel of channels) {
+      try {
+        const context = await patchright.chromium.launchPersistentContext(profileDir(), {
+          channel,
+          headless: this.headless,
+          viewport: null,
+          acceptDownloads: true,
+          ignoreDefaultArgs: ["--enable-automation"],
+          args: [
+            "--disable-blink-features=AutomationControlled",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--disable-background-networking",
+            "--disable-sync",
+            "--metrics-recording-only"
+          ]
+        });
+        await context.route("**/*", (route) => {
+          if (process.env.TWOSCI_BROWSER_BLOCK_RESOURCES === "false") return route.continue();
+          const type = route.request().resourceType();
+          if (type === "image" || type === "media" || type === "font") return route.abort();
+          return route.continue();
+        });
+        this.context = context;
+        return context;
+      } catch (error62) {
+        lastError = error62;
+      }
+    }
+    throw new Error(`Patchright could not launch Chrome/Edge: ${describeError(lastError)}`);
+  }
+  async waitForChallenge(page, timeoutMs) {
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+      const title2 = await page.title().catch(() => "");
+      const body2 = await page.locator("body").innerText({ timeout: 1500 }).catch(() => "");
+      if (!isChallengePage2(title2, body2, page.url())) return true;
+      if (process.env.TWOSCI_BROWSER_TURNSTILE_CLICK === "true") {
+        await this.tryTurnstileClick(page);
+      }
+      await page.waitForTimeout(1e3).catch(() => void 0);
+    }
+    const title = await page.title().catch(() => "");
+    const body = await page.locator("body").innerText({ timeout: 1500 }).catch(() => "");
+    return !isChallengePage2(title, body, page.url());
+  }
+  async tryTurnstileClick(page) {
+    try {
+      const frame = page.frameLocator('iframe[src*="challenges.cloudflare.com"]');
+      const checkbox = frame.locator('input[type="checkbox"]');
+      if (await checkbox.count() > 0) {
+        await checkbox.first().click({ timeout: 1500 });
+      }
+    } catch {
+    }
+  }
+  async handleLinkingHub(page, doi, attempts) {
+    const currentUrl = page.url();
+    if (!/linkinghub|retrieve\/pii/i.test(currentUrl)) return;
+    attempts.push("linkinghub:wait_redirect");
+    await page.waitForTimeout(5e3).catch(() => void 0);
+    if (/linkinghub/i.test(page.url())) {
+      const pii = page.url().match(/pii\/([A-Z0-9]+)/i);
+      if (pii) {
+        const direct = `https://www.sciencedirect.com/science/article/pii/${pii[1]}`;
+        await page.goto(direct, { waitUntil: "domcontentloaded", timeout: 3e4 }).catch(() => void 0);
+        await page.waitForTimeout(3e3).catch(() => void 0);
+        attempts.push(`linkinghub->${direct}`);
+      }
+    }
+  }
+  async extractPdfLink(page) {
+    try {
+      const link = await page.evaluate(() => {
+        const meta3 = document.querySelector('meta[name="citation_pdf_url"]');
+        if (meta3?.content) return meta3.content;
+        const labelled = document.querySelector('a[aria-label*="PDF" i], a[title*="PDF" i]');
+        if (labelled?.href) return labelled.href;
+        for (const anchor2 of Array.from(document.querySelectorAll("a"))) {
+          const href = (anchor2.href || "").toLowerCase();
+          const text3 = (anchor2.textContent || "").toLowerCase();
+          if (href.includes("/pdfft") || href.includes("/pdfdirect")) return anchor2.href;
+          if (href.includes("pdf") && !href.includes("supplement") && !href.includes("cite")) return anchor2.href;
+          if (text3.includes("pdf") && (text3.includes("download") || text3.includes("view"))) return anchor2.href;
+        }
+        return null;
+      });
+      return typeof link === "string" ? link : void 0;
+    } catch {
+      return void 0;
+    }
+  }
+  async capturePdfs(page, context, urls, referer, attempts) {
+    const captured = [];
+    const onResponse = async (response) => {
+      try {
+        const contentType = (response.headers()["content-type"] || "").toLowerCase();
+        if (!contentType.includes("pdf") && !contentType.includes("octet")) return;
+        const body = await response.body();
+        if (body.subarray(0, 5).toString("ascii") === "%PDF-") {
+          captured.push({ buffer: body, url: response.url() });
+        }
+      } catch {
+      }
+    };
+    const onDownload = async (download) => {
+      try {
+        const filePath = await download.path();
+        if (!filePath) return;
+        const buffer = fs11.readFileSync(filePath);
+        if (buffer.subarray(0, 5).toString("ascii") === "%PDF-") {
+          captured.push({ buffer, url: download.url() });
+        }
+      } catch {
+      }
+    };
+    page.on("response", onResponse);
+    page.on("download", onDownload);
+    try {
+      for (const url3 of urls) {
+        if (captured.length > 0) break;
+        attempts.push(`pdf_navigate:${url3}`);
+        try {
+          await page.goto(url3, { waitUntil: "domcontentloaded", timeout: 3e4 });
+          await this.waitForChallenge(page, 6e3);
+        } catch (error62) {
+          attempts.push(`pdf_navigate_error:${describeError(error62)}`);
+        }
+        if (captured.length > 0) break;
+        try {
+          const response = await context.request.get(url3, {
+            headers: { Referer: referer },
+            timeout: 3e4
+          });
+          const body = Buffer.from(await response.body());
+          if (body.subarray(0, 5).toString("ascii") === "%PDF-") {
+            captured.push({ buffer: body, url: url3 });
+          }
+        } catch (error62) {
+          attempts.push(`context_request_error:${describeError(error62)}`);
+        }
+        if (captured.length === 0) {
+          const viewerUrl = await page.evaluate(() => {
+            const object3 = document.querySelector('object[type="application/pdf"]');
+            const embed = document.querySelector('embed[type="application/pdf"]');
+            const iframe = document.querySelector('iframe[src*="pdf"]');
+            return object3?.data || embed?.src || iframe?.src || null;
+          }).catch(() => null);
+          if (viewerUrl && typeof viewerUrl === "string") {
+            const absolute = new URL(viewerUrl, page.url()).toString();
+            try {
+              await page.goto(absolute, { waitUntil: "domcontentloaded", timeout: 3e4 });
+              await page.waitForTimeout(2e3);
+            } catch {
+            }
+          }
+        }
+      }
+    } finally {
+      page.off("response", onResponse);
+      page.off("download", onDownload);
+    }
+    const valid = captured.filter((item) => item.buffer.length > 5e3).sort((left, right) => right.buffer.length - left.buffer.length);
+    return valid.length > 0 ? { pdf: valid[0].buffer, pdfUrl: valid[0].url } : {};
+  }
+  async readCookies(context) {
+    try {
+      return (await context.cookies()).map((cookie) => ({
+        name: cookie.name,
+        value: cookie.value,
+        domain: cookie.domain,
+        path: cookie.path,
+        expires: cookie.expires,
+        secure: cookie.secure,
+        httpOnly: cookie.httpOnly
+      }));
+    } catch {
+      return [];
+    }
+  }
+  touch() {
+    if (this.idleTimer) clearTimeout(this.idleTimer);
+    const idleMs = Number(process.env.TWOSCI_BROWSER_IDLE_MS || 3e5);
+    this.idleTimer = setTimeout(() => {
+      void this.close();
+    }, Number.isFinite(idleMs) ? idleMs : 3e5);
+    this.idleTimer.unref?.();
+  }
+  async withLock(task) {
+    const previous = this.queue;
+    let release = () => void 0;
+    this.queue = new Promise((resolve6) => {
+      release = resolve6;
+    });
+    await previous;
+    try {
+      return await task();
+    } finally {
+      release();
+    }
+  }
+};
+function resolveHeadless() {
+  const value = (process.env.TWOSCI_BROWSER_HEADLESS || "auto").toLowerCase();
+  if (value === "false" || value === "0") return false;
+  if (value === "true" || value === "1") return true;
+  return true;
+}
+function allowHeadedEscalation() {
+  return (process.env.TWOSCI_BROWSER_HEADLESS || "auto").toLowerCase() === "auto";
+}
+function configuredChannels() {
+  const configured = (process.env.TWOSCI_BROWSER_CHANNEL || "auto").toLowerCase();
+  if (configured === "auto") return ["chrome", "msedge"];
+  return [configured];
+}
+function profileDir() {
+  return process.env.TWOSCI_BROWSER_PROFILE_DIR || path10.join(os.homedir(), ".twosci", "browser-profile");
+}
+function safeOrigin3(rawUrl) {
+  try {
+    const parsed = new URL(rawUrl);
+    return `${parsed.protocol}//${parsed.host}`;
+  } catch {
+    return "";
+  }
+}
+function uniqueUrls2(urls) {
+  const seen = /* @__PURE__ */ new Set();
+  const result = [];
+  for (const url3 of urls) {
+    if (!url3 || seen.has(url3)) continue;
+    seen.add(url3);
+    result.push(url3);
+  }
+  return result;
+}
+var sharedResolver;
+function getBrowserResolver() {
+  if (!sharedResolver) {
+    sharedResolver = new BrowserResolver();
+    process.once("beforeExit", () => {
+      void sharedResolver?.close();
+    });
+  }
+  return sharedResolver;
+}
+
 // src/literature/download/pdfFetcher.ts
 function normalizeDoi4(value) {
   const trimmed = value.trim().replace(/^doi:\s*/i, "");
@@ -365894,7 +366355,7 @@ async function resolveDoiLanding(doi) {
     const response = await axios_default.get(`https://doi.org/${encodeURIComponent(doi)}`, {
       maxRedirects: 5,
       timeout: 15e3,
-      headers: { "User-Agent": "TwoSCI/0.3.0" },
+      headers: { "User-Agent": "TwoSCI/0.3.1" },
       validateStatus: (status) => status < 400
     });
     const finalUrl = String(
@@ -366021,7 +366482,7 @@ async function fetchPdf(input2, destPath, options = {}) {
       return { success: true, channel: "elsevier_api", attempts };
     }
   }
-  const resolvedLanding = landingUrl || (doi ? await resolveDoiLanding(doi) : void 0);
+  const resolvedLanding = landingUrl || (doi ? await resolveDoiLanding(doi) : void 0) || (doi ? `https://doi.org/${doi}` : void 0);
   const config3 = loadInstitutionalConfig();
   const profile = doi ? publisherProfileFor(doi, resolvedLanding) : void 0;
   if (profile) {
@@ -366045,6 +366506,41 @@ async function fetchPdf(input2, destPath, options = {}) {
   )) {
     const success2 = attempts.find((item) => item.status === "success");
     return { success: true, channel: success2?.channel, url: success2?.url, attempts };
+  }
+  if (resolvedLanding && process.env.NODE_ENV !== "test" && process.env.TWOSCI_BROWSER_ENABLED !== "false") {
+    let browser;
+    try {
+      browser = await getBrowserResolver().resolve(resolvedLanding, { doi });
+    } catch (error62) {
+      attempts.push({
+        channel: "browser",
+        status: "error",
+        reason: error62 instanceof Error ? error62.message : String(error62)
+      });
+    }
+    if (!browser) {
+      return { success: false, attempts, message: "Browser fallback failed to start." };
+    }
+    if (browser.pdf) {
+      fs12.writeFileSync(destPath, browser.pdf);
+      attempts.push({ channel: "browser", status: "success", url: browser.pdfUrl });
+      return { success: true, channel: "browser", url: browser.pdfUrl, attempts };
+    }
+    const cookieHeader = browser.cookies.length > 0 ? cookieHeaderForUrl(browser.cookies, browser.finalUrl || resolvedLanding) : void 0;
+    for (const pdfUrl of browser.pdfUrls || []) {
+      const ok = await attempt("browser_cookie", pdfUrl, destPath, options, attempts, {
+        ...cookieHeader ? { Cookie: cookieHeader } : {},
+        ...browser.finalUrl ? { Referer: browser.finalUrl } : {}
+      });
+      if (ok) return { success: true, channel: "browser_cookie", url: pdfUrl, attempts };
+    }
+    if (browser.authRequired) {
+      attempts.push({ channel: "browser", status: "blocked", reason: "auth_required" });
+    } else if (browser.challenge) {
+      attempts.push({ channel: "browser", status: "blocked", reason: "challenge_not_solved" });
+    } else if (browser.attempts.length > 0) {
+      attempts.push({ channel: "browser", status: "miss", reason: browser.attempts.slice(-3).join(" | ") });
+    }
   }
   return {
     success: false,
@@ -366096,7 +366592,7 @@ var MineruService = class {
     try {
       const resp = await axios_default.get(`https://api.crossref.org/works/${encodeURIComponent(cleanDoi)}`, {
         timeout: 1e4,
-        headers: { "User-Agent": "TwoSCI/0.3.0 (mailto:research@twosci.org)" }
+        headers: { "User-Agent": "TwoSCI/0.3.1 (mailto:research@twosci.org)" }
       });
       const item = resp.data?.message;
       if (item) {
@@ -366151,11 +366647,11 @@ var MineruService = class {
     const firstAuthor = extractFirstAuthorSurname(authors);
     const year = record2?.year || (/* @__PURE__ */ new Date()).getFullYear();
     const folderName = this.buildDirectoryName({ authors, year, title, doi });
-    const targetDir = path10.resolve(workDir, "twosci", folderName);
-    const imgDir = path10.join(targetDir, "img");
+    const targetDir = path11.resolve(workDir, "twosci", folderName);
+    const imgDir = path11.join(targetDir, "img");
     const cleanTitle = this.sanitizeName(title, 60);
-    const pdfPath = path10.join(targetDir, `${cleanTitle}.pdf`);
-    const mdPath = path10.join(targetDir, `${cleanTitle}.md`);
+    const pdfPath = path11.join(targetDir, `${cleanTitle}.pdf`);
+    const mdPath = path11.join(targetDir, `${cleanTitle}.md`);
     let route;
     if (record2) {
       route = FullTextRouter.resolveRoute(record2);
@@ -366180,11 +366676,11 @@ var MineruService = class {
     const landingUrl = input2.url || route?.landingUrl || (doi ? `https://doi.org/${encodeURI(doi)}` : void 0);
     let channel = route?.channel || "oa_direct";
     try {
-      if (!fs11.existsSync(pdfPath)) {
+      if (!fs13.existsSync(pdfPath)) {
         if (process.env.NODE_ENV === "test") {
           throw new Error("PDF acquisition is disabled in the test environment");
         }
-        fs11.mkdirSync(imgDir, { recursive: true });
+        fs13.mkdirSync(imgDir, { recursive: true });
         const fetched = await fetchPdf(doi || input2.url || "", pdfPath, {
           doi,
           landingUrl,
@@ -366199,7 +366695,7 @@ var MineruService = class {
         channel = fetched.channel || channel;
         this.validatePdfFile(pdfPath);
       } else {
-        fs11.mkdirSync(imgDir, { recursive: true });
+        fs13.mkdirSync(imgDir, { recursive: true });
         this.validatePdfFile(pdfPath);
       }
       const conversion = await this.convertWithMineru(pdfPath, mdPath, imgDir, {
@@ -366225,8 +366721,8 @@ var MineruService = class {
       };
     } catch (err) {
       try {
-        if (fs11.existsSync(targetDir) && fs11.readdirSync(targetDir).length === 0) {
-          fs11.rmdirSync(targetDir);
+        if (fs13.existsSync(targetDir) && fs13.readdirSync(targetDir).length === 0) {
+          fs13.rmdirSync(targetDir);
         }
       } catch {
       }
@@ -366260,22 +366756,22 @@ var MineruService = class {
       totalRequested: items.length,
       successCount,
       failedCount: items.length - successCount,
-      outputDirectory: path10.resolve(workDir, "twosci"),
+      outputDirectory: path11.resolve(workDir, "twosci"),
       artifacts
     };
   }
   static validatePdfFile(filePath) {
-    if (!fs11.existsSync(filePath)) {
+    if (!fs13.existsSync(filePath)) {
       throw new Error(`\u6587\u4EF6\u4E0D\u5B58\u5728: ${filePath}`);
     }
-    const stat = fs11.statSync(filePath);
+    const stat = fs13.statSync(filePath);
     if (stat.size < 500) {
       throw new Error(`PDF \u6587\u4EF6\u5C3A\u5BF8\u5F02\u5E38 (${stat.size} bytes)\uFF0C\u7591\u4F3C\u7A7A\u58F3\u6216\u635F\u574F`);
     }
-    const fd = fs11.openSync(filePath, "r");
+    const fd = fs13.openSync(filePath, "r");
     const buf = Buffer.alloc(5);
-    fs11.readSync(fd, buf, 0, 5, 0);
-    fs11.closeSync(fd);
+    fs13.readSync(fd, buf, 0, 5, 0);
+    fs13.closeSync(fd);
     if (buf.toString("ascii") !== "%PDF-") {
       throw new Error(`\u6587\u4EF6\u4E0D\u662F\u6807\u51C6 PDF: ${filePath}`);
     }
@@ -366291,7 +366787,7 @@ var MineruService = class {
       } catch {
       }
     }
-    const pdfBuffer = fs11.readFileSync(pdfPath);
+    const pdfBuffer = fs13.readFileSync(pdfPath);
     const extractor = new PDFExtractor();
     const parsed = await extractor.extractFromBuffer(pdfBuffer);
     const realText = (parsed?.text || "").trim();
@@ -366315,11 +366811,11 @@ ${meta3.abstract}
       "",
       realText || "*(PDF \u672A\u5305\u542B\u53EF\u63D0\u53D6\u7684\u7EAF\u6587\u672C\u56FE\u5C42)*"
     ].filter(Boolean).join("\n");
-    fs11.writeFileSync(mdPath, realMd, "utf8");
+    fs13.writeFileSync(mdPath, realMd, "utf8");
     return { imageCount: 0, method: "local_pdf_parse" };
   }
   static async callMineruCloudApi(pdfPath, mdPath, imgDir, token) {
-    const fileName = path10.basename(pdfPath);
+    const fileName = path11.basename(pdfPath);
     const batchRes = await axios_default.post(
       "https://mineru.net/api/v4/file-urls/batch",
       { files: [{ name: fileName, is_ocr: false }] },
@@ -366336,7 +366832,7 @@ ${meta3.abstract}
     if (!batchId || !uploadUrl) {
       return { success: false, imageCount: 0 };
     }
-    const pdfBuffer = fs11.readFileSync(pdfPath);
+    const pdfBuffer = fs13.readFileSync(pdfPath);
     await axios_default.put(uploadUrl, pdfBuffer, {
       headers: { "Content-Type": "" },
       timeout: 6e4
@@ -366374,10 +366870,10 @@ ${meta3.abstract}
       const lower = entry.entryName.toLowerCase();
       if (lower.endsWith(".md")) {
         const mdText = entry.getData().toString("utf8");
-        fs11.writeFileSync(mdPath, mdText, "utf8");
+        fs13.writeFileSync(mdPath, mdText, "utf8");
       } else if (/\.(png|jpe?g|webp|svg)$/i.test(lower)) {
-        const imgTarget = path10.join(imgDir, path10.basename(entry.entryName));
-        fs11.writeFileSync(imgTarget, entry.getData());
+        const imgTarget = path11.join(imgDir, path11.basename(entry.entryName));
+        fs13.writeFileSync(imgTarget, entry.getData());
         imageCount++;
       }
     }
@@ -366506,19 +367002,19 @@ var CitationTopologyService = class {
 };
 
 // src/literature/AcademicLibraryService.ts
-var fs12 = __toESM(require("node:fs"), 1);
-var path11 = __toESM(require("node:path"), 1);
+var fs14 = __toESM(require("node:fs"), 1);
+var path12 = __toESM(require("node:path"), 1);
 var AcademicLibraryService = class {
   /**
    * Build and write ACADEMIC_LIBRARY.md into ./twosci directory.
    */
   static buildLibrary(records, options = {}) {
     const workDir = options.workDir || process.cwd();
-    const twosciDir = path11.resolve(workDir, "twosci");
-    fs12.mkdirSync(twosciDir, { recursive: true });
-    const libraryMdPath = options.outputPath || path11.join(twosciDir, "ACADEMIC_LIBRARY.md");
-    const bibtexPath = path11.join(twosciDir, "references.bib");
-    const auditJsonPath = path11.join(twosciDir, "screening_audit.json");
+    const twosciDir = path12.resolve(workDir, "twosci");
+    fs14.mkdirSync(twosciDir, { recursive: true });
+    const libraryMdPath = options.outputPath || path12.join(twosciDir, "ACADEMIC_LIBRARY.md");
+    const bibtexPath = path12.join(twosciDir, "references.bib");
+    const auditJsonPath = path12.join(twosciDir, "screening_audit.json");
     const nowStr = (/* @__PURE__ */ new Date()).toISOString().replace("T", " ").slice(0, 19) + " (UTC)";
     const topicStr = options.brief?.intent || "\u524D\u6CBF\u79D1\u5B66\u6587\u732E\u8C03\u7814\u4E0E\u6280\u672F\u8DEF\u7EBF\u8FFD\u8E2A";
     const seedStr = options.brief?.seed ? `${options.brief.seed.title} (DOI: ${options.brief.seed.doi || "\u65E0"})` : "\uFF08\u65E0\u521D\u59CB\u79CD\u5B50\u6587\u732E\uFF09";
@@ -366577,9 +367073,9 @@ var AcademicLibraryService = class {
     lines.push(`- **BibTeX \u683C\u5F0F\u5F15\u6587\u6587\u4EF6**: \`./twosci/references.bib\``);
     lines.push(`- **\u521D\u7B5B\u5BA1\u8BA1\u65E5\u5FD7**: \`./twosci/screening_audit.json\``);
     const markdownContent = lines.join("\n");
-    fs12.writeFileSync(libraryMdPath, markdownContent, "utf8");
+    fs14.writeFileSync(libraryMdPath, markdownContent, "utf8");
     const bibtexContent = this.generateBibtex(records);
-    fs12.writeFileSync(bibtexPath, bibtexContent, "utf8");
+    fs14.writeFileSync(bibtexPath, bibtexContent, "utf8");
     const auditJson = {
       generatedAt: nowStr,
       topic: topicStr,
@@ -366595,7 +367091,7 @@ var AcademicLibraryService = class {
         sources: r.sources.map((s) => s.source)
       }))
     };
-    fs12.writeFileSync(auditJsonPath, JSON.stringify(auditJson, null, 2), "utf8");
+    fs14.writeFileSync(auditJsonPath, JSON.stringify(auditJson, null, 2), "utf8");
     return {
       libraryMarkdownPath: libraryMdPath,
       bibtexPath,
@@ -367535,6 +368031,10 @@ var LiteratureService = class {
         } : {}
       },
       mode_defaults: MODE_CONFIG,
+      browser: {
+        patchright_available: await isPatchrightAvailable(),
+        ...await getBrowserResolver().status()
+      },
       session_store: this.store.stats()
     };
   }
@@ -368882,7 +369382,7 @@ var CitationService = class {
 // src/mcp/handleToolCall.ts
 init_SecurityUtils();
 init_Logger();
-var fs13 = __toESM(require("node:fs"), 1);
+var fs15 = __toESM(require("node:fs"), 1);
 var citationService = new CitationService();
 function jsonTextResponse(text3) {
   return {
@@ -369016,7 +369516,7 @@ function sanitizePublicSaveDirectory(savePath) {
 }
 async function pathExists(filePath) {
   try {
-    await fs13.promises.lstat(filePath);
+    await fs15.promises.lstat(filePath);
     return true;
   } catch (error62) {
     if (error62?.code === "ENOENT") return false;
@@ -370049,7 +370549,7 @@ function registerMcpHandlers(server2, searcherFactory = initializeSearchers) {
       },
       serverInfo: {
         name: "twosci",
-        version: "0.3.0"
+        version: "0.3.1"
       }
     };
   });
@@ -370066,6 +370566,7 @@ function registerMcpHandlers(server2, searcherFactory = initializeSearchers) {
   const previousOnClose = server2.onclose;
   server2.onclose = () => {
     callToolHandler.dispose();
+    void getBrowserResolver().close();
     previousOnClose?.();
   };
 }
@@ -370075,20 +370576,20 @@ init_Logger();
 var import_meta = {};
 function loadEnvironment() {
   try {
-    const homeEnv = path12.resolve(os.homedir(), ".twosci", ".env");
-    if (fs14.existsSync(homeEnv)) {
+    const homeEnv = path13.resolve(os2.homedir(), ".twosci", ".env");
+    if (fs16.existsSync(homeEnv)) {
       dotenv.config({ path: homeEnv });
     }
   } catch {
   }
-  const cwdEnv = path12.resolve(process.cwd(), ".env");
-  if (fs14.existsSync(cwdEnv)) {
+  const cwdEnv = path13.resolve(process.cwd(), ".env");
+  if (fs16.existsSync(cwdEnv)) {
     dotenv.config({ path: cwdEnv });
   }
   try {
-    const currentDir = typeof __dirname !== "undefined" ? __dirname : path12.dirname((0, import_node_url.fileURLToPath)(import_meta.url));
-    const pluginEnv = path12.resolve(currentDir, "..", ".env");
-    if (fs14.existsSync(pluginEnv)) {
+    const currentDir = typeof __dirname !== "undefined" ? __dirname : path13.dirname((0, import_node_url.fileURLToPath)(import_meta.url));
+    const pluginEnv = path13.resolve(currentDir, "..", ".env");
+    if (fs16.existsSync(pluginEnv)) {
       dotenv.config({ path: pluginEnv });
     }
   } catch {
@@ -370101,14 +370602,14 @@ function loadClaudeDesktopConfig() {
     const platform = process.platform;
     let configPath = "";
     if (platform === "win32") {
-      configPath = path12.join(process.env.APPDATA || "", "Claude", "claude_desktop_config.json");
+      configPath = path13.join(process.env.APPDATA || "", "Claude", "claude_desktop_config.json");
     } else if (platform === "darwin") {
-      configPath = path12.join(process.env.HOME || "", "Library", "Application Support", "Claude", "claude_desktop_config.json");
+      configPath = path13.join(process.env.HOME || "", "Library", "Application Support", "Claude", "claude_desktop_config.json");
     } else {
-      configPath = path12.join(process.env.HOME || "", ".config", "Claude", "claude_desktop_config.json");
+      configPath = path13.join(process.env.HOME || "", ".config", "Claude", "claude_desktop_config.json");
     }
-    if (configPath && fs14.existsSync(configPath)) {
-      const raw = fs14.readFileSync(configPath, "utf8");
+    if (configPath && fs16.existsSync(configPath)) {
+      const raw = fs16.readFileSync(configPath, "utf8");
       const parsed = JSON.parse(raw);
       const mcpServers = parsed?.mcpServers || {};
       const envSource = mcpServers.twosci?.env || mcpServers["paper-search"]?.env;
@@ -370127,7 +370628,7 @@ loadEnvironment();
 var server = new Server(
   {
     name: "twosci",
-    version: "0.3.0"
+    version: "0.3.1"
   },
   {
     capabilities: {

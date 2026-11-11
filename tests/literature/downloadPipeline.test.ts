@@ -17,6 +17,11 @@ import {
 } from '../../src/literature/download/institutionalAccess.js';
 import { normalizeArxivId } from '../../src/literature/download/openAccess.js';
 import { normalizeDoi } from '../../src/literature/download/pdfFetcher.js';
+import {
+  buildBrowserPdfPaths,
+  isChallengePage,
+  isLoginPage
+} from '../../src/literature/download/browserResolver.js';
 
 describe('publisher profile registry', () => {
   it('infers profiles from DOI prefixes and landing-page hosts', () => {
@@ -129,5 +134,32 @@ describe('identifier normalization', () => {
   it('normalizes DOI inputs', () => {
     expect(normalizeDoi('https://doi.org/10.3390/Buildings15111900')).toBe('10.3390/buildings15111900');
     expect(normalizeDoi('doi: 10.1016/j.enbuild.2015.07.058')).toBe('10.1016/j.enbuild.2015.07.058');
+  });
+});
+
+describe('browser resolver heuristics', () => {
+  it('detects challenge and login pages without flagging article pages', () => {
+    expect(isChallengePage('Access Denied', 'You do not have permission', 'https://www.mdpi.com/x')).toBe(true);
+    expect(isChallengePage('请稍候…', '正在进行安全验证', 'https://example.com')).toBe(true);
+    expect(isLoginPage('统一身份认证', '请登录', 'https://id.example.edu/cas/login')).toBe(true);
+    expect(isLoginPage(
+      'Exploring Carbon Emissions in the Construction Industry',
+      'Abstract The construction industry plays a pivotal role in climate change mitigation. '.repeat(80),
+      'https://www.mdpi.com/2075-5309/15/11/1900'
+    )).toBe(false);
+  });
+
+  it('builds publisher-specific browser PDF fallbacks', () => {
+    const sciencedirect = buildBrowserPdfPaths(
+      '10.1016/j.enbuild.2015.07.058',
+      'https://www.sciencedirect.com/science/article/pii/S0378778815301742'
+    );
+    expect(sciencedirect).toContain('/science/article/pii/S0378778815301742/pdfft');
+
+    const springer = buildBrowserPdfPaths(
+      '10.1007/s00134-020-06050-1',
+      'https://link.springer.com/article/10.1007/s00134-020-06050-1'
+    );
+    expect(springer).toContain('/content/pdf/10.1007/s00134-020-06050-1.pdf');
   });
 });

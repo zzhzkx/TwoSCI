@@ -72,9 +72,32 @@ Institutional access is configured with `TWOSCI_WEBVPN_*` and
 `TWOSCI_CARSI_*`; an existing scansci config can be imported read-only via
 `TWOSCI_SCANSCI_CONFIG`.
 
-The plugin does not bundle a browser and does not integrate Sci-Hub.
+The plugin does not bundle Chromium and does not integrate Sci-Hub.
 Cloudflare/Akamai challenges and interactive SSO cannot be replicated over
 plain HTTP; those cases fail with an explicit reason.
+
+## Browser Fallback: Patchright + Local Chrome/Edge
+
+Patchright is launched only after the HTTP/API/publisher routes fail. It
+patches the usual Playwright automation leaks and drives the locally installed
+Google Chrome (`channel=chrome`), falling back to Edge; Chromium is not bundled.
+
+- `TWOSCI_BROWSER_HEADLESS=auto`: try headless first, then relaunch headed
+  when a challenge persists (MDPI returns 403 headless and loads headed).
+- A persistent profile (`~/.twosci/browser-profile` by default) keeps challenge
+  cookies across downloads.
+- Resource controls: image/font/media blocking, one shared browser, serialized
+  pages, and idle shutdown after five minutes.
+- The browser resolves landing pages, challenges, and PDF links/responses; PDF
+  bytes still prefer CDN/API/HTTP routes.
+- `TWOSCI_BROWSER_TURNSTILE_CLICK=true` attempts the Turnstile checkbox;
+  Turnstile is not guaranteed.
+- Automatic SSO login is not implemented. CAS/institution pages return
+  `auth_required`; run once with `TWOSCI_BROWSER_HEADLESS=false` to log in and
+  reuse the persistent profile.
+
+If Chrome/Edge is missing, run `npx patchright install chromium` from the
+plugin directory to install Patchright's Chromium build (~150 MB).
 
 ## Result Layers
 

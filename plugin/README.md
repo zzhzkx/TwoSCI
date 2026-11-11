@@ -33,6 +33,11 @@ variables in the host application:
 
 If `WOS_EXPANDED_API_KEY` is present, all WoS calls use Expanded by default.
 
+PDF acquisition is native (Unpaywall/OpenAlex/Europe PMC/publisher routes).
+The optional browser fallback uses Patchright with the locally installed
+Chrome or Edge; Chromium is not bundled. Set `TWOSCI_BROWSER_HEADLESS=auto`
+to try headless first and relaunch headed only when a challenge persists.
+
 ## Local test
 
 ```bash
