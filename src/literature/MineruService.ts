@@ -4,6 +4,16 @@ import axios from 'axios';
 import AdmZip from 'adm-zip';
 import { PDFExtractor } from '../utils/PDFExtractor.js';
 import { FullTextRouter, getMdpiCdnVariants, type FullTextRoute } from './FullTextRouter.js';
+import {
+  buildInstitutionalTargets,
+  carsiCookieFileForDoi,
+  cookieHeaderForUrl,
+  isWebVpnSessionAlive,
+  loadCookies,
+  loadInstitutionalConfig,
+  type CookieRecord
+} from './InstitutionalAccess.js';
+import { getLightpandaBrowser } from './LightpandaBrowser.js';
 import type { LiteratureRecord } from './types.js';
 
 export function extractFirstAuthorSurname(authors?: string[]): string {
@@ -85,7 +95,7 @@ export class MineruService {
     try {
       const resp = await axios.get(`https://api.crossref.org/works/${encodeURIComponent(cleanDoi)}`, {
         timeout: 10000,
-        headers: { 'User-Agent': 'TwoSCI/0.2.2 (mailto:research@twosci.org)' }
+        headers: { 'User-Agent': 'TwoSCI/0.2.3 (mailto:research@twosci.org)' }
       });
       const item = resp.data?.message;
       if (item) {
@@ -180,18 +190,21 @@ export class MineruService {
 
     const downloadUrl = input.url || route?.bestPdfUrl || (doi ? `https://doi.org/${encodeURI(doi)}` : '');
     const candidateUrls = route?.candidatePdfUrls || [];
-    const channel = route?.channel || 'oa_direct';
+    let channel: string = route?.channel || 'oa_direct';
+    const landingUrl = input.url || route?.landingUrl || (doi ? `https://doi.org/${encodeURI(doi)}` : undefined);
 
     try {
       // 1. 获取真实 PDF (若本地已存在有效 PDF 则复用，保证每篇论文只存一份)
       if (!fs.existsSync(pdfPath)) {
         fs.mkdirSync(imgDir, { recursive: true });
-        await this.acquirePdf(downloadUrl, pdfPath, {
+        const resolvedChannel = await this.acquirePdf(downloadUrl, pdfPath, {
           candidateUrls,
           doi,
+          landingUrl,
           targetDir,
           elsevierApiKey: process.env.ELSEVIER_API_KEY
         });
+        if (resolvedChannel) channel = resolvedChannel;
       } else {
         fs.mkdirSync(imgDir, { recursive: true });
         this.validatePdfFile(pdfPath);
@@ -271,15 +284,29 @@ export class MineruService {
   private static async acquirePdf(
     url: string,
     destPath: string,
-    options?: { candidateUrls?: string[]; doi?: string; targetDir?: string; elsevierApiKey?: string }
-  ): Promise<void> {
-    const candidates: string[] = [];
+    options?: {
+      candidateUrls?: string[];
+      doi?: string;
+      landingUrl?: string;
+      targetDir?: string;
+      elsevierApiKey?: string;
+    }
+  ): Promise<string | undefined> {
+    interface PdfCandidate {
+      url: string;
+      cookieHeader?: string;
+      referer?: string;
+      channel: string;
+    }
+    const candidates: PdfCandidate[] = [];
     const seen = new Set<string>();
 
-    const addUrl = (u?: string) => {
-      if (!u || u.startsWith('#') || seen.has(u)) return;
-      seen.add(u);
-      candidates.push(u);
+    const addUrl = (target?: string, cookieHeader?: string, channel = 'oa_direct', referer?: string) => {
+      if (!target || target.startsWith('#')) return;
+      const key = `${channel}|${target}|${cookieHeader || ''}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      candidates.push({ url: target, cookieHeader, channel, referer });
     };
 
     // 1. MDPI DOI 优先使用开放 CDN 直链 (彻底避免 www.mdpi.com 的 403 反爬)
@@ -304,46 +331,177 @@ export class MineruService {
       addUrl(`https://api.elsevier.com/content/article/doi/${encodeURIComponent(options.doi)}?httpAccept=application/pdf`);
     }
 
-    let lastError: Error | undefined;
-    for (const candidateUrl of candidates) {
-      try {
-        const headers: Record<string, string> = {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          Accept: 'application/pdf,application/octet-stream;q=0.9,*/*;q=0.8'
-        };
-        if (candidateUrl.includes('api.elsevier.com') && options?.elsevierApiKey) {
-          headers['X-ELS-APIKey'] = options.elsevierApiKey;
+    // 5. 机构通道：WebVPN 改写 + CARSI cookie（只读复用 ~/.scansci-pdf）
+    const institutional = loadInstitutionalConfig();
+    const doi = options?.doi || '';
+    const backend = (process.env.TWOSCI_BROWSER_BACKEND || 'auto').toLowerCase();
+    let webVpnAlive = false;
+    if (institutional && backend !== 'off') {
+      const primary = url && !url.includes('www.mdpi.com/') ? url : options?.candidateUrls?.[0];
+      if (primary) {
+        for (const target of buildInstitutionalTargets(primary, doi, institutional)) {
+          if (target.channel === 'carsi') addUrl(target.url, target.cookieHeader, target.channel);
         }
+      }
+      if (options?.landingUrl) {
+        for (const target of buildInstitutionalTargets(options.landingUrl, doi, institutional)) {
+          if (target.channel === 'carsi') addUrl(target.url, target.cookieHeader, target.channel);
+        }
+      }
+    }
 
-        const response = await axios.get(candidateUrl, {
-          responseType: 'arraybuffer',
-          timeout: 25000,
-          headers
-        });
-
-        const buffer = Buffer.from(response.data);
-        this.validatePdfBuffer(buffer, candidateUrl);
-        fs.writeFileSync(destPath, buffer);
-        return; // 成功下载真实 PDF
+    let lastError: Error | undefined;
+    for (const candidate of candidates) {
+      try {
+        await this.downloadPdf(candidate, destPath, options?.elsevierApiKey);
+        return candidate.channel;
       } catch (err: any) {
         lastError = err;
       }
     }
 
-    // 5. 本地 scansci-pdf CLI 引擎级联兜底 (支持 20+ 源、校园网/WebVPN/CARSI)
-    if (options?.doi && process.env.NODE_ENV !== 'test') {
-      const scansciOk = await this.tryScansciDownload(options.doi, destPath, options.targetDir);
-      if (scansciOk) return;
+    webVpnAlive = institutional && backend !== 'off'
+      ? await isWebVpnSessionAlive(institutional)
+      : false;
+
+    // 6. Lightpanda 无头浏览器解析落地页，提取 PDF 链接与浏览器 cookie
+    if (backend !== 'off' && backend !== 'scansci' && process.env.NODE_ENV !== 'test') {
+      const browserChannel = await this.resolveViaLightpanda(
+        options?.landingUrl,
+        doi,
+        destPath,
+        options?.elsevierApiKey,
+        institutional
+      );
+      if (browserChannel) return browserChannel;
+    }
+
+    // 7. WebVPN 直连（仅在会话探测通过后尝试，避免死会话拖慢链路）
+    if (webVpnAlive && institutional && backend !== 'off') {
+      const primary = url && !url.includes('www.mdpi.com/') ? url : options?.candidateUrls?.[0];
+      const webVpnTargets = [
+        ...(primary ? buildInstitutionalTargets(primary, doi, institutional) : []),
+        ...(options?.landingUrl ? buildInstitutionalTargets(options.landingUrl, doi, institutional) : [])
+      ].filter(target => target.channel === 'webvpn');
+      for (const target of webVpnTargets) {
+        try {
+          await this.downloadPdf(
+            { url: target.url, cookieHeader: target.cookieHeader },
+            destPath,
+            options?.elsevierApiKey
+          );
+          return target.channel;
+        } catch (err: any) {
+          lastError = err;
+        }
+      }
+    }
+
+    // 8. 本地 scansci-pdf CLI 兜底（含 Chrome 机构登录流程）
+    if (doi && process.env.NODE_ENV !== 'test' && backend !== 'lightpanda') {
+      const scansciOk = await this.tryScansciDownload(doi, destPath, options?.targetDir);
+      if (scansciOk) return 'scansci_cli';
     }
 
     if (candidates.length === 0 && !url) {
       throw new Error('未提供有效的 PDF 下载链接');
     }
 
-    if (lastError?.message && lastError.message.includes('非 PDF 数据')) {
-      throw lastError;
+    const suffix = lastError?.message ? `; last error: ${lastError.message}` : '';
+    throw new Error(`PDF 下载失败: 未能在开放获取或机构渠道获取到有效 PDF 原文。已尝试开放 CDN、仓储直链、WebVPN/CARSI 与 Lightpanda (${doi || url})${suffix}`);
+  }
+
+  private static async downloadPdf(
+    candidate: { url: string; cookieHeader?: string; referer?: string },
+    destPath: string,
+    elsevierApiKey?: string
+  ): Promise<void> {
+    const headers: Record<string, string> = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      Accept: 'application/pdf,application/octet-stream;q=0.9,*/*;q=0.8'
+    };
+    if (candidate.cookieHeader) headers.Cookie = candidate.cookieHeader;
+    if (candidate.referer) headers.Referer = candidate.referer;
+    if (candidate.url.includes('api.elsevier.com') && elsevierApiKey) {
+      headers['X-ELS-APIKey'] = elsevierApiKey;
     }
-    throw new Error(`PDF 下载失败: 未能在开放获取渠道获取到有效 PDF 原文。已尝试开放 CDN、仓储直链与 scansci 级联 (${options?.doi || url})`);
+
+    const originalHost = new URL(candidate.url).hostname;
+    const response = await axios.get(candidate.url, {
+      responseType: 'arraybuffer',
+      timeout: 25000,
+      headers,
+      maxRedirects: 5,
+      beforeRedirect: (options: { href?: string; headers?: Record<string, string> }) => {
+        if (!candidate.cookieHeader || !options.href) return;
+        try {
+          if (!sameSite(originalHost, new URL(options.href).hostname)) {
+            delete options.headers?.Cookie;
+            delete options.headers?.cookie;
+          }
+        } catch {
+          // malformed redirect target; keep the request as-is
+        }
+      }
+    });
+
+    const buffer = Buffer.from(response.data);
+    this.validatePdfBuffer(buffer, candidate.url);
+    fs.writeFileSync(destPath, buffer);
+  }
+
+  private static async resolveViaLightpanda(
+    landingUrl: string | undefined,
+    doi: string,
+    destPath: string,
+    elsevierApiKey: string | undefined,
+    institutional: ReturnType<typeof loadInstitutionalConfig>
+  ): Promise<string | undefined> {
+    if (!landingUrl) return undefined;
+    const browser = getLightpandaBrowser();
+    if (!browser.runtime()) return undefined;
+
+    const attempts: Array<{ url: string; cookies?: CookieRecord[] }> = [];
+    const carsiCookieFile = institutional ? carsiCookieFileForDoi(doi, institutional) : '';
+    attempts.push({
+      url: landingUrl,
+      cookies: carsiCookieFile ? loadCookies(carsiCookieFile) : undefined
+    });
+
+    if (institutional?.vpnsciEnabled && institutional.vpnsciBaseUrl
+      && await isWebVpnSessionAlive(institutional)) {
+      const webVpn = buildInstitutionalTargets(landingUrl, doi, institutional)
+        .find(target => target.channel === 'webvpn');
+      if (webVpn) {
+        attempts.push({
+          url: webVpn.url,
+          cookies: loadCookies(institutional.vpnsciCookieFile)
+        });
+      }
+    }
+
+    for (const attempt of attempts) {
+      const page = await browser.fetchPage(attempt.url, { cookies: attempt.cookies });
+      if (!page || page.pdfUrls.length === 0) continue;
+      const pageCookieHeader = cookieHeaderForUrl(page.cookies, page.finalUrl);
+      for (const pdfUrl of page.pdfUrls) {
+        const cookieHeader = mergeCookieHeaders(
+          pageCookieHeader,
+          cookieHeaderForUrl(attempt.cookies || [], pdfUrl)
+        );
+        try {
+          await this.downloadPdf(
+            { url: pdfUrl, cookieHeader, referer: page.finalUrl },
+            destPath,
+            elsevierApiKey
+          );
+          return 'lightpanda_browser';
+        } catch {
+          // try next extracted PDF link
+        }
+      }
+    }
+    return undefined;
   }
 
   private static async tryScansciDownload(
@@ -572,4 +730,24 @@ export class MineruService {
     }
     return { success: false, imageCount: 0 };
   }
+}
+
+function mergeCookieHeaders(...headers: Array<string | undefined>): string | undefined {
+  const cookies = new Map<string, string>();
+  for (const header of headers) {
+    if (!header) continue;
+    for (const part of header.split(';')) {
+      const separator = part.indexOf('=');
+      if (separator <= 0) continue;
+      cookies.set(part.slice(0, separator).trim(), part.slice(separator + 1).trim());
+    }
+  }
+  if (cookies.size === 0) return undefined;
+  return [...cookies.entries()].map(([name, value]) => `${name}=${value}`).join('; ');
+}
+
+function sameSite(left: string, right: string): boolean {
+  if (left === right) return true;
+  const base = (host: string) => host.split('.').slice(-2).join('.');
+  return base(left) === base(right);
 }

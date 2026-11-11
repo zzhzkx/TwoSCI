@@ -45,6 +45,30 @@ TwoSCI 是一个面向 Codex 和 Claude Code 的文献研究 MCP 服务与插件
 `search_literature` 的显式来源。它默认不加入 `quick`、`balanced`、`deep`
 的检索源集合。
 
+## 全文获取后端
+
+`download_and_parse_mineru` 的下载顺序为：开放 CDN / 仓储直链 → 出版商 API →
+机构通道（WebVPN/CARSI）→ Lightpanda 落地页解析 → scansci-pdf CLI 兜底。
+
+- Lightpanda 只负责执行落地页、收集 cookie 与 PDF 链接，PDF 字节仍走普通 HTTPS。
+- `TWOSCI_BROWSER_BACKEND=auto`（默认）优先 Lightpanda；设为 `lightpanda` 可完全禁用
+  scansci/Chrome 兜底，设为 `scansci` 或 `off` 可跳过 Lightpanda。
+- Windows 无原生 Lightpanda 二进制，TwoSCI 自动通过 WSL2 执行
+  `~/.twosci/bin/lightpanda`。Linux/macOS 可直接放入 PATH 或设置 `LIGHTPANDA_BIN`。
+- 已运行的实例可通过 `LIGHTPANDA_CDP_URL=ws://127.0.0.1:9222` 复用。
+
+Windows 安装示例（PowerShell + WSL2）：
+
+```powershell
+$dest = "$HOME\.twosci\bin"; New-Item -ItemType Directory -Force $dest | Out-Null
+Invoke-WebRequest "https://github.com/lightpanda-io/browser/releases/latest/download/lightpanda-x86_64-linux" -OutFile "$dest\lightpanda"
+wsl -d Ubuntu-24.04 -- bash -lc "chmod +x /mnt/c/Users/$env:USERNAME/.twosci/bin/lightpanda"
+```
+
+机构配置以只读方式复用 `~/.scansci-pdf/config.json`：读取 WebVPN 网关地址、
+`vpnsci_cookie_file` 与 `carsi_cookies/*.json`，并按 DOI 前缀匹配出版商。
+TwoSCI 不会修改该目录，也不会复制 cookie 到项目目录。
+
 ## 结果三层
 
 - `metadata`：标题、作者、年份、期刊、DOI、来源 ID。

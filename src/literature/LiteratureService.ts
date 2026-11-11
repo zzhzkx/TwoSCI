@@ -7,6 +7,8 @@ import { FullTextRouter, type FullTextResolutionResult, type FullTextRoute } fro
 import { ReadingCardService, type ReadingPacketResult } from './ReadingCardService.js';
 import { CardFormatter } from './CardFormatter.js';
 import { MineruService, type MineruBatchResult } from './MineruService.js';
+import { detectLightpandaRuntime } from './LightpandaBrowser.js';
+import { institutionalSummary, loadInstitutionalConfig } from './InstitutionalAccess.js';
 import { CitationTopologyService, type CitationTopologyResult } from './CitationTopologyService.js';
 import { AcademicLibraryService, type AcademicLibraryResult } from './AcademicLibraryService.js';
 import {
@@ -533,6 +535,15 @@ export class LiteratureService {
           : {})
       },
       mode_defaults: MODE_CONFIG,
+      browser: (() => {
+        const runtime = detectLightpandaRuntime();
+        return {
+          backend: process.env.TWOSCI_BROWSER_BACKEND || 'auto',
+          lightpanda_available: Boolean(runtime),
+          lightpanda_runtime: runtime?.description || null
+        };
+      })(),
+      institutional: institutionalSummary(loadInstitutionalConfig()),
       session_store: this.store.stats()
     };
   }

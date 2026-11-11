@@ -76,7 +76,7 @@ export const API_ENDPOINTS = {
 /**
  * Default User Agent
  */
-export const USER_AGENT = 'TwoSCI/0.2.2 (Academic Research Tool)';
+export const USER_AGENT = 'TwoSCI/0.2.3 (Academic Research Tool)';
 
 /**
  * Default mailto for Crossref polite pool
