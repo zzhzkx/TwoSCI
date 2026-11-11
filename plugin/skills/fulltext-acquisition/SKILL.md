@@ -32,11 +32,3 @@ description: >
 2. **通道探测**：调用 `resolve_fulltext_access` 探测最优获取路径（Tier 1 OA直链 / Tier 2 出版商 API / Tier 3 校园网）。
 3. **下载与解析**：调用 `download_and_parse_mineru`，传入 `dois` 或 `urls`。系统自动下载 PDF、调用 MinerU 转换为结构化 Markdown 并将插图提取到 `img/` 子目录。
 4. **交付反馈**：向用户汇报成功解析的文献篇数、本地文件夹路径与图片资产数量。
-
-## 3. 浏览器与机构通道
-
-- 下载顺序：开放 CDN/仓储直链 → 出版商 API → CARSI → Lightpanda 落地页解析 → WebVPN → scansci CLI。
-- Lightpanda 只负责执行落地页并提取 PDF 链接与 cookie；PDF 仍走 HTTPS 下载。
-- 默认 `TWOSCI_BROWSER_BACKEND=auto`。设为 `lightpanda` 可完全禁用 scansci/Chrome 兜底。
-- 机构配置只读复用 `~/.scansci-pdf/config.json` 与其中的 WebVPN/CARSI cookies；TwoSCI 不写入该目录。
-- WebVPN 会话失效时会被快速跳过，需先在 scansci-pdf 中重新登录，不要在下载循环里反复重试。

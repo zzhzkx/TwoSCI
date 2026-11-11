@@ -47,31 +47,6 @@ access, and legacy workflows.
 also accepted as an explicit source in `search_literature`; it is not part of
 the default `quick`, `balanced`, or `deep` source sets.
 
-## Full-Text Browser Backend
-
-`download_and_parse_mineru` resolves PDFs in this order: open CDN/repository
-links → publisher APIs → CARSI → Lightpanda landing-page resolution → WebVPN →
-scansci-pdf CLI fallback.
-
-- Lightpanda (https://github.com/lightpanda-io/browser) only executes the
-  landing page and collects PDF links/cookies; PDF bytes still use plain HTTPS.
-- `TWOSCI_BROWSER_BACKEND=auto` (default) prefers Lightpanda. Set it to
-  `lightpanda` to disable the scansci/Chrome fallback entirely.
-- Windows has no native Lightpanda binary; TwoSCI runs
-  `~/.twosci/bin/lightpanda` through WSL2 automatically.
-- An existing CDP endpoint can be reused via `LIGHTPANDA_CDP_URL`.
-- Institutional access reuses `~/.scansci-pdf/config.json` read-only: WebVPN
-  gateway URL, its cookie jar, and CARSI publisher cookies. TwoSCI never writes
-  to that directory.
-
-Windows install (PowerShell + WSL2):
-
-```powershell
-$dest = "$HOME\.twosci\bin"; New-Item -ItemType Directory -Force $dest | Out-Null
-Invoke-WebRequest "https://github.com/lightpanda-io/browser/releases/latest/download/lightpanda-x86_64-linux" -OutFile "$dest\lightpanda"
-wsl -d Ubuntu-24.04 -- bash -lc "chmod +x /mnt/c/Users/$env:USERNAME/.twosci/bin/lightpanda"
-```
-
 ## Result Layers
 
 `search_literature` separates response detail from upstream quota:
