@@ -27,7 +27,7 @@ export function registerMcpHandlers(
       },
       serverInfo: {
         name: 'twosci',
-        version: '0.3.1'
+        version: '0.3.2'
       }
     };
   });

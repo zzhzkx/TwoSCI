@@ -29,11 +29,12 @@ await build({
 cpSync(join(root, 'skills'), join(outDir, 'skills'), { recursive: true });
 cpSync(join(root, 'LICENSE'), join(outDir, 'LICENSE'));
 cpSync(join(root, '.env.example'), join(outDir, '.env.example'));
+cpSync(join(root, 'assets'), join(outDir, 'assets'), { recursive: true });
 copyRuntimeDependencies(root, outDir);
 
 const packageJson = {
   name: 'twosci',
-  version: '0.3.1',
+  version: '0.3.2',
   private: true,
   type: 'commonjs',
   dependencies: {
@@ -43,6 +44,8 @@ const packageJson = {
 
 const interfaceMetadata = {
   displayName: 'TwoSCI',
+  logo: './assets/logo.png',
+  composerIcon: './assets/logo.png',
   shortDescription: 'Run a human-like literature research workflow with WoS, Scopus, and IEEE.',
   longDescription:
     'TwoSCI starts from a seed paper and the user research intent, discovers deduplicated literature across Web of Science, Scopus, OpenAlex, Crossref, and IEEE Xplore, delegates abstract screening to subagents, expands one-hop citation networks, keeps screening decisions, and exports evidence-ready records.',
@@ -59,7 +62,7 @@ const interfaceMetadata = {
 
 const baseManifest = {
   name: 'twosci',
-  version: '0.3.1',
+  version: '0.3.2',
   description:
     'Seed-paper-driven literature discovery, abstract screening, citation expansion, and evidence export across Web of Science, Scopus, OpenAlex, Crossref, and IEEE Xplore.',
   author: { name: 'zzhzkx' },
@@ -92,6 +95,7 @@ const codexManifest = {
 };
 const claudeManifest = {
   ...baseManifest,
+  logo: './assets/logo.png',
   skills: [
     './skills/academic-search',
     './skills/intent-deep-research',

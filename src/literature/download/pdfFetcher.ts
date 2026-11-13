@@ -84,7 +84,7 @@ async function resolveDoiLanding(doi: string): Promise<string | undefined> {
     const response = await axios.get(`https://doi.org/${encodeURIComponent(doi)}`, {
       maxRedirects: 5,
       timeout: 15_000,
-      headers: { 'User-Agent': 'TwoSCI/0.3.1' },
+      headers: { 'User-Agent': 'TwoSCI/0.3.2' },
       validateStatus: status => status < 400
     });
     const finalUrl = String(

@@ -83,7 +83,7 @@ export async function tryUnpaywall(
     const response = await axios.get(`https://api.unpaywall.org/v2/${encodeURIComponent(doi)}`, {
       params: { email: contactEmail(options) },
       timeout: 20_000,
-      headers: { 'User-Agent': 'TwoSCI/0.3.1' }
+      headers: { 'User-Agent': 'TwoSCI/0.3.2' }
     });
     const data = response.data as {
       best_oa_location?: { url_for_pdf?: string; url?: string };
@@ -123,7 +123,7 @@ export async function tryOpenAlex(
         ...(contactEmail(options) ? { mailto: contactEmail(options) } : {})
       },
       timeout: 20_000,
-      headers: { 'User-Agent': 'TwoSCI/0.3.1' }
+      headers: { 'User-Agent': 'TwoSCI/0.3.2' }
     });
     const data = response.data as {
       open_access?: { oa_url?: string };
@@ -158,7 +158,7 @@ export async function trySemanticScholar(
         params: { fields: 'openAccessPdf,isOpenAccess' },
         timeout: 20_000,
         headers: {
-          'User-Agent': 'TwoSCI/0.3.1',
+          'User-Agent': 'TwoSCI/0.3.2',
           ...(process.env.SEMANTIC_SCHOLAR_API_KEY
             ? { 'x-api-key': process.env.SEMANTIC_SCHOLAR_API_KEY }
             : {})
@@ -193,7 +193,7 @@ export async function tryEuropePmc(
         pageSize: 1
       },
       timeout: 20_000,
-      headers: { 'User-Agent': 'TwoSCI/0.3.1' }
+      headers: { 'User-Agent': 'TwoSCI/0.3.2' }
     });
     const result = (response.data as {
       resultList?: { result?: Array<{
@@ -239,7 +239,7 @@ export async function tryPmc(
         email: contactEmail(options)
       },
       timeout: 20_000,
-      headers: { 'User-Agent': 'TwoSCI/0.3.1' }
+      headers: { 'User-Agent': 'TwoSCI/0.3.2' }
     });
     const record = (response.data as {
       records?: Array<{ pmcid?: string }>;
@@ -272,7 +272,7 @@ export async function tryCrossref(
   try {
     const response = await axios.get(`https://api.crossref.org/works/${encodeURIComponent(doi)}`, {
       timeout: 20_000,
-      headers: { 'User-Agent': `TwoSCI/0.3.1 (mailto:${contactEmail(options)})` }
+      headers: { 'User-Agent': `TwoSCI/0.3.2 (mailto:${contactEmail(options)})` }
     });
     const links = (response.data as {
       message?: { link?: Array<{ URL?: string; 'content-type'?: string }> };

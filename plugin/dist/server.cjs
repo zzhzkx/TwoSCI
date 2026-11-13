@@ -33221,7 +33221,7 @@ var init_constants = __esm({
       OPENALEX: "https://api.openalex.org",
       IEEE_XPLORE: "https://ieeexploreapi.ieee.org/api/v1"
     };
-    USER_AGENT = "TwoSCI/0.3.1 (Academic Research Tool)";
+    USER_AGENT = "TwoSCI/0.3.2 (Academic Research Tool)";
     DEFAULT_MAILTO = process.env.CROSSREF_MAILTO || "twosci@example.com";
   }
 });
@@ -365519,7 +365519,7 @@ async function tryUnpaywall(doi, destPath, options, attempts) {
     const response = await axios_default.get(`https://api.unpaywall.org/v2/${encodeURIComponent(doi)}`, {
       params: { email: contactEmail(options) },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.1" }
+      headers: { "User-Agent": "TwoSCI/0.3.2" }
     });
     const data2 = response.data;
     const candidates = [];
@@ -365550,7 +365550,7 @@ async function tryOpenAlex(doi, destPath, options, attempts) {
         ...contactEmail(options) ? { mailto: contactEmail(options) } : {}
       },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.1" }
+      headers: { "User-Agent": "TwoSCI/0.3.2" }
     });
     const data2 = response.data;
     const candidates = [
@@ -365576,7 +365576,7 @@ async function trySemanticScholar(doi, destPath, options, attempts) {
         params: { fields: "openAccessPdf,isOpenAccess" },
         timeout: 2e4,
         headers: {
-          "User-Agent": "TwoSCI/0.3.1",
+          "User-Agent": "TwoSCI/0.3.2",
           ...process.env.SEMANTIC_SCHOLAR_API_KEY ? { "x-api-key": process.env.SEMANTIC_SCHOLAR_API_KEY } : {}
         }
       }
@@ -365603,7 +365603,7 @@ async function tryEuropePmc(doi, destPath, options, attempts) {
         pageSize: 1
       },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.1" }
+      headers: { "User-Agent": "TwoSCI/0.3.2" }
     });
     const result = response.data.resultList?.result?.[0];
     const candidates = [];
@@ -365638,7 +365638,7 @@ async function tryPmc(doi, destPath, options, attempts) {
         email: contactEmail(options)
       },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.1" }
+      headers: { "User-Agent": "TwoSCI/0.3.2" }
     });
     const record2 = response.data.records?.[0];
     const pmcid = record2?.pmcid;
@@ -365663,7 +365663,7 @@ async function tryCrossref(doi, destPath, options, attempts) {
   try {
     const response = await axios_default.get(`https://api.crossref.org/works/${encodeURIComponent(doi)}`, {
       timeout: 2e4,
-      headers: { "User-Agent": `TwoSCI/0.3.1 (mailto:${contactEmail(options)})` }
+      headers: { "User-Agent": `TwoSCI/0.3.2 (mailto:${contactEmail(options)})` }
     });
     const links = response.data.message?.link || [];
     const candidates = links.filter((link) => /pdf/i.test(link["content-type"] || "") || /\.pdf(?:$|[?#])/i.test(link.URL || "")).map((link) => link.URL).filter((value) => Boolean(value));
@@ -366355,7 +366355,7 @@ async function resolveDoiLanding(doi) {
     const response = await axios_default.get(`https://doi.org/${encodeURIComponent(doi)}`, {
       maxRedirects: 5,
       timeout: 15e3,
-      headers: { "User-Agent": "TwoSCI/0.3.1" },
+      headers: { "User-Agent": "TwoSCI/0.3.2" },
       validateStatus: (status) => status < 400
     });
     const finalUrl = String(
@@ -366592,7 +366592,7 @@ var MineruService = class {
     try {
       const resp = await axios_default.get(`https://api.crossref.org/works/${encodeURIComponent(cleanDoi)}`, {
         timeout: 1e4,
-        headers: { "User-Agent": "TwoSCI/0.3.1 (mailto:research@twosci.org)" }
+        headers: { "User-Agent": "TwoSCI/0.3.2 (mailto:research@twosci.org)" }
       });
       const item = resp.data?.message;
       if (item) {
@@ -370549,7 +370549,7 @@ function registerMcpHandlers(server2, searcherFactory = initializeSearchers) {
       },
       serverInfo: {
         name: "twosci",
-        version: "0.3.1"
+        version: "0.3.2"
       }
     };
   });
@@ -370628,7 +370628,7 @@ loadEnvironment();
 var server = new Server(
   {
     name: "twosci",
-    version: "0.3.1"
+    version: "0.3.2"
   },
   {
     capabilities: {
