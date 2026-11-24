@@ -497,7 +497,9 @@ export class ScopusSearcher extends PaperSource {
       response = await this.searchWithView(query, 0, 1, view);
     }
     const entry = response.data['search-results']?.entry?.[0];
-    return entry ? this.parseEntry(entry) : null;
+    if (!entry) return null;
+    const paper = await this.parseEntry(entry);
+    return paper && paper.title.trim() ? paper : null;
   }
 
   async downloadPdf(paperId: string, options: DownloadOptions = {}): Promise<string> {

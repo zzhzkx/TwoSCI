@@ -108,7 +108,10 @@ describe('IEEEXploreSearcher', () => {
 
     expect(paper?.paperId).toBe('11012345');
     expect(adapter).toHaveBeenCalledWith(expect.objectContaining({
-      params: expect.objectContaining({ doi: '10.1109/JLT.2025.3581583' })
+      params: expect.objectContaining({
+        doi: '10.1109/JLT.2025.3581583',
+        max_records: 2
+      })
     }));
   });
 

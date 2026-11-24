@@ -138,6 +138,22 @@ describe('ScopusSearcher', () => {
     });
   });
 
+  describe('DOI lookup', () => {
+    it('rejects an empty entry instead of returning a placeholder record', async () => {
+      const client = (searcher as any).client;
+      client.defaults.adapter = jest.fn(async () => searchResponse([{
+        '@_fa': 'true',
+        link: [],
+        eid: '2-s2.0-empty',
+        'dc:identifier': 'SCOPUS_ID:empty'
+      }]));
+
+      const paper = await searcher.getPaperByDoi('10.1109/TII.2019.2902090');
+
+      expect(paper).toBeNull();
+    });
+  });
+
   describe('key configuration', () => {
     it('uses the dedicated search key when no general Elsevier key is configured', async () => {
       process.env.SCOPUS_SEARCH_API_KEY = 'search-only-key';

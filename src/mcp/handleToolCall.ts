@@ -909,6 +909,7 @@ async function handleToolCallWithContext(
         count: result.records.length,
         cards: result.cards,
         records: result.records,
+        warnings: result.search.warnings,
         search_id: result.search.searchId
       });
     }
@@ -932,6 +933,7 @@ async function handleToolCallWithContext(
         cards: result.cards,
         count: result.records.length,
         records: result.records,
+        warnings: result.search.warnings,
         brief_context: result.brief
           ? {
               intent: result.brief.intent,

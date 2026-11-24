@@ -142,7 +142,7 @@ export class IEEEXploreSearcher extends PaperSource {
     try {
       const response = await this.request({
         doi: normalized,
-        max_records: 1,
+        max_records: 2,
         start_record: 1,
         format: 'json'
       });

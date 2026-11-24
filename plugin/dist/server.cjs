@@ -33221,7 +33221,7 @@ var init_constants = __esm({
       OPENALEX: "https://api.openalex.org",
       IEEE_XPLORE: "https://ieeexploreapi.ieee.org/api/v1"
     };
-    USER_AGENT = "TwoSCI/0.3.2 (Academic Research Tool)";
+    USER_AGENT = "TwoSCI/0.3.3 (Academic Research Tool)";
     DEFAULT_MAILTO = process.env.CROSSREF_MAILTO || "twosci@example.com";
   }
 });
@@ -362309,7 +362309,9 @@ var ScopusSearcher = class extends PaperSource {
       response = await this.searchWithView(query, 0, 1, view);
     }
     const entry = response.data["search-results"]?.entry?.[0];
-    return entry ? this.parseEntry(entry) : null;
+    if (!entry) return null;
+    const paper = await this.parseEntry(entry);
+    return paper && paper.title.trim() ? paper : null;
   }
   async downloadPdf(paperId, options = {}) {
     throw new Error("PDF download requires institutional access for Scopus");
@@ -362842,7 +362844,7 @@ var IEEEXploreSearcher = class extends PaperSource {
     try {
       const response = await this.request({
         doi: normalized,
-        max_records: 1,
+        max_records: 2,
         start_record: 1,
         format: "json"
       });
@@ -365519,7 +365521,7 @@ async function tryUnpaywall(doi, destPath, options, attempts) {
     const response = await axios_default.get(`https://api.unpaywall.org/v2/${encodeURIComponent(doi)}`, {
       params: { email: contactEmail(options) },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.2" }
+      headers: { "User-Agent": "TwoSCI/0.3.3" }
     });
     const data2 = response.data;
     const candidates = [];
@@ -365550,7 +365552,7 @@ async function tryOpenAlex(doi, destPath, options, attempts) {
         ...contactEmail(options) ? { mailto: contactEmail(options) } : {}
       },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.2" }
+      headers: { "User-Agent": "TwoSCI/0.3.3" }
     });
     const data2 = response.data;
     const candidates = [
@@ -365576,7 +365578,7 @@ async function trySemanticScholar(doi, destPath, options, attempts) {
         params: { fields: "openAccessPdf,isOpenAccess" },
         timeout: 2e4,
         headers: {
-          "User-Agent": "TwoSCI/0.3.2",
+          "User-Agent": "TwoSCI/0.3.3",
           ...process.env.SEMANTIC_SCHOLAR_API_KEY ? { "x-api-key": process.env.SEMANTIC_SCHOLAR_API_KEY } : {}
         }
       }
@@ -365603,7 +365605,7 @@ async function tryEuropePmc(doi, destPath, options, attempts) {
         pageSize: 1
       },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.2" }
+      headers: { "User-Agent": "TwoSCI/0.3.3" }
     });
     const result = response.data.resultList?.result?.[0];
     const candidates = [];
@@ -365638,7 +365640,7 @@ async function tryPmc(doi, destPath, options, attempts) {
         email: contactEmail(options)
       },
       timeout: 2e4,
-      headers: { "User-Agent": "TwoSCI/0.3.2" }
+      headers: { "User-Agent": "TwoSCI/0.3.3" }
     });
     const record2 = response.data.records?.[0];
     const pmcid = record2?.pmcid;
@@ -365663,7 +365665,7 @@ async function tryCrossref(doi, destPath, options, attempts) {
   try {
     const response = await axios_default.get(`https://api.crossref.org/works/${encodeURIComponent(doi)}`, {
       timeout: 2e4,
-      headers: { "User-Agent": `TwoSCI/0.3.2 (mailto:${contactEmail(options)})` }
+      headers: { "User-Agent": `TwoSCI/0.3.3 (mailto:${contactEmail(options)})` }
     });
     const links = response.data.message?.link || [];
     const candidates = links.filter((link) => /pdf/i.test(link["content-type"] || "") || /\.pdf(?:$|[?#])/i.test(link.URL || "")).map((link) => link.URL).filter((value) => Boolean(value));
@@ -366355,7 +366357,7 @@ async function resolveDoiLanding(doi) {
     const response = await axios_default.get(`https://doi.org/${encodeURIComponent(doi)}`, {
       maxRedirects: 5,
       timeout: 15e3,
-      headers: { "User-Agent": "TwoSCI/0.3.2" },
+      headers: { "User-Agent": "TwoSCI/0.3.3" },
       validateStatus: (status) => status < 400
     });
     const finalUrl = String(
@@ -366592,7 +366594,7 @@ var MineruService = class {
     try {
       const resp = await axios_default.get(`https://api.crossref.org/works/${encodeURIComponent(cleanDoi)}`, {
         timeout: 1e4,
-        headers: { "User-Agent": "TwoSCI/0.3.2 (mailto:research@twosci.org)" }
+        headers: { "User-Agent": "TwoSCI/0.3.3 (mailto:research@twosci.org)" }
       });
       const item = resp.data?.message;
       if (item) {
@@ -367207,7 +367209,9 @@ function recordFromPaper(paper, source, rank) {
     extra: {
       ...extra.openalexId ? { openalexId: String(extra.openalexId) } : {},
       ...extra.oaStatus ? { oaStatus: String(extra.oaStatus) } : {},
-      ...extra.documentType ? { documentType: String(extra.documentType) } : {}
+      ...extra.documentType ? { documentType: String(extra.documentType) } : {},
+      ...extra.ieeeArticleNumber ? { ieeeArticleNumber: String(extra.ieeeArticleNumber) } : {},
+      ...extra.isOa === true ? { isOa: true } : {}
     }
   };
   return record2;
@@ -370204,6 +370208,7 @@ ${JSON.stringify(
         count: result.records.length,
         cards: result.cards,
         records: result.records,
+        warnings: result.search.warnings,
         search_id: result.search.searchId
       });
     }
@@ -370226,6 +370231,7 @@ ${JSON.stringify(
         cards: result.cards,
         count: result.records.length,
         records: result.records,
+        warnings: result.search.warnings,
         brief_context: result.brief ? {
           intent: result.brief.intent,
           seed_title: result.brief.seed.title,
@@ -370549,7 +370555,7 @@ function registerMcpHandlers(server2, searcherFactory = initializeSearchers) {
       },
       serverInfo: {
         name: "twosci",
-        version: "0.3.2"
+        version: "0.3.3"
       }
     };
   });
@@ -370628,7 +370634,7 @@ loadEnvironment();
 var server = new Server(
   {
     name: "twosci",
-    version: "0.3.2"
+    version: "0.3.3"
   },
   {
     capabilities: {

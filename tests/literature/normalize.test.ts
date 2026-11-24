@@ -60,6 +60,22 @@ describe('literature normalization', () => {
     expect(dedupeRecords([left, right])).toHaveLength(2);
   });
 
+  it('preserves IEEE article numbers and open-access flags for routing', () => {
+    const ieee = recordFromPaper(paper({
+      paperId: '11012345',
+      source: 'ieee',
+      doi: '10.1109/JLT.2025.3581583',
+      extra: { ieeeArticleNumber: '11012345', isOa: true, accessType: 'Open Access' }
+    }), 'ieee', 1);
+
+    expect(ieee.extra).toEqual(expect.objectContaining({
+      ieeeArticleNumber: '11012345',
+      isOa: true
+    }));
+    expect(ieee.openAccess).toBe(true);
+    expect(ieee.sources[0].source).toBe('ieee');
+  });
+
   it('treats DOI case variants as the same work', () => {
     const upper = recordFromPaper(paper({
       doi: '10.1109/JLT.2025.3581583',

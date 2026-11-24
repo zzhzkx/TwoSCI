@@ -34,7 +34,7 @@ copyRuntimeDependencies(root, outDir);
 
 const packageJson = {
   name: 'twosci',
-  version: '0.3.2',
+  version: '0.3.3',
   private: true,
   type: 'commonjs',
   dependencies: {
@@ -62,7 +62,7 @@ const interfaceMetadata = {
 
 const baseManifest = {
   name: 'twosci',
-  version: '0.3.2',
+  version: '0.3.3',
   description:
     'Seed-paper-driven literature discovery, abstract screening, citation expansion, and evidence export across Web of Science, Scopus, OpenAlex, Crossref, and IEEE Xplore.',
   author: { name: 'zzhzkx' },

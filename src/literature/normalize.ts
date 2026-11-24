@@ -90,7 +90,9 @@ export function recordFromPaper(
     extra: {
       ...(extra.openalexId ? { openalexId: String(extra.openalexId) } : {}),
       ...(extra.oaStatus ? { oaStatus: String(extra.oaStatus) } : {}),
-      ...(extra.documentType ? { documentType: String(extra.documentType) } : {})
+      ...(extra.documentType ? { documentType: String(extra.documentType) } : {}),
+      ...(extra.ieeeArticleNumber ? { ieeeArticleNumber: String(extra.ieeeArticleNumber) } : {}),
+      ...(extra.isOa === true ? { isOa: true } : {})
     }
   };
   return record;
